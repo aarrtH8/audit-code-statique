@@ -1,5 +1,25 @@
 {
-  "genereLe": "2026-10-10T14:37:42.874Z",
-  "total_constats": 0,
-  "depots": []
+  "genereLe": "2026-10-10T14:38:28.749Z",
+  "total_constats": 23,
+  "depots": [
+    {
+      "client": "Saleor",
+      "fichiers": 4701,
+      "constats": 17,
+      "comptes": {
+        "CRITIQUE": 11,
+        "ELEVEE": 4,
+        "MOYENNE": 2
+      }
+    },
+    {
+      "client": "Paperless-ngx",
+      "fichiers": 0,
+      "constats": 6,
+      "comptes": {
+        "CRITIQUE": 5,
+        "ELEVEE": 1
+      }
+    }
+  ]
 }
