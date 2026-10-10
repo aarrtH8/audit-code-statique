@@ -1,0 +1,48 @@
+name: Audit de code statique (offert)
+# Ajoutez ce fichier dans .github/workflows/audit-code.yml de VOTRE dépôt.
+# Il ne modifie rien : il lit votre code et publie un rapport en artefact.
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Récupérer l'auditeur statique
+        run: |
+          curl -fsSL -o audit-depot.mjs \
+            https://raw.githubusercontent.com/aarrtH8/audit-code-statique/main/tools/audit-depot.mjs
+
+      - name: Analyser le dépôt (aucun code exécuté)
+        run: node audit-depot.mjs . --rapport rapport-audit.html | tee audit.json
+
+      - name: Publier le rapport et le résumé
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          let r = {};
+          try { r = JSON.parse(fs.readFileSync('audit.json','utf8').split('\n').slice(-200).filter(l=>l.trim().startsWith('{')||l.trim().startsWith('}')||l.trim().startsWith('"')||l.trim()==='').join('\n') || '{}'); } catch(e){}
+          const s = `## Audit de code statique\n\n- Constats : **${r.constats ?? '?'}** (critiques : ${r.parGravite?.critique ?? '?'})\n- Fichiers analysés : ${r.fichiersAnalyses ?? '?'}\n- Indice de propreté : **${r.indiceProprete ?? '?'}/100**\n\nRapport complet en artefact \`rapport-audit\`. Aucun code exécuté.\n\n> Analyse statique par motifs — ne garantit pas l'absence de vulnérabilité. Un audit humain commenté : https://aarrth8.github.io/audit-code-statique/`;
+          fs.writeFileSync('resume.md', s);
+          console.log(s);
+          NODE
+
+      - name: Téléverser le rapport
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-audit
+          path: rapport-audit.html
+          retention-days: 30

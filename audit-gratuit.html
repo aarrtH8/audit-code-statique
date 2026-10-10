@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit de code statique gratuit en intégration continue</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--bord:#30363d;--fg:#c9d1d9;--dim:#8b949e;--accent:#58a6ff;--ok:#3fb950}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}h1{color:#fff;font-size:1.6rem;margin:0 0 8px}
+h2{color:#fff;font-size:1.15rem;margin-top:34px;border-bottom:1px solid var(--bord);padding-bottom:6px}
+a{color:var(--accent)}.lead{color:var(--dim)}
+pre{background:#010409;border:1px solid var(--bord);border-radius:8px;padding:14px;overflow:auto;font-size:.85rem}
+code{font-family:ui-monospace,Consolas,monospace}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:8px;padding:16px 18px;margin:14px 0}
+.btn{display:inline-block;background:var(--accent);color:#04121f;border-radius:8px;padding:11px 18px;font-weight:700;text-decoration:none;margin:6px 6px 6px 0}
+.etape{display:flex;gap:14px;margin:18px 0}.num{background:var(--accent);color:#04121f;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 28px}
+.note{background:var(--panel);border-left:3px solid var(--ok);padding:12px 16px;margin:16px 0;font-size:.9rem;color:var(--dim)}
+footer{margin-top:44px;border-top:1px solid var(--bord);padding-top:16px;color:var(--dim);font-size:.85rem}
+</style></head><body><div class="wrap">
+<h1>Audit de code statique dans votre intégration continue — gratuit</h1>
+<p class="lead">Ajoutez un fichier, vos pushes sont analysés automatiquement. Le rapport sort en artefact. <strong>Aucun code n'est exécuté.</strong></p>
+
+<div class="note"><strong>Pourquoi c'est gratuit :</strong> c'est un outil sérieux, pas une démonstration. Si l'analyse automatique vous signale quelque chose de délicat et que vous voulez un audit humain commenté, avec faux positifs écartés et plan de correction, c'est là que je facture. Vous ne payez rien pour l'outil.</div>
+
+<h2>Installation en 3 étapes</h2>
+<div class="etape"><div class="num">1</div><div>Créez le fichier <code>.github/workflows/audit-code.yml</code> dans votre dépôt.</div></div>
+<div class="etape"><div class="num">2</div><div>Collez son contenu (téléchargeable ci-dessous).</div></div>
+<div class="etape"><div class="num">3</div><div>Poussez. Le rapport apparaît dans l'onglet <em>Actions</em>, en artefact téléchargeable.</div></div>
+
+<h2>Télécharger le fichier de workflow</h2>
+<div class="card">
+  <a class="btn" href="./install/audit-code.yml" download>Audit-code.yml</a>
+  <a class="btn" href="./tools/audit-depot.mjs" download style="background:transparent;color:#c9d1d9;border:1px solid #30363d">audit-depot.mjs (l'analyseur)</a>
+  <p class="lead" style="margin-top:10px;font-size:.88rem">Le workflow récupère l'analyseur automatiquement ; le second lien sert si vous voulez l'exécuter en local : <code>node audit-depot.mjs . --rapport rapport.html</code></p>
+</div>
+
+<h2>Ce que l'analyse détecte</h2>
+<ul>
+<li>Secrets et clés en dur (valeur d'exemple écartée automatiquement).</li>
+<li>Constructions d'injection SQL et d'exécution de commandes.</li>
+<li>Exécution dynamique de code atteignable par une entrée.</li>
+<li>CORS ouvert, transport non chiffré, écriture HTML directe, hachages faibles, vérification TLS désactivée.</li>
+</ul>
+
+<h2>Ce que ce n'est pas</h2>
+<ul>
+<li>Ce n'est pas un test d'intrusion, et le code n'est jamais exécuté.</li>
+<li>Ce n'est pas une garantie « zéro vulnérabilité ».</li>
+<li>Un constat est une <em>construction à risque</em> dans le texte source, pas une faille forcément exploitable. Certains sont des faux positifs : c'est justement le travail de l'audit humain de les trier.</li>
+</ul>
+
+<h2>Exemple de rapport réel</h2>
+<p class="lead">Analyse d'un dépôt open source connu, publiée telle quelle : <a href="./rapports/express.html">rapport d'exemple →</a></p>
+
+<h2>Passer à l'audit commenté</h2>
+<div class="card">
+  <table style="width:100%;border-collapse:collapse">
+    <tr><td style="border:1px solid #30363d;padding:9px">Audit ciblé</td><td style="border:1px solid #30363d;padding:9px">dès 90 €</td></tr>
+    <tr><td style="border:1px solid #30363d;padding:9px">Audit complet</td><td style="border:1px solid #30363d;padding:9px">dès 290 €</td></tr>
+    <tr><td style="border:1px solid #30363d;padding:9px">Conformité &amp; historique Git</td><td style="border:1px solid #30363d;padding:9px">dès 490 €</td></tr>
+  </table>
+  <p class="lead" style="margin-top:12px">Prix ferme au devis, montant et devise convenus avant commande. PayPal <code>arthhur.grossi@gmail.com</code> ou virement professionnel (Arthur Grossi EI).</p>
+  <a class="btn" href="./estimation.html">Estimer mon prix</a>
+  <a class="btn" href="./commande.html" style="background:transparent;color:#c9d1d9;border:1px solid #30363d">Demander un devis</a>
+</div>
+
+<footer>
+Audit de code statique — Arthur Grossi EI · arthhur.grossi@gmail.com<br>
+<a href="./">Site</a> · <a href="./tarifs.html">Tarifs</a> · <a href="./suivi.html">Suivi des demandes</a>
+</footer>
+</div></body></html>
