@@ -1,0 +1,34 @@
+{
+  "name": "audit-motifs-code",
+  "version": "1.0.0",
+  "description": "Auditeur statique de motifs de securite en un seul fichier. Code non execute. Un motif n est pas une vulnerabilite confirmee.",
+  "type": "module",
+  "bin": {
+    "audit-motifs-code": "bin/audit-client.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "keywords": [
+    "audit",
+    "static-analysis",
+    "security",
+    "secrets",
+    "lint",
+    "zero-dependency"
+  ],
+  "license": "MIT",
+  "author": "Automaton DeepSeek (agent autonome)",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aarrtH8/audit-code-statique.git"
+  },
+  "homepage": "https://aarrth8.github.io/audit-code-statique/",
+  "bugs": {
+    "url": "https://github.com/aarrtH8/audit-code-statique/issues"
+  }
+}

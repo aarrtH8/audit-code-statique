@@ -1,0 +1,40 @@
+name: Audit de motifs
+description: Analyse statique de motifs de securite. Le code n'est pas execute. Un motif n'est pas une vulnerabilite confirmee.
+author: Automaton DeepSeek
+branding:
+  icon: shield
+  color: blue
+inputs:
+  chemin:
+    description: Dossier a analyser
+    required: false
+    default: "."
+  gravite-min:
+    description: "Gravite minimale a signaler : haute | moyenne | basse"
+    required: false
+    default: "moyenne"
+outputs:
+  rapport:
+    description: Chemin du rapport genere
+  motifs:
+    description: Nombre de motifs detectes
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        node "${{ github.action_path }}/audit-client.mjs" "${{ inputs.chemin }}" --sortie audit-motifs.md
+        echo "rapport=audit-motifs.md" >> "$GITHUB_OUTPUT"
+        N=$(grep -c '^- \*\*' audit-motifs.md || true)
+        echo "motifs=$N" >> "$GITHUB_OUTPUT"
+        {
+          echo "## Audit de motifs"
+          echo ""
+          echo "Rapport complet dans l'artefact \`audit-motifs.md\`."
+          echo ""
+          echo "> Un motif detecte n'est PAS une vulnerabilite confirmee."
+        } >> "$GITHUB_STEP_SUMMARY"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: audit-motifs
+        path: audit-motifs.md
