@@ -101,4 +101,23 @@ Analyse statique honnête : un constat est un motif de risque, pas une faille pr
     +'<a href="mailto:arthhur.grossi@gmail.com?subject=Devis '+r+'&body='+encodeURIComponent(devis)+'"><button type="button" style="background:#027a48">Envoyer par e-mail</button></a>';
 }
 </script>
+<script>
+// Transmission du devis : endpoint configurable, repli e-mail honnete.
+window.__GUICHET__ = "";
+window.transmettreDevis = async function(ref, texte, meta){
+  if(!window.__GUICHET__){
+    document.getElementById('etat-envoi').textContent = "Aucun guichet serveur configuré : utilisez le bouton e-mail ci-dessous pour transmettre le devis.";
+    return;
+  }
+  try{
+    const r = await fetch(window.__GUICHET__, {method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({reference:ref, texte:texte}, meta))});
+    document.getElementById('etat-envoi').textContent = r.ok
+      ? "Devis transmis (référence "+ref+"). Vous recevrez une réponse à l'adresse indiquée."
+      : "Transmission impossible ("+r.status+"). Utilisez le bouton e-mail.";
+  }catch(e){
+    document.getElementById('etat-envoi').textContent = "Guichet injoignable. Utilisez le bouton e-mail ci-dessous.";
+  }
+};
+</script>
 </body></html>
