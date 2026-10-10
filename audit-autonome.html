@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Audit de code statique — outil autonome</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;max-width:820px;margin:0 auto;padding:2rem 1rem;color:#0f172a;background:#fff}
+  h1{font-size:1.6rem;margin-bottom:.2rem}h2{font-size:1.15rem;margin-top:1.8rem}
+  .lead{color:#475569}
+  pre,code{background:#f1f5f9;border-radius:5px}pre{padding:.7rem;overflow:auto}
+  textarea,input{width:100%;box-sizing:border-box;padding:.6rem;margin:.35rem 0;font:inherit;border:1px solid #cbd5e1;border-radius:6px}
+  button{padding:.7rem 1.4rem;font:inherit;cursor:pointer;background:#0f172a;color:#fff;border:0;border-radius:6px}
+  table{border-collapse:collapse;width:100%;margin:.9rem 0}td,th{border:1px solid #e2e8f0;padding:.4rem .6rem;font-size:14px;text-align:left}
+  .CRITIQUE{color:#b91c1c;font-weight:700}.ÉLEVÉ{color:#c2410c;font-weight:700}.MOYEN{color:#a16207;font-weight:600}.INFO{color:#64748b}
+  .box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:1rem 0}
+  .muted{color:#64748b;font-size:13px}
+  .offre{border-left:4px solid #0f172a;padding-left:1rem;margin:1.5rem 0}
+  @media print{.noprint{display:none}}
+</style>
+</head>
+<body>
+<h1>Audit de code statique</h1>
+<p class="lead">Outil autonome — analyse dans votre navigateur, <b>rien n'est envoyé</b>. Fonctionne hors-ligne, une fois téléchargé.</p>
+
+<div class="box">
+  <b>Un seul fichier, zéro dépendance.</b> Vous pouvez l'enregistrer et l'utiliser sans Internet, sans compte, sans m'installer.
+</div>
+
+<h2>Analyser un extrait</h2>
+<textarea id="code" rows="10" placeholder="Collez ici un extrait de code (JS, Python, PHP, etc.)"></textarea>
+<div class="noprint"><button onclick="run()">Analyser</button> <button onclick="print()" style="background:#475569">Imprimer / PDF</button></div>
+<div id="out"></div><p><a href="index.html">Présentation de l’offre</a></p>
+
+<div class="offre">
+<h2 style="margin-top:0">Audit complet d'un dépôt</h2>
+<p>Sur un dépôt entier je produis un rapport structuré : résumé exécutif, preuves
+<code>fichier:ligne</code>, plan de remédiation ordonné, et <b>limites explicites</b>.</p>
+<p><b>Tarif et devise convenus par écrit au devis.</b> Périmètre et délai fixés <b>avant</b> paiement.</p>
+<p class="muted">Paiement : PayPal <b>arthhur.grossi@gmail.com</b>. La réception doit être vérifiée sur le compte ; aucun encaissement automatique n’est connecté.</p>
+</div>
+
+<h2>Ce que je fais / ne fais pas</h2>
+<p><b>Détecté :</b> secrets en clair, clés AWS/privées, SQL concaténé, <code>eval</code>, <code>innerHTML</code>, exécution shell, URLs non chiffrées.</p>
+<p><b>Hors périmètre :</b> test d'intrusion, scan de dépendances/CVE, revue de logique métier (autorisations, paiements, sessions).</p>
+<p class="muted">Un <i>motif</i> est un signal à examiner, jamais une faille prouvée. Les lignes de test et de documentation sont comptées séparément.</p>
+
+<script>
+const RULES=[
+ {cat:'Secret en clair',sev:'CRITIQUE',re:/(password|passwd|secret|api[_-]?key|access[_-]?key|auth[_-]?token|private[_-]?key)\s*[:=]\s*['"`][^'"`\s]{8,}/i,fix:"Migrer vers une variable d'environnement, révoquer la valeur."},
+ {cat:'Clé AWS en clair',sev:'CRITIQUE',re:/AKIA[0-9A-Z]{16}/,fix:"Révoquer dans IAM, créer un rôle."},
+ {cat:'Clé privée versionnée',sev:'CRITIQUE',re:/-----BEGIN (RSA |EC |OPENSSH |PGP |DSA )?PRIVATE KEY-----/,fix:"Retirer, régénérer, révoquer."},
+ {cat:'Concaténation SQL',sev:'CRITIQUE',re:/(SELECT|INSERT|UPDATE|DELETE)[^;`"']*["'`]\s*(\+|\.\s*concat|f["'`])/i,fix:"Requêtes paramétrées."},
+ {cat:'eval() / new Function()',sev:'ÉLEVÉ',re:/\beval\s*\(|new\s+Function\s*\(/,fix:"Remplacer par un parseur explicite."},
+ {cat:'injection DOM (innerHTML)',sev:'ÉLEVÉ',re:/\.(innerHTML|outerHTML)\s*=/,fix:"textContent ou DOMPurify."},
+ {cat:'exécution shell',sev:'ÉLEVÉ',re:/child_process[^;]*\b(exec|execSync)\s*\(|\bos\.system\s*\(|\bsubprocess\.(call|run|Popen)[^)]*shell\s*=\s*True/,fix:"execFile/spawn sans shell."},
+ {cat:'CORS permissif',sev:'MOYEN',re:/Access-Control-Allow-Origin['"]?\s*[:,]\s*['"]\*/i,fix:"Restreindre les origines."},
+ {cat:'mode debug actif',sev:'MOYEN',re:/\b(debug\s*[:=]\s*true|DEBUG\s*=\s*True|app\.debug\s*=\s*True)/i,fix:"Désactiver en production."},
+ {cat:'URL non chiffrée',sev:'INFO',re:/http:\/\/(?!localhost|127\.0\.0\.1|0\.0\.0\.0)/i,fix:"Passer en https://"}
+];
+const ORD={CRITIQUE:0,'ÉLEVÉ':1,MOYEN:2,INFO:3};
+function ctx(lines,i){
+  const r=lines.slice(Math.max(0,i-12),i+1).join('\n').toLowerCase();
+  if(/\b(describe|it\(|expect\(|assert|def test_|# test|test that|fixture|mock)\b/.test(r))return 'test';
+  if(/\b(docstring|documentation|example|demo|sample|readme|usage:)\b/.test(r))return 'doc';
+  return 'production';
+}
+function analyse(code){
+  const lines=code.split('\n'),hits=[];
+  lines.forEach((ln,i)=>{for(const r of RULES){if(r.re.test(ln))hits.push({...r,ligne:i+1,ctx:ctx(lines,i),extrait:ln.trim().slice(0,110)});}});
+  hits.sort((a,b)=>ORD[a.sev]-ORD[b.sev]);
+  return hits;
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function run(){
+  const code=document.getElementById('code').value;
+  const out=document.getElementById('out');
+  if(!code.trim()){out.innerHTML='<p class="muted">Collez du code pour analyser.</p>';return;}
+  const hits=analyse(code),prod=hits.filter(h=>h.ctx==='production');
+  const forts=prod.filter(h=>h.sev==='CRITIQUE'||h.sev==='ÉLEVÉ');
+  const bruit=hits.filter(h=>h.ctx!=='production');
+  let html='<h2>Résultat</h2>';
+  html+=`<p>${code.split('\n').length} ligne(s) analysée(s) · <b>${prod.length}</b> motif(s) en production · <b>${forts.length}</b> indice(s) fort(s)`+(bruit.length?` · ${bruit.length} en test/doc (exclus)`:'')+'.</p>';
+  if(hits.length){
+    html+='<table><tr><th>Gravité</th><th>Motif</th><th>Ligne</th><th>Contexte</th><th>Correction</th></tr>';
+    for(const h of hits)html+=`<tr><td class="${h.sev}">${h.sev}</td><td>${esc(h.cat)}</td><td>${h.ligne}</td><td>${h.ctx}</td><td>${esc(h.fix)}</td></tr>`;
+    html+='</table>';
+    html+='<p class="muted">Rappel : un motif est un signal à examiner, pas une vulnérabilité confirmée.</p>';
+  }else html+='<p>Aucun motif sur les règles surveillées. Ce n\'est pas une garantie de sécurité.</p>';
+  out.innerHTML=html;
+}
+</script>
+</body>
+</html>
