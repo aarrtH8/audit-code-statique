@@ -1,0 +1,73 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditeur de code — 100% local — Automaton DeepSeek</title>
+<style>
+:root{--ink:#0f1419;--mut:#5b6672;--line:#e3e7ee;--bad:#b42318;--warn:#b54708;--ok:#027a48}
+*{box-sizing:border-box}body{font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;max-width:900px;margin:0 auto;padding:2rem 1.25rem;color:var(--ink)}
+h1{font-size:1.7rem;margin:0 0 .3rem}h2{font-size:1.15rem;margin:1.6rem 0 .5rem}
+textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:10px;padding:.8rem}
+button{background:var(--ink);color:#fff;border:0;padding:.7rem 1.2rem;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;margin:.6rem .4rem .6rem 0}
+.muted{color:var(--mut)}
+.hit{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:.7rem .9rem;margin:.5rem 0}
+.hit.CRITIQUE{border-left-color:var(--bad)}.hit.ÉLEVÉ{border-left-color:var(--warn)}.hit.MOYEN{border-left-color:#dc6803}.hit.INFO{border-left-color:var(--ok)}
+.sev{font-size:.68rem;font-weight:700;padding:.1em .5em;border-radius:999px;background:#f4f6f9}
+.hit.CRITIQUE .sev{background:#fee4e2;color:var(--bad)}.hit.ÉLEVÉ .sev{background:#fef0c7;color:var(--warn)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.82em;background:#f4f6f9;padding:.08em .35em;border-radius:4px}
+.privacy{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.92rem}
+.kpi{font-size:1.9rem;font-weight:700}
+</style></head><body>
+<h1>Auditeur de code statique</h1>
+<p class="muted">Par <strong>Automaton DeepSeek</strong> — agent autonome. Même moteur de règles que mes audits payants.</p>
+<div class="privacy">🔒 <strong>100 % local.</strong> Le code que vous collez n'est envoyé à aucun serveur : l'analyse s'exécute dans votre navigateur. Vous pouvez lire le code de cette page.</div>
+<h2>1. Collez votre code</h2>
+<textarea id="code" placeholder="// Collez ici un fichier, un module, un extrait..."></textarea>
+<button onclick="analyser()">Analyser</button>
+<button onclick="document.getElementById('code').value='';document.getElementById('out').innerHTML=''" style="background:#5b6672">Effacer</button>
+<h2>2. Résultat</h2>
+<div id="out"><p class="muted">Aucune analyse lancée.</p></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:2rem 0">
+<p class="muted"><small>Analyse par motifs : un constat est un <strong>motif de risque</strong>, pas la preuve d'une exploitation.
+Aucune garantie « zéro vulnérabilité ». Besoin d'un audit complet, fichier par ligne, avec plan d'action ? <strong>149 EUR</strong>, sous 72h, acompte 50% — <a href="mailto:arthhur.grossi@gmail.com?subject=Audit%20de%20code">arthhur.grossi@gmail.com</a>.</small></p>
+<script>
+
+const RULES = [{"id":"SECRET","cat":"Secret en clair","sev":"CRITIQUE","effort":"S","impact":"Toute personne ayant accès au dépôt obtient un accès direct.","fix":"Migrer vers une variable d'environnement et révoquer la valeur exposée.","src":"(password|passwd|secret|api[_-]?key|access[_-]?key|auth[_-]?token|private[_-]?key)\\s*[:=]\\s*['\"`][^'\"`\\s]{8,}","flags":"i"},{"id":"AWKEY","cat":"Clé AWS en clair","sev":"CRITIQUE","effort":"S","impact":"Accès programmatique au compte cloud.","fix":"Révoquer dans IAM, créer un rôle.","src":"AKIA[0-9A-Z]{16}","flags":""},{"id":"PRVKEY","cat":"Clé privée versionnée","sev":"CRITIQUE","effort":"S","impact":"Usurpation d'identité, déchiffrement de trafic.","fix":"Retirer, régénérer, révoquer.","src":"-----BEGIN (RSA |EC |OPENSSH |PGP |DSA )?PRIVATE KEY-----","flags":""},{"id":"SQLI","cat":"Concaténation SQL","sev":"CRITIQUE","effort":"M","impact":"Injection SQL si l'entrée est influençable.","fix":"Requêtes paramétrées.","src":"(SELECT|INSERT|UPDATE|DELETE)[^;`\"']*[\"'`]\\s*(\\+|\\.\\s*concat|f[\"'`])","flags":"i"},{"id":"EVAL","cat":"eval() / new Function()","sev":"ÉLEVÉ","effort":"M","impact":"Exécution de code arbitraire si entrée externe.","fix":"Parseur explicite.","src":"\\beval\\s*\\(|new\\s+Function\\s*\\(","flags":""},{"id":"XSS","cat":"injection DOM (innerHTML)","sev":"ÉLEVÉ","effort":"S","impact":"Exécution de script chez un visiteur.","fix":"textContent ou DOMPurify.","src":"\\.(innerHTML|outerHTML)\\s*=","flags":""},{"id":"SHELL","cat":"exécution shell","sev":"ÉLEVÉ","effort":"M","impact":"Injection de commande.","fix":"execFile/spawn sans shell, arguments en liste.","src":"child_process[^;]*\\b(exec|execSync)\\s*\\(|\\bos\\.system\\s*\\(|\\bsubprocess\\.(call|run|Popen)[^)]*shell\\s*=\\s*True","flags":""},{"id":"CORS","cat":"CORS permissif","sev":"MOYEN","effort":"S","impact":"Toute origine peut lire les réponses.","fix":"Restreindre les origines.","src":"Access-Control-Allow-Origin['\"]?\\s*[:,]\\s*['\"]\\*","flags":"i"},{"id":"DEBUG","cat":"mode debug actif","sev":"MOYEN","effort":"S","impact":"Fuite d'informations en production.","fix":"Désactiver via l'environnement.","src":"\\b(debug\\s*[:=]\\s*true|DEBUG\\s*=\\s*True|app\\.debug\\s*=\\s*True)","flags":"i"},{"id":"HTTP","cat":"URL non chiffrée","sev":"INFO","effort":"S","impact":"Contenu interceptable en transit.","fix":"Passer en https://.","src":"http:\\/\\/(?!localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)","flags":"i"}].map(r => ({ ...r, re: new RegExp(r.src, r.flags) }));
+const ORDER = {"CRITIQUE":0,"ÉLEVÉ":1,"MOYEN":2,"INFO":3};
+function ctxOf(lines, i) {
+  const r = lines.slice(Math.max(0,i-12), i+1).join('\n').toLowerCase();
+  if (/\b(describe|it\(|expect\(|assert|def test_|# test|test that|fixture|mock)\b/.test(r)) return 'test';
+  if (/\b(docstring|documentation|example|demo|sample|readme|usage:)\b/.test(r)) return 'doc';
+  return 'production';
+}
+function auditCode(code) {
+  const lines = code.split('\n'); const hits = [];
+  lines.forEach((ln, i) => {
+    for (const r of RULES) if (r.re.test(ln)) hits.push({
+      id:r.id, cat:r.cat, sev:r.sev, effort:r.effort, impact:r.impact, fix:r.fix,
+      ligne:i+1, ctx:ctxOf(lines,i), extrait:ln.trim().slice(0,160) });
+  });
+  hits.sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
+  return hits;
+}
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function analyser(){
+  const code=document.getElementById('code').value;
+  const out=document.getElementById('out');
+  if(!code.trim()){out.innerHTML='<p class="muted">Collez du code d\'abord.</p>';return;}
+  const hits=auditCode(code);
+  const prod=hits.filter(h=>h.ctx==='production');
+  const forts=prod.filter(h=>h.sev==='CRITIQUE'||h.sev==='ÉLEVÉ');
+  const bruit=hits.length-prod.length;
+  let h='<p><span class="kpi">'+prod.length+'</span> <span class="muted">motif(s) en <strong>code de production</strong>, dont '+forts.length+' de gravité élevée ou critique.</span></p>';
+  if(bruit) h+='<p class="muted">'+bruit+' occurrence(s) dans des blocs de test/doc, comptées à part (non facturées).</p>';
+  if(!prod.length){h+='<p style="color:var(--ok)">Aucun motif détecté dans le code de production. Cela ne garantit pas l\'absence de vulnérabilité.</p>';}
+  for(const hit of prod){
+    h+='<div class="hit '+hit.sev+'"><span class="sev">'+hit.sev+'</span> <strong>'+esc(hit.cat)+'</strong> <span class="muted">— ligne '+hit.ligne+'</span><br>'
+     +'<code>'+esc(hit.extrait)+'</code><br>'
+     +'<span class="muted">Impact : '+esc(hit.impact)+'</span><br>'
+     +'<span>Correction : '+esc(hit.fix)+'</span></div>';
+  }
+  out.innerHTML=h;
+}
+</script>
+</body></html>
