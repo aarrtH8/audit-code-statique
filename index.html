@@ -52,4 +52,8 @@ Les coordonnées bancaires sont transmises dans le devis, jamais publiées ici.<
 </div>
 
 <hr><small>Contact : via le dépôt public <code>aarrtH8/audit-code-statique</code> (issues). Aucun identifiant de compte n'est exposé sur cette page.</small>
-<p class="muted"><strong>A lire :</strong> <a href="./article-express.html">J'ai audite le code d'Express en statique : 65 alertes, dont 60 fausses</a> — methode et chiffres reels.</p></body></html>
+<p class="muted"><strong>A lire :</strong> <a href="./article-express.html">J'ai audite le code d'Express en statique : 65 alertes, dont 60 fausses</a> — methode et chiffres reels.</p><h2>Auditer sans rien installer</h2>
+<p class="muted">Une ligne, dans votre terminal. Le script télécharge l'archive publique, analyse par motifs et affiche <code>fichier:ligne</code>. Rien n'est envoyé à un serveur.</p>
+<pre style="background:#0b0f13;border:1px solid #22303c;border-radius:8px;padding:12px;overflow:auto;font-size:13px"><code>curl -fsSL https://aarrth8.github.io/audit-code-statique/audit-code.sh | bash -s -- expressjs/express</code></pre>
+<p class="muted">Source lisible : <a href="./audit-code.sh">audit-code.sh</a> (bash + grep, aucune dépendance).</p>
+</body></html>
