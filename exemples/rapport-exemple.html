@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapport d'audit de code statique — Exemple geomacro</title><style>
+:root{--bg:#fff;--panel:#f6f8fa;--b:#d0d7de;--f:#1f2328;--d:#59636e;--crit:#cf222e;--eleve:#bc4c00;--moyen:#9a6700;--bas:#0969da}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--f);font-family:system-ui,-apple-system,sans-serif;line-height:1.65}
+.w{max-width:900px;margin:0 auto;padding:40px 24px 90px}
+h1{font-size:1.6rem;margin:0 0 2px}h2{font-size:1.15rem;margin-top:34px;border-bottom:1px solid var(--b);padding-bottom:6px}
+h3{font-size:1rem;margin:20px 0 6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(--panel);padding:1px 5px;border-radius:4px}
+.entete{border-bottom:2px solid #1f2328;padding-bottom:14px;margin-bottom:24px}
+.meta{color:var(--d);font-size:.9rem}
+.grille{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+.st{background:var(--panel);border:1px solid var(--b);border-radius:8px;padding:12px 18px;min-width:120px}
+.st .n{font-size:1.45rem;font-weight:700}.st .l{font-size:.74rem;color:var(--d);text-transform:uppercase;letter-spacing:.03em}
+.jauge{background:var(--panel);border:1px solid var(--b);border-radius:8px;padding:16px 20px;margin:14px 0}
+.barre{height:10px;background:#e4e8ec;border-radius:999px;overflow:hidden;margin-top:8px}
+.remplir{height:100%;background:linear-gradient(90deg,#cf222e,#9a6700,#1a7f37)}
+.c{background:var(--panel);border:1px solid var(--b);border-left-width:4px;border-radius:6px;padding:9px 13px;margin:8px 0}
+.c.critique{border-left-color:var(--crit)}.c.eleve{border-left-color:var(--eleve)}.c.moyen{border-left-color:var(--moyen)}.c.bas{border-left-color:var(--bas)}
+.b{font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:999px;color:#fff;text-transform:uppercase;margin-right:6px}
+.b.critique{background:var(--crit)}.b.eleve{background:var(--eleve)}.b.moyen{background:var(--moyen)}.b.bas{background:var(--bas)}
+.ex{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;color:var(--d);background:#fff;border:1px solid var(--b);border-radius:4px;padding:6px 9px;margin:6px 0;overflow-x:auto;white-space:pre-wrap}
+.fix{font-size:.86rem;color:#1a7f37}.cnt{font-weight:400;color:var(--d);font-size:.85rem}.plus{color:var(--d);font-size:.85rem;font-style:italic}
+.scel{background:var(--panel);border:1px solid var(--b);border-radius:8px;padding:16px 20px;margin:18px 0}
+.hash{font-family:ui-monospace,monospace;font-size:.78rem;word-break:break-all;background:#fff;border:1px solid var(--b);border-radius:4px;padding:8px 10px;margin:6px 0}
+.note{border-left:3px solid #9a6700;background:#fff8e5;padding:12px 16px;border-radius:0 6px 6px 0;margin:16px 0;font-size:.9rem}
+footer{margin-top:50px;border-top:1px solid var(--b);padding-top:18px;color:var(--d);font-size:.86rem}
+</style></head><body><div class="w">
+<div class="entete">
+<h1>Rapport d'audit de code statique</h1>
+<p class="meta">Destinataire : <strong>Exemple geomacro</strong> · Source analysée : <code>https://github.com/blocknine0/geomacro</code> · Date : 2026-10-10 16:14:05<br>
+Réalisé par Arthur Grossi EI — audit de code statique · arthhur.grossi@gmail.com</p>
+</div>
+
+<div class="jauge">
+  <div><strong>Indice de propreté : 0/100</strong> — Critique</div>
+  <div class="barre"><div class="remplir" style="width:0%"></div></div>
+  <p class="meta" style="margin:8px 0 0">353 571 lignes analysées · 2172 fichiers · 62 constats relevés</p>
+</div>
+
+<div class="grille">
+  <div class="st"><div class="n" style="color:var(--crit)">4</div><div class="l">Critique</div></div>
+  <div class="st"><div class="n" style="color:var(--eleve)">38</div><div class="l">Élevé</div></div>
+  <div class="st"><div class="n" style="color:var(--moyen)">20</div><div class="l">Moyen</div></div>
+  <div class="st"><div class="n" style="color:var(--bas)">0</div><div class="l">Faible</div></div>
+</div>
+
+<div class="note">
+<strong>Ce que ce document prouve :</strong> la présence, à la date indiquée, des constructions listées ci-dessous aux fichiers et lignes cités.<br>
+<strong>Ce qu'il ne prouve pas :</strong> l'absence d'autres vulnérabilités. L'analyse est statique — le code n'est <em>jamais exécuté</em>. Les fichiers de test, exemples et dépendances sont exclus. Les faux positifs possibles sont signalés comme « constats », non comme « vulnérabilités confirmées ».
+</div>
+
+<h2>Constats détaillés</h2>
+<p class="meta">Classés par nombre de constats par fichier. Chaque constat indique la correction attendue.</p>
+
+<h3>server/routes/internal/commercial-ops.get.ts <span class="cnt">14 constats</span></h3>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 121</code>
+<div class="ex">$('funnelCards').innerHTML=funnelCards.map(([k,v])=&gt;'&lt;div class="card"&gt;&lt;div class="k"&gt;'+esc(k)+'&lt;/div&gt;&lt;div class="v"&gt;'+esc(v)+'&lt;/div&gt;&lt;/div&gt;').join('');</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 128</code>
+<div class="ex">$('cards').innerHTML=cards.map(([k,v])=&gt;'&lt;div class="card"&gt;&lt;div class="k"&gt;'+esc(k)+'&lt;/div&gt;&lt;div class="v"&gt;'+esc(v)+'&lt;/div&gt;&lt;/div&gt;').join('');</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 137</code>
+<div class="ex">$('growthTable').innerHTML=growthTable(j.data); $('growthStatusText').innerHTML='&lt;span class="ok"&gt;Loaded '+esc(j.data.length)+' draft(s). No external publication performed.&lt;/span&gt;'</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 138</code>
+<div class="ex">}catch(e){$('growthStatusText').innerHTML='&lt;span class="danger"&gt;'+esc(e.message)+'&lt;/span&gt;'}</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 147</code>
+<div class="ex">$('growthStatusText').innerHTML='&lt;span class="ok"&gt;Draft '+esc(action)+'d. No external publication performed.&lt;/span&gt;';</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 149</code>
+<div class="ex">}catch(e){$('growthStatusText').innerHTML='&lt;span class="danger"&gt;'+esc(e.message)+'&lt;/span&gt;'}</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 155</code>
+<div class="ex">$('funnelRollup').innerHTML=table(rollup);</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 156</code>
+<div class="ex">$('funnelTable').innerHTML=table(attempts);</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 161</code>
+<div class="ex">if(opsToken.length&lt;32){$('status').innerHTML='&lt;span class="danger"&gt;Enter the owner token.&lt;/span&gt;';return}</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 166</code>
+<div class="ex">summarize(j.data); renderDeveloperFunnel(j.data); $('usageTable').innerHTML=table(j.data.recent_usage); $('paymentTable').innerHTML=table(j.data.recent_payments); $('usageRollup').</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 167</code>
+<div class="ex">$('content').classList.remove('hidden'); $('status').innerHTML='&lt;span class="ok"&gt;Loaded '+esc(j.data.generated_at)+'&lt;/span&gt;';</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Écriture HTML directe</strong> <code>ligne 169</code>
+<div class="ex">}catch(e){$('status').innerHTML='&lt;span class="danger"&gt;'+esc(e.message)+'&lt;/span&gt;'}</div>
+<div class="fix">Correction : textContent, ou assainissement.</div></div>
+<p class="plus">… et 2 autre(s) constat(s) dans ce fichier.</p>
+
+<h3>scripts/db/check-migration-safety.mjs <span class="cnt">3 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 245</code>
+<div class="ex">String.raw`\bdelete\s+from\s+(${qualifiedSqlIdentifier})(?=\s|;|$)`,</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 349</code>
+<div class="ex">/\bdelete\s+from\b/i.test(</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 375</code>
+<div class="ex">/\bdelete\s+from\b/gi,</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>src/lib/testnet-public-access-contract.ts <span class="cnt">3 constats</span></h3>
+<div class="c critique"><span class="b critique">Critique</span>
+<strong>Secret probable en dur</strong> <code>ligne 7</code>
+<div class="ex">public_api_key: "gmk_public_arc_testnet_v1",</div>
+<div class="fix">Correction : Révoquer la clé, la placer en variable d'environnement, purger l'historique Git.</div></div>
+<div class="c critique"><span class="b critique">Critique</span>
+<strong>Secret probable en dur</strong> <code>ligne 12</code>
+<div class="ex">public_api_key: "gmk_public_base_sepolia_v1",</div>
+<div class="fix">Correction : Révoquer la clé, la placer en variable d'environnement, purger l'historique Git.</div></div>
+<div class="c critique"><span class="b critique">Critique</span>
+<strong>Secret probable en dur</strong> <code>ligne 17</code>
+<div class="ex">public_api_key: "gmk_public_polygon_amoy_v1",</div>
+<div class="fix">Correction : Révoquer la clé, la placer en variable d'environnement, purger l'historique Git.</div></div>
+
+
+<h3>scripts/compute-gri-v11.js <span class="cnt">2 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 888</code>
+<div class="ex">.insert(rows.slice(i, i + chunkSize));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 902</code>
+<div class="ex">const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/compute-gri-v12.js <span class="cnt">2 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 883</code>
+<div class="ex">.insert(rows.slice(i, i + chunkSize));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 897</code>
+<div class="ex">const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/ops/b2-compact-structured-event-bundle.mjs <span class="cnt">2 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 297</code>
+<div class="ex">const hotBytesBefore = updates.reduce((sum, item) =&gt; sum + item.current_bytes, 0);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 298</code>
+<div class="ex">const hotBytesAfter = updates.reduce((sum, item) =&gt; sum + item.pointer_bytes, 0);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/validate-gri-v12.js <span class="cnt">2 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 162</code>
+<div class="ex">let q = supabase.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 341</code>
+<div class="ex">const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/validate-gri.js <span class="cnt">2 constats</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 162</code>
+<div class="ex">let q = supabase.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 341</code>
+<div class="ex">const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>.github/workflows/telegram-b2-d1-consumer.yml <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 224</code>
+<div class="ex">npx -y "wrangler@${WRANGLER_VERSION}" d1 execute DB --remote --json --config "$D1_CONFIG" --command "UPDATE telegram_signal_lead_queue SET attempt_count=attempt_count+1,last_attemp</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-agent-hot-topic-readiness.ts <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 44</code>
+<div class="ex">let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-gdelt-dependency-live.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 88</code>
+<div class="ex">let query = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-global-production-coverage.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 41</code>
+<div class="ex">let q = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-global-realtime-intelligence-100.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 83</code>
+<div class="ex">let query = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-hot-topic-family-readiness.ts <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 43</code>
+<div class="ex">let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-sovereign-fiscal-production-diagnostics.ts <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 90</code>
+<div class="ex">let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/audit-ucdp-quality-reasons.ts <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 34</code>
+<div class="ex">let query: any = db.from(table).select(select).range(from, from + PAGE_SIZE - 1);</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/commercial/private-pilot-demand-report.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 37</code>
+<div class="ex">const { data, error } = await db.from(table).select(columns).order(orderColumn).range(start, Math.min(start + 499, limit - 1));</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/drain-live-structure.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 152</code>
+<div class="ex">events_updated: outputs.reduce((n, row) =&gt; n + Number(row?.events_updated ?? 0), 0),</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/early-warning/ecb-rss-core.mjs <span class="cnt">1 constat</span></h3>
+<div class="c eleve"><span class="b eleve">Élevé</span>
+<strong>Requête SQL concaténée</strong> <code>ligne 96</code>
+<div class="ex">.update(`${guid}\n${publishedAt}\n${title}`, "utf8")</div>
+<div class="fix">Correction : Requêtes paramétrées.</div></div>
+
+
+<h3>scripts/ingest-gdelt-v2-events-live.mjs <span class="cnt">1 constat</span></h3>
+<div class="c moyen"><span class="b moyen">Moyen</span>
+<strong>Hachage faible</strong> <code>ligne 278</code>
+<div class="ex">const exportMd5 = createHash("md5").update(zipBuffer).digest("hex")</div>
+<div class="fix">Correction : bcrypt / Argon2id.</div></div>
+
+
+<h2>Intégrité du livrable</h2>
+<div class="scel">
+<p class="meta">Empreinte SHA-256 de l'arborescence source analysée (2172 fichiers, triés, contenu inclus) :</p>
+<div class="hash">d3baf7ac48d67aa2fa8e5fbb68aae314fb95096a3a8b4fe7394f59d747a42058</div>
+<p class="meta">Pour vérifier que ce rapport correspond bien à la version analysée : clonez le dépôt dans cet état, puis recalculez l'empreinte des fichiers listés. Toute divergence signifie que le code a changé depuis l'audit — auquel cas ce rapport ne s'applique plus.</p>
+</div>
+
+<footer>
+Rapport d'audit statique — Arthur Grossi EI · arthhur.grossi@gmail.com<br>
+Document produit automatiquement, relu avant livraison. Prix convenu au devis, montant ferme. Aucune donnée du client n'est exécutée ni transmise à un tiers.
+</footer>
+</div></body></html>
