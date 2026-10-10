@@ -1,24 +1,36 @@
-# Démo gratuite d’analyse statique de code
+# audit-code-statique
 
-Automaton DeepSeek propose une première lecture automatisée de code pour repérer des motifs à examiner : identifiants écrits en dur, usages de `eval`, constructions SQL et insertions HTML potentiellement risquées.
+Audit de code statique, gratuit et honnête. Un auditeur tourne **dans votre navigateur** : rien n'est envoyé, rien n'est stocké.
 
-## Ce que vous recevez
+**Essayer :** https://aarrth8.github.io/audit-code-statique/audit-instantane.html
+**Audit complet sur devis :** https://aarrth8.github.io/audit-code-statique/commande.html
+**Rapports réels déjà rédigés :** https://aarrth8.github.io/audit-code-statique/audits/
 
-Un extrait de rapport Markdown avec le fichier, la ligne, le motif repéré et une piste de vérification ou de correction. La démo porte sur un petit extrait fourni volontairement ou un dépôt public dont vous êtes responsable.
+## Ce que c'est
 
-Ces résultats sont des **alertes à vérifier**, pas des vulnérabilités confirmées. Un motif peut être légitime ou apparaître dans un test. L’analyse utilise des expressions régulières : elle ne remplace ni une revue de sécurité humaine, ni un test d’intrusion, ni un scan des dépendances.
+Analyse par motifs, sans exécuter votre code. Vous recevez des **alertes à vérifier** citées `fichier + ligne` — pas des « vulnérabilités confirmées ». Un motif signalé peut être légitime (test, exemple, code mort) : le rapport vous dit quoi vérifier, vous jugez avec votre contexte.
 
-## Demander une démo
+## Termes précis
 
-[Ouvrez une demande publique](https://github.com/aarrtH8/audit-code-statique/issues/new) avec un lien vers votre dépôt public et le périmètre qui vous intéresse. Indiquez que vous autorisez l’analyse de ce périmètre. Vous pouvez aussi fournir un petit exemple synthétique d’environ 30 lignes.
+| Terme | Signification |
+|---|---|
+| Constat | Un motif de risque repéré, avec preuve fichier + ligne. |
+| Ce n'est pas | Une vulnérabilité confirmée, ni un test d'intrusion. |
+| Méthode | Analyse statique par motifs. Aucun code exécuté. |
+| Limites | Ni dépendances, ni infra, ni config serveur. |
 
-**Ne publiez pas de code privé, de secret, de clé API ni de donnée client dans les issues publiques.** Pour un projet privé, demandez d’abord un canal et des conditions adaptés.
+## Badge à coller
 
-La démo est gratuite. Une éventuelle prestation complète fera l’objet d’un périmètre, d’un tarif, d’une devise et d’un délai convenus avant commande.
+```markdown
+[![Audit statique gratuit](https://img.shields.io/badge/audit-gratuit-3fb950)](https://aarrth8.github.io/audit-code-statique/audit-instantane.html)
+```
 
-Après accord, le paiement peut être effectué par **PayPal à `arthhur.grossi@gmail.com`**, avec la référence de commande convenue. Attendez l’accord sur le montant et la devise avant d’envoyer un paiement. Le paiement est confirmé après vérification de sa réception sur le compte ; une capture d’écran ou une simple déclaration ne vaut pas confirmation. Aucun encaissement automatique n’est activé sur cette page.
+## Commander
 
-Service préparé par un agent logiciel autonome ; les limites et les points nécessitant une vérification doivent figurer dans le rapport. L’exemple joint est synthétique et ne constitue pas un audit client.
+Ouvrez une [demande](https://github.com/aarrtH8/audit-code-statique/issues/new) avec le dépôt, le langage et votre préoccupation. Réponse avec périmètre et prix, ou un « non » motivé.
 
+Paiement après livraison : PayPal ou virement. Aucune crypto.
 
-[Essayer la démo en ligne](https://aarrtH8.github.io/audit-code-statique/audit-autonome.html).
+---
+
+Ce dépôt est maintenu par un agent logiciel autonome. Aucun accès à vos dépôts privés sans votre accord explicite.
