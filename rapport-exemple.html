@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<title>Rapport d'audit — Démonstration (dépôt public d'exemple)</title>
+<style>
+ body{font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;max-width:860px;margin:40px auto;padding:0 20px}
+ h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:28px 0 8px;border-bottom:1px solid #e5e5e5;padding-bottom:4px}
+ .meta{color:#666;font-size:13px;margin-bottom:24px}
+ table{width:100%;border-collapse:collapse;font-size:14px}
+ th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #eee;vertical-align:top}
+ th{background:#fafafa;font-weight:600}
+ .ref{font-family:ui-monospace,Consolas,monospace;color:#0b5;white-space:nowrap}
+ .box{background:#f7f9fb;border:1px solid #e2e8ee;border-radius:6px;padding:12px 14px;font-size:14px;margin:12px 0}
+ .warn{background:#fff8f0;border-color:#f0d8b8}
+ .foot{margin-top:36px;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px}
+ code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:#f2f2f2;padding:1px 4px;border-radius:3px}
+</style></head><body>
+<h1>Rapport d'audit de code statique</h1>
+<div class="meta">Client : <strong>Démonstration (dépôt public d'exemple)</strong> &nbsp;·&nbsp; Prestation : Audit statique en lecture seule &nbsp;·&nbsp; Prix : sur devis, convenu avant commande</div>
+
+<div class="box warn">
+<strong>Périmètre et limites (à lire).</strong> Analyse <em>statique</em> : le code n'est jamais exécuté,
+aucun accès à vos serveurs, aucune modification. Un constat est un <strong>motif à vérifier</strong>
+(présence d'un schéma suspect à un endroit précis), <strong>pas une vulnérabilité confirmée</strong>.
+La confirmation exige un test dynamique, hors périmètre de cette prestation.
+</div>
+
+<h2>Synthèse</h2>
+<div class="box">
+Constats relevés : <strong>86</strong>.
+Mentions « haute » dans le rapport : 2. « moyenne » : 3. « basse » : 2.
+</div>
+
+<h2>Constats (fichier:ligne)</h2>
+<table><thead><tr><th style="width:34%">Référence</th><th>Motif à vérifier</th></tr></thead><tbody>
+<tr><td class="ref">acquisition-github.mjs:15</td><td>[production]</td></tr>
+<tr><td class="ref">audit-client.mjs:29</td><td>[production]</td></tr>
+<tr><td class="ref">audit-depot.mjs:26</td><td>[production]</td></tr>
+<tr><td class="ref">audit-diff.mjs:49</td><td>[production]</td></tr>
+<tr><td class="ref">audit-livrer.mjs:27</td><td>[production]</td></tr>
+<tr><td class="ref">audit-lot.mjs:24</td><td>[production]</td></tr>
+<tr><td class="ref">audit-moteur-lib.mjs:31</td><td>[production]</td></tr>
+<tr><td class="ref">audit-reproductible.mjs:26</td><td>[production]</td></tr>
+<tr><td class="ref">audit-sarif.mjs:77</td><td>[production]</td></tr>
+<tr><td class="ref">audit-service.mjs:46</td><td>[production]</td></tr>
+<tr><td class="ref">audit-service.mjs:56</td><td>[production]</td></tr>
+<tr><td class="ref">boucle-prospection.mjs:28</td><td>[production]</td></tr>
+<tr><td class="ref">boucle-prospection.mjs:118</td><td>[production]</td></tr>
+<tr><td class="ref">boucle-prospection.mjs:120</td><td>[production]</td></tr>
+<tr><td class="ref">business.mjs:21</td><td>[production]</td></tr>
+<tr><td class="ref">campagne.mjs:38</td><td>[production]</td></tr>
+<tr><td class="ref">commande.mjs:38</td><td>[production]</td></tr>
+<tr><td class="ref">commande.mjs:41</td><td>[production]</td></tr>
+<tr><td class="ref">commande.mjs:44</td><td>[production]</td></tr>
+<tr><td class="ref">consolider.mjs:18</td><td>[production]</td></tr>
+<tr><td class="ref">contact-demo.mjs:26</td><td>[production]</td></tr>
+<tr><td class="ref">contact-demo.mjs:29</td><td>[production]</td></tr>
+<tr><td class="ref">contact-prouve.mjs:25</td><td>[production]</td></tr>
+<tr><td class="ref">contact-prouve.mjs:27</td><td>[production]</td></tr>
+<tr><td class="ref">cycle-acquisition.mjs:21</td><td>[production]</td></tr>
+<tr><td class="ref">cycle.mjs:44</td><td>[production]</td></tr>
+<tr><td class="ref">demandes.mjs:12</td><td>[production]</td></tr>
+<tr><td class="ref">demo-gratuite.mjs:15</td><td>[production]</td></tr>
+<tr><td class="ref">demo-public.mjs:29</td><td>[production]</td></tr>
+<tr><td class="ref">demo-public.mjs:103</td><td>[production]</td></tr>
+<tr><td class="ref">devis.mjs:27</td><td>[production]</td></tr>
+<tr><td class="ref">envoi-encadre.mjs:137</td><td>[production]</td></tr>
+<tr><td class="ref">envoyer-github.mjs:29</td><td>[production]</td></tr>
+<tr><td class="ref">estimer.mjs:23</td><td>[production]</td></tr>
+<tr><td class="ref">etat-reel.mjs:40</td><td>[production]</td></tr>
+<tr><td class="ref">etat-reel.mjs:46</td><td>[production]</td></tr>
+<tr><td class="ref">gh-auth.mjs:12</td><td>[production]</td></tr>
+<tr><td class="ref">guichet-v2.mjs:66</td><td>[production]</td></tr>
+<tr><td class="ref">guichet.mjs:93</td><td>[production]</td></tr>
+<tr><td class="ref">livrable-signe.mjs:48</td><td>[production]</td></tr>
+<tr><td class="ref">audit-client.mjs:51</td><td>[production]</td></tr>
+<tr><td class="ref">audit-lib.mjs:23</td><td>[production]</td></tr>
+<tr><td class="ref">audit-repo-honnete.mjs:28</td><td>[production]</td></tr>
+<tr><td class="ref">botte.mjs:32</td><td>[production]</td></tr>
+<tr><td class="ref">botte.mjs:33</td><td>[production]</td></tr>
+<tr><td class="ref">demo-gratuite.mjs:13</td><td>[production]</td></tr>
+<tr><td class="ref">demo-gratuite.mjs:14</td><td>[production]</td></tr>
+<tr><td class="ref">message-adresse.mjs:11</td><td>[production]</td></tr>
+<tr><td class="ref">message-adresse.mjs:84</td><td>[production]</td></tr>
+<tr><td class="ref">demo-public.mjs:70</td><td>[production]</td></tr>
+<tr><td class="ref">parcours-client.mjs:40</td><td>[production]</td></tr>
+<tr><td class="ref">test-auditeur.mjs:10</td><td>[production]</td></tr>
+<tr><td class="ref">demo-public.mjs:71</td><td>[production]</td></tr>
+<tr><td class="ref">parcours-client.mjs:43</td><td>[production]</td></tr>
+<tr><td class="ref">test-auditeur.mjs:13</td><td>[production]</td></tr>
+<tr><td class="ref">message-adresse.mjs:10</td><td>[production]</td></tr>
+<tr><td class="ref">audit-profond.mjs:27</td><td>[production]</td></tr>
+<tr><td class="ref">audit-reel.mjs:31</td><td>[production]</td></tr>
+<tr><td class="ref">audit-repo.mjs:25</td><td>[production]</td></tr>
+<tr><td class="ref">build-auditeur-navigateur.mjs:74</td><td>[production]</td></tr>
+<tr><td class="ref">build-auditeur-navigateur.mjs:86</td><td>[production]</td></tr>
+<tr><td class="ref">build-auditeur-navigateur.mjs:100</td><td>[production]</td></tr>
+<tr><td class="ref">build-commande.mjs:60</td><td>[production]</td></tr>
+<tr><td class="ref">build-commande.mjs:71</td><td>[production]</td></tr>
+<tr><td class="ref">build-commande.mjs:122</td><td>[production]</td></tr>
+<tr><td class="ref">demo-gratuite.mjs:18</td><td>[production]</td></tr>
+<tr><td class="ref">rapport-demo.mjs:25</td><td>[production]</td></tr>
+<tr><td class="ref">serveur-devis.mjs:82</td><td>[production]</td></tr>
+<tr><td class="ref">test-auditeur.mjs:12</td><td>[production]</td></tr>
+<tr><td class="ref">demo-public.mjs:57</td><td>[production]</td></tr>
+<tr><td class="ref">guichet-devis.mjs:33</td><td>[production]</td></tr>
+<tr><td class="ref">guichet-v2.mjs:41</td><td>[production]</td></tr>
+<tr><td class="ref">diagnostic-canal.mjs:35</td><td>[production]</td></tr>
+<tr><td class="ref">gmail-oauth.mjs:74</td><td>[production]</td></tr>
+<tr><td class="ref">gmail-oauth.mjs:82</td><td>[production]</td></tr>
+<tr><td class="ref">guichet-public.mjs:60</td><td>[production]</td></tr>
+<tr><td class="ref">mail\auth.mjs:35</td><td>[production]</td></tr>
+<tr><td class="ref">parcours-client.mjs:21</td><td>[production]</td></tr>
+<tr><td class="ref">serveur-devis.mjs:94</td><td>[production]</td></tr>
+<tr><td class="ref">test-auditeur.mjs:11</td><td>[production]</td></tr>
+<tr><td class="ref">test-chaine.mjs:29</td><td>[production]</td></tr>
+<tr><td class="ref">test-chaine.mjs:33</td><td>[production]</td></tr>
+<tr><td class="ref">veille.mjs:37</td><td>[production]</td></tr>
+<tr><td class="ref">gmail-oauth.mjs:95</td><td>[production]</td></tr>
+<tr><td class="ref">mail\send.mjs:30</td><td>[production]</td></tr>
+<tr><td class="ref">repondre-demandes.mjs:88</td><td>[production]</td></tr>
+</tbody></table>
+
+<h2>Intégrité du rapport</h2>
+<p>Empreinte SHA-256 du rapport source (<code>livrable/exemple-livrable-reel.md</code>) :</p>
+<p><code>d940e68ce1e26e34b30419756cf24951ebd2afab005304948b12c2b9fdbb3b68</code></p>
+<p>Recalculable par vous : <code>sha256sum livrable/exemple-livrable-reel.md</code>. Si l'empreinte diffère, le rapport a été modifié après émission.</p>
+
+<div class="foot">
+Document généré par un agent autonome, honnêtement : aucune donnée n'a été inventée, aucun résultat
+n'est extrapolé au-delà de ce qui est listé ci-dessus. Aucun script dans ce fichier ; il s'ouvre hors-ligne.
+</div>
+</body></html>
