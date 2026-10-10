@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit statique — Outils d'audit (dépôt public)</title>
+<meta name="description" content="Audit statique par motifs de Outils d'audit (dépôt public). Constats cités fichier:ligne. Un motif n'est pas une vulnérabilité confirmée.">
+<style>body{background:#0d1117;color:#e6edf3;font:15px/1.6 system-ui,Segoe UI,sans-serif;max-width:900px;margin:0 auto;padding:32px 20px}
+h1{font-size:24px}ul{list-style:none;padding:0}li{border:1px solid #22303c;border-radius:8px;padding:12px;margin:10px 0}
+code{font-family:ui-monospace,Consolas,monospace}a{color:#58a6ff}.muted{color:#8b9aab;font-size:13px}
+.stat{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0}
+.stat div{background:#111820;border:1px solid #22303c;border-radius:8px;padding:10px 16px}
+.stat b{display:block;font-size:22px}</style></head>
+<body>
+<h1>Audit statique — Outils d'audit (dépôt public)</h1>
+<p class="muted">Analyse par motifs. Chaque constat est cité <code>fichier:ligne</code> avec l'extrait réellement lu.
+<b>Aucun constat n'est présenté comme une vulnérabilité confirmée.</b></p>
+<div class="stat">
+  <div><b>200</b><span class="muted">fichiers lus</span></div>
+  <div><b>10304 Ko</b><span class="muted">analysés</span></div>
+  <div><b>0</b><span class="muted">critique</span></div>
+  <div><b>28</b><span class="muted">élevé</span></div>
+  <div><b>3</b><span class="muted">moyen</span></div>
+  <div><b>61</b><span class="muted">faible</span></div>
+</div>
+<h2>Constats (92)</h2>
+<ul>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:400</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code># Other parts of the system (e.g. count_message_by_user_query)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:1424</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2159</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:154</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>with _allow_stripe_api_passthru():</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:503</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>def _allow_stripe_api_passthru() -&gt; Iterator[None]:  # nocoverage</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:507</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>request_mock.add_passthru(&quot;https://api.stripe.com&quot;)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:707</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>with _allow_stripe_api_passthru():  # nocoverage</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:754</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">php-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>with _allow_stripe_api_passthru():</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:170</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:415</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:547</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:555</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uuid_owner_secret=&quot;dummy-owner-secret&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:638</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2027</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2035</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uuid_owner_secret=&quot;dummy-owner-secret&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:43</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:51</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uuid_owner_secret=&quot;dummy-owner-secret&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:44</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:59</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:77</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>#         api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:90</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:3935</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">secret</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>api_key=&quot;magic_secret_api_key&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:161</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>list_queues_output = subprocess.check_output(</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:178</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>queue_stats_dir = subprocess.check_output(</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:118</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>subprocess.check_call(</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:123</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>subprocess.check_call(</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:132</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>return subprocess.check_output(</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:258</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">py-exec</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>subprocess.check_call(args, **kwargs)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:25</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">innerhtml</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>{ id: 'innerhtml', sev: 'moyen', what: 'injection HTML potentielle', re: /innerHTML\s*=|dangerouslySetInnerHTML/ },</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:1862</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">sql-concat</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>last_audit_log_update = self.now + timedelta(days=5)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:933</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">sql-concat</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>last_audit_log_update = self.now + timedelta(days=5)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:85</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*      next: 'http://api.example.com/users?page=2',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:86</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*      last: 'http://api.example.com/users?page=5',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:88</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*        'http://api.example.com/users?page=1',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:89</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*        'http://api.example.com/users?page=2'</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:789</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*    res.location('http://example.com');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:808</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*    res.redirect('http://example.com');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:809</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>*    res.redirect(301, 'http://example.com');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:14</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>res.location('http://google.com/').end();</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:19</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>.expect('Location', 'http://google.com/')</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:27</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>res.location('http://google.com').end();</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:32</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>.expect('Location', 'http://google.com')</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:115</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>res.location(new URL('http://google.com/')).end();</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:120</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>.expect('Location', 'http://google.com/')</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:198</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:199</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:253</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com/%0d%0afoo:%20bar',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:254</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com/%0d%0afoo:%20bar',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:275</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com/%e2%98%83',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:276</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>'http://google.com\\@apple.com/%e2%98%83',</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:295</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: 'http://example.com/foo', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:300</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/foo');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:312</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: '/proxy?url=http://example.com/blog/post/1', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:317</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, '/?url=http://example.com/blog/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:329</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: '/proxy/http://example.com/blog/post/1', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:334</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, '/http://example.com/blog/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:346</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:351</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:363</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:368</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/blog/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:374</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:386</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:391</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:397</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:403</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert.equal(req.url, 'http://example.com/blog/post/1');</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:116</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code># the sane default - while having http:// in development, which will allow</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:70</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertIn(&quot;http://selfhosting.testserver/remote-billing-login/&quot;, result[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:163</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uri_scheme=&quot;http://&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:260</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertIn(&quot;http://selfhosting.testserver/remote-billing-login/&quot;, result[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:267</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;http://selfhosting.testserver/remote-billing-login/&quot;, data[&quot;billing_access_url&quot;]</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:502</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>f&quot;http://{desdemona.realm.host}/self-hosted-billing/?next_page=plans&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:118</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;Support URL: http://zulip.testserver/activity/support?q=zulip&quot;, message.body</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:126</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(response[&quot;Location&quot;], &quot;http://zulip.testserver/sponsorship&quot;)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:260</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>f&quot;Support URL: http://zulip.testserver/activity/remote/support?q={remote_realm.uuid!s}&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:388</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>f&quot;Support URL: http://zulip.testserver/activity/remote/support?q={self.remote_server.uuid!s}&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:232</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(&quot;http://zulip.testserver/billing&quot;, response[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:349</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(&quot;http://zulip.testserver/billing&quot;, response[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:469</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(&quot;http://zulip.testserver/billing&quot;, response[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:597</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(&quot;http://zulip.testserver/billing&quot;, response[&quot;Location&quot;])</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2088</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(response[&quot;Location&quot;], &quot;http://zulip.testserver/sponsorship&quot;)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2118</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(response[&quot;Location&quot;], &quot;http://zulip.testserver/billing&quot;)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2123</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>self.assertEqual(response[&quot;Location&quot;], &quot;http://zulip.testserver/billing&quot;)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:3963</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>f&quot;Your organization, http://{row.realm.string_id}.testserver, has been downgraded&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:930</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;&lt;b&gt;Link&lt;/b&gt;: http://testserver/accounts/do_confirm/&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:941</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;&lt;b&gt;Link&lt;/b&gt;: http://zulip.testserver/join/&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:952</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;&lt;b&gt;Link&lt;/b&gt;: http://zulip.testserver/reactivate/&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:1008</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>result = get_check_query_result(&quot;http://lear.testserver&quot;, 1)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:2303</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>&quot;Support URL: http://zulip.testserver/activity/support?q=zulip&quot;, message.body</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:85</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uri_scheme: Literal[&quot;http://&quot;, &quot;https://&quot;] = &quot;https://&quot;,</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:471</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>assert uri_scheme in [&quot;http://&quot;, &quot;https://&quot;]</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:473</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>uri_scheme = cast(Literal[&quot;http://&quot;, &quot;https://&quot;], uri_scheme)</code></pre>
+      </li>
+      <li>
+        <span style="background:#4b5563;color:#fff;border-radius:4px;padding:1px 7px;font-size:12px"></span>
+        <code>:63</code>
+        <div style="color:#8b9aab;font-size:13px;margin-top:3px">http-clair</div>
+        <pre style="background:#0b0f13;border:1px solid #22303c;border-radius:6px;padding:8px;overflow:auto;font-size:12px;margin:6px 0 0"><code>const redirectUrl = new URL(req.url, `http://${host}`);</code></pre>
+      </li></ul>
+<h2>Ce que ce rapport ne dit pas</h2>
+<ul class="muted">
+<li>Impacts réels non confirmés — un motif est une adresse, pas une preuve.</li>
+<li>Dépendances non vérifiées.</li>
+<li>Configuration serveur et infrastructure non examinées.</li>
+</ul>
+<p class="muted">Généré par <code>acquisition/outil-cli/generer-rapport.mjs</code> — Automaton DeepSeek.
+Rapport complet sur mesure : <a href="../commande.html">demander un devis</a>.</p>
+</body></html>
