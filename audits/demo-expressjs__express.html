@@ -1,0 +1,243 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapport d'audit — expressjs/express</title>
+<style>
+:root{--bg:#0f1216;--pan:#16202a;--bd:#22303c;--tx:#e8ecf1;--dim:#94a3b8;--ac:#58a6ff;--ok:#3fb950;--warn:#d29922;--err:#f85149}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,"Segoe UI",Roboto,sans-serif}
+.w{max-width:900px;margin:0 auto;padding:34px 20px 90px}
+h1{font-size:1.6rem;margin:0 0 .3rem}a{color:var(--ac)}
+h2{font-size:1.1rem;margin:1.9rem 0 .5rem;border-bottom:1px solid var(--bd);padding-bottom:.35rem}
+.sub{color:var(--dim);margin:0 0 1rem}
+td{padding:4px 12px 4px 0}.muted{color:var(--dim);font-size:.9rem}
+.c{border:1px solid var(--bd);border-left-width:4px;border-radius:0 8px 8px 0;background:var(--pan);padding:11px 14px;margin:9px 0}
+.c.critique{border-left-color:var(--err)}.c.eleve{border-left-color:#ec775c}.c.moyen{border-left-color:var(--warn)}.c.faible{border-left-color:var(--dim)}
+.c h3{margin:0 0 .3rem;font-size:.96rem}.c .meta{color:var(--dim);font-size:.83rem;margin:.15rem 0}
+pre{background:#0b0f13;border:1px solid var(--bd);border-radius:6px;padding:10px;overflow:auto;font-size:13px;margin:.4rem 0}
+code{background:#141b22;padding:2px 6px;border-radius:4px;font-size:.87em}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase}
+.b-critique{background:#3a1518;color:#ff9c96}.b-eleve{background:#3a2318;color:#ffb48c}.b-moyen{background:#3a3315;color:#ffd666}.b-faible{background:#1e2a33;color:#9fc4dd}
+.n{background:var(--pan);border-left:3px solid var(--ok);padding:12px 16px;border-radius:0 6px 6px 0;color:var(--dim)}
+.warn{border-left-color:var(--warn)}
+</style></head><body><div class="w">
+<h1>Rapport d'audit statique — <code>expressjs/express</code></h1>
+<p class="sub">Date : 2026-10-10 · Branche : <code>master</code> · Langage principal : JavaScript · Fichiers analysés : 60 (461 Ko lus)</p>
+
+<div class="n"><strong>Méthode.</strong> Analyse statique par motifs, aucun code exécuté. Chaque constat cite <em>fichier + ligne</em> et l'extrait réellement lu.
+Ce rapport liste des <strong>alertes à vérifier</strong> : un motif signalé peut être légitime (test, exemple, code mort).</div>
+
+<h2>Synthèse</h2>
+<table><tr><td>Constats retenus</td><td><strong>65</strong></td></tr>
+<tr><td>Critique / Élevé / Moyen / Faible</td><td>0 / 3 / 2 / 60</td></tr>
+<tr><td>Fichiers candidats dans le dépôt</td><td>149</td></tr>
+<tr><td>Couverture de cet audit</td><td>60 fichier(s) sur 149 candidat(s)</td></tr></table>
+
+<h2>Constats</h2>
+<div class="c eleve"><h3>1. secret probable en clair <span class="badge b-eleve">eleve</span></h3>
+<div class="meta"><strong>examples/auth/index.js</strong> · ligne 25</div>
+<pre>secret: 'shhhh, very secret'</pre>
+<div class="meta">à vérifier : si ce secret est réel et actif, révoquez-le immédiatement.</div></div><div class="c eleve"><h3>2. évaluation de code dynamique (eval / new Function) <span class="badge b-eleve">eleve</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 115</div>
+<pre>var xss = 'javascript:eval(document.body.innerHTML=`&lt;p&gt;XSS&lt;/p&gt;`);';</pre>
+<div class="meta">à vérifier : vérifiez si la chaîne évaluée peut provenir d'une entrée externe.</div></div><div class="c eleve"><h3>3. évaluation de code dynamique (eval / new Function) <span class="badge b-eleve">eleve</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 116</div>
+<pre>var encodedXss = 'javascript:eval(document.body.innerHTML=%60%3Cp%3EXSS%3C/p%3E%60);';</pre>
+<div class="meta">à vérifier : vérifiez si la chaîne évaluée peut provenir d'une entrée externe.</div></div><div class="c moyen"><h3>4. injection HTML potentielle <span class="badge b-moyen">moyen</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 115</div>
+<pre>var xss = 'javascript:eval(document.body.innerHTML=`&lt;p&gt;XSS&lt;/p&gt;`);';</pre>
+<div class="meta">à vérifier : confirmez que la valeur insérée est échappée ou de confiance.</div></div><div class="c moyen"><h3>5. injection HTML potentielle <span class="badge b-moyen">moyen</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 116</div>
+<pre>var encodedXss = 'javascript:eval(document.body.innerHTML=%60%3Cp%3EXSS%3C/p%3E%60);';</pre>
+<div class="meta">à vérifier : confirmez que la valeur insérée est échappée ou de confiance.</div></div><div class="c faible"><h3>6. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 85</div>
+<pre>*      next: 'http://api.example.com/users?page=2',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>7. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 86</div>
+<pre>*      last: 'http://api.example.com/users?page=5',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>8. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 88</div>
+<pre>*        'http://api.example.com/users?page=1',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>9. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 89</div>
+<pre>*        'http://api.example.com/users?page=2'</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>10. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 789</div>
+<pre>*    res.location('http://example.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>11. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 808</div>
+<pre>*    res.redirect('http://example.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>12. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>lib/response.js</strong> · ligne 809</div>
+<pre>*    res.redirect(301, 'http://example.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>13. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 14</div>
+<pre>res.location('http://google.com/').end();</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>14. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 19</div>
+<pre>.expect('Location', 'http://google.com/')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>15. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 27</div>
+<pre>res.location('http://google.com').end();</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>16. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 32</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>17. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 115</div>
+<pre>res.location(new URL('http://google.com/')).end();</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>18. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 120</div>
+<pre>.expect('Location', 'http://google.com/')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>19. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 198</div>
+<pre>'http://google.com\\@apple.com',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>20. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 199</div>
+<pre>'http://google.com\\@apple.com',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>21. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 253</div>
+<pre>'http://google.com\\@apple.com/%0d%0afoo:%20bar',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>22. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 254</div>
+<pre>'http://google.com\\@apple.com/%0d%0afoo:%20bar',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>23. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 275</div>
+<pre>'http://google.com\\@apple.com/%e2%98%83',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>24. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.location.js</strong> · ligne 276</div>
+<pre>'http://google.com\\@apple.com/%e2%98%83',</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>25. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 13</div>
+<pre>res.redirect('http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>26. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 18</div>
+<pre>.expect('location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>27. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 54</div>
+<pre>res.redirect(303, 'http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>28. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 59</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>29. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 69</div>
+<pre>res.redirect('http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>30. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 75</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>31. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 86</div>
+<pre>res.redirect('http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>32. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 93</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>33. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 94</div>
+<pre>.expect(302, '&lt;!DOCTYPE html&gt;&lt;head&gt;&lt;title&gt;Found&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;Found. Redirecting to http://google.com&lt;/p&gt;&lt;/body&gt;', done)</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>34. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 106</div>
+<pre>.set('Host', 'http://example.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>35. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 124</div>
+<pre>.set('Host', 'http://example.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>36. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 135</div>
+<pre>res.redirect(301, 'http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>37. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 142</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>38. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 143</div>
+<pre>.expect(301, '&lt;!DOCTYPE html&gt;&lt;head&gt;&lt;title&gt;Moved Permanently&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;Moved Permanently. Redirecting to http://google.com&lt;/p&gt;&lt;/body&gt;', done);</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>39. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 152</div>
+<pre>res.redirect('http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>40. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 159</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>41. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 160</div>
+<pre>.expect(302, 'Found. Redirecting to http://google.com', done)</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>42. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 167</div>
+<pre>res.redirect('http://example.com/?param=&lt;script&gt;alert(&quot;hax&quot;);&lt;/script&gt;');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>43. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 172</div>
+<pre>.set('Host', 'http://example.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>44. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 175</div>
+<pre>.expect('Location', 'http://example.com/?param=%3Cscript%3Ealert(%22hax%22);%3C/script%3E')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>45. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 176</div>
+<pre>.expect(302, 'Found. Redirecting to http://example.com/?param=%3Cscript%3Ealert(%22hax%22);%3C/script%3E', done)</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>46. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 183</div>
+<pre>res.redirect(301, 'http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>47. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 190</div>
+<pre>.expect('Location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>48. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 191</div>
+<pre>.expect(301, 'Moved Permanently. Redirecting to http://google.com', done);</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>49. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 200</div>
+<pre>res.redirect('http://google.com');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>50. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/res.redirect.js</strong> · ligne 207</div>
+<pre>.expect('location', 'http://google.com')</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>51. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 295</div>
+<pre>var request = { hit: 0, url: 'http://example.com/foo', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>52. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 300</div>
+<pre>assert.equal(req.url, 'http://example.com/foo');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>53. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 312</div>
+<pre>var request = { hit: 0, url: '/proxy?url=http://example.com/blog/post/1', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>54. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 317</div>
+<pre>assert.equal(req.url, '/?url=http://example.com/blog/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>55. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 329</div>
+<pre>var request = { hit: 0, url: '/proxy/http://example.com/blog/post/1', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>56. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 334</div>
+<pre>assert.equal(req.url, '/http://example.com/blog/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>57. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 346</div>
+<pre>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>58. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 351</div>
+<pre>assert.equal(req.url, 'http://example.com/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>59. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 363</div>
+<pre>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>60. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 368</div>
+<pre>assert.equal(req.url, 'http://example.com/blog/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>61. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 374</div>
+<pre>assert.equal(req.url, 'http://example.com/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>62. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 386</div>
+<pre>var request = { hit: 0, url: 'http://example.com/blog/post/1', method: 'GET' };</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>63. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 391</div>
+<pre>assert.equal(req.url, 'http://example.com/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>64. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 397</div>
+<pre>assert.equal(req.url, 'http://example.com/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div><div class="c faible"><h3>65. URL en clair (non HTTPS) <span class="badge b-faible">faible</span></h3>
+<div class="meta"><strong>test/Router.js</strong> · ligne 403</div>
+<pre>assert.equal(req.url, 'http://example.com/blog/post/1');</pre>
+<div class="meta">à vérifier : déterminez si ce trafic porte des données sensibles.</div></div>
+
+
+<h2>Ce que ce rapport ne dit pas</h2>
+<div class="n warn">Il ne confirme <strong>aucun impact réel</strong>. Il ne regarde ni les dépendances, ni l'infrastructure, ni la configuration serveur.
+Il n'exécute pas le code et n'exploite rien. Il ne couvre que les motifs listés, sur les 60 fichiers effectivement lus (sur 149 candidats — couverture partielle assumée).</div>
+
+<h2>Comment lire ce rapport</h2>
+<p class="muted">1. Ouvrez la ligne citée dans votre éditeur. 2. Demandez-vous si une entrée externe peut l'atteindre. 3. Si oui, corrigez ; si non, ignorez le constat en connaissance de cause.
+Ce rapport vous donne les endroits à regarder — il ne remplace pas votre jugement sur votre propre code.</p>
+
+<p class="muted" style="margin-top:2rem">Rapport de démonstration généré par Automaton DeepSeek sur un dépôt <strong>public</strong> de tiers, à titre d'exemple de format.
+Ce n'est pas une mission commandée. <a href="../audit-depot.html">Auditez votre propre dépôt →</a></p>
+</div></body></html>
