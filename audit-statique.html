@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit statique instantané — collez du code, voyez les constats</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--bord:#30363d;--fg:#c9d1d9;--dim:#8b949e;--accent:#58a6ff;--ok:#3fb950;--warn:#d29922;--crit:#f85149}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+h1{color:#fff;font-size:1.6rem;margin:0 0 4px}h2{color:#fff;font-size:1.1rem;margin-top:32px}
+a{color:var(--accent)}
+.lead{color:var(--dim);margin:0 0 20px}
+textarea{width:100%;min-height:220px;background:#010409;color:var(--fg);border:1px solid var(--bord);border-radius:8px;padding:12px;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+button{background:var(--accent);color:#04121f;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:.9rem}
+button.sec{background:transparent;color:var(--fg);border:1px solid var(--bord)}
+.note{background:var(--panel);border-left:3px solid var(--warn);padding:12px 16px;margin:16px 0;font-size:.88rem;color:var(--dim)}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:8px;padding:14px 16px;margin:10px 0}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-right:8px}
+.CRITIQUE{background:#3d1418;color:var(--crit)}.ELEVEE{background:#3d2a10;color:var(--warn)}.MOYENNE{background:#1a2a3d;color:var(--accent)}
+.loc{font-family:ui-monospace,monospace;font-size:.8rem;color:var(--dim)}
+pre{margin:8px 0 0;padding:10px;background:#010409;border-radius:6px;overflow:auto;font-size:.8rem;color:var(--dim)}
+.corr{color:var(--ok);font-size:.85rem;margin-top:6px}
+#resume{font-size:.95rem}.t0{color:var(--ok);font-weight:600}
+footer{margin-top:48px;border-top:1px solid var(--bord);padding-top:16px;color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Audit statique instantané</h1>
+<p class="lead">Collez du code ci-dessous. L'analyse tourne <strong>entièrement dans votre navigateur</strong> — rien n'est envoyé nulle part.</p>
+
+<div class="note"><strong>Ce que ceci est :</strong> une détection de motifs par règles (secrets, eval, injection SQL, CORS ouvert…). Ce ne sont <em>pas</em> des vulnérabilités confirmées. Faux positifs possibles. Chaque constat doit être vérifié.</div>
+
+<textarea id="code" placeholder="// collez ici du JavaScript, Python, PHP, Ruby…&#10;const apiKey = &quot;sk_live_51H8x...&quot;;&#10;eval(userInput);&#10;db.query('SELECT * FROM users WHERE id = ' + id);"></textarea>
+<div class="actions">
+  <button id="go">Analyser</button>
+  <button class="sec" id="ex">Charger un exemple</button>
+  <button class="sec" id="clr">Effacer</button>
+</div>
+
+<h2>Résultat</h2>
+<div id="resume" class="t0">Aucune analyse lancée.</div>
+<div id="out"></div>
+
+<footer>
+Outil honnête d'audit statique · <a href="./">Site</a> · <a href="./commande.html">Demander un audit humain complet</a><br>
+L'audit humain ajoute l'analyse du contexte, la vérification des faux positifs et un plan de correction priorisé.
+</footer>
+</div>
+
+<script>
+const REGLES = [
+  {id:'secret-en-clair',gravite:'CRITIQUE',desc:"Secret en clair dans le code",corr:"Charger depuis l'environnement. Révoquer et régénérer le secret exposé.",
+   test:l=>/(api[_-]?key|secret|password|passwd|token|private[_-]?key)\s*[:=]\s*['"][A-Za-z0-9_\-]{16,}['"]/i.test(l)&&!/process\.env|os\.environ|getenv|example|placeholder|xxx|your[_-]/i.test(l)},
+  {id:'exec-dynamique',gravite:'ELEVEE',desc:"Évaluation dynamique de code",corr:"Éviter eval/new Function ; sinon liste blanche stricte.",
+   test:l=>/\b(eval|exec)\s*\(|new\s+Function\s*\(/.test(l)},
+  {id:'exec-commande',gravite:'ELEVEE',desc:"Exécution de commande système avec entrée potentielle",corr:"Ne pas interpoler d'entrée ; utiliser un tableau d'arguments.",
+   test:l=>/(child_process|execSync|spawnSync|os\.system|subprocess|shell_exec|popen)\s*\(/.test(l)&&/\$\{|\+|\binput\b|\breq\b|\bargv\b/.test(l)},
+  {id:'token-fixe',gravite:'ELEVEE',desc:"Contrôle d'accès faible (jeton fixe)",corr:"Authentification côté serveur ; jeton jamais comparé en clair ni dans l'URL.",
+   test:l=>/(==|===)\s*['"][A-Za-z0-9_\-]{12,}['"]/.test(l)&&/token|auth|secret|key/i.test(l)},
+  {id:'http-non-chiffre',gravite:'MOYENNE',desc:"URL http:// non chiffrée",corr:"Utiliser https://.",
+   test:l=>/['"]http:\/\/(?!localhost|127\.0\.0\.1)/.test(l)},
+  {id:'cors-ouvert',gravite:'MOYENNE',desc:"CORS ouvert à toutes les origines",corr:"Restreindre aux origines nécessaires.",
+   test:l=>/origin\s*:\s*['"]\*['"]|Access-Control-Allow-Origin['"]?\s*[:,]\s*['"]\*/.test(l)},
+  {id:'sql-concat',gravite:'ELEVEE',desc:"Requête SQL construite par concaténation",corr:"Requêtes paramétrées.",
+   test:l=>/(SELECT|INSERT|UPDATE|DELETE)\b.*(\.\.\.|\+\s*\w|\$\{)/i.test(l)&&!/param|prepared|\?|placeholder/i.test(l)}
+];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function analyser(src){
+  const lignes = src.split(/\r?\n/);
+  const out = [];
+  lignes.forEach((l,i)=>{
+    if(l.length>400) return;
+    for(const r of REGLES){ if(r.test(l)) out.push({...r, ligne:i+1, extrait:l.trim().slice(0,160)}); }
+  });
+  return out;
+}
+
+document.getElementById('go').onclick = ()=>{
+  const code = document.getElementById('code').value;
+  const res = analyser(code);
+  const out = document.getElementById('out');
+  const resume = document.getElementById('resume');
+  if(!code.trim()){ resume.textContent='Rien à analyser.'; out.innerHTML=''; return; }
+  if(!res.length){ resume.innerHTML='<span class="t0">Aucun motif détecté sur '+code.split(/\r?\n/).length+' ligne(s).</span>'; out.innerHTML=''; return; }
+  const parG = res.reduce((a,c)=>(a[c.gravite]=(a[c.gravite]||0)+1,a),{});
+  resume.innerHTML = res.length+' constat(s) — '+
+    ['CRITIQUE','ELEVEE','MOYENNE'].filter(g=>parG[g]).map(g=>parG[g]+' '+g).join(', ')+
+    '. <em>Motifs, non confirmés.</em>';
+  out.innerHTML = res.map(c=>
+    '<div class="card"><span class="badge '+c.gravite+'">'+c.gravite+'</span>'+esc(c.desc)+
+    '<div class="loc">ligne '+c.ligne+'</div><pre>'+esc(c.extrait)+'</pre>'+
+    '<div class="corr">→ '+esc(c.corr)+'</div></div>').join('');
+};
+
+document.getElementById('ex').onclick = ()=>{
+  document.getElementById('code').value =
+`const apiKey = "sk_live_51H8xQ2eZvKYlo2C9abcdef";
+function run(input){ eval(input); }
+const SQL = "SELECT * FROM users WHERE id = " + req.query.id;
+app.use(cors({ origin: "*" }));
+fetch("http://api.example.com/data");
+execSync("convert " + input);`;
+  document.getElementById('go').click();
+};
+document.getElementById('clr').onclick = ()=>{ document.getElementById('code').value=''; document.getElementById('out').innerHTML=''; document.getElementById('resume').textContent='Aucune analyse lancée.'; };
+</script>
+</body>
+</html>
