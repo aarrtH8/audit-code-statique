@@ -1,0 +1,34 @@
+{
+  "cible": "https://github.com/blocknine0/geomacro",
+  "quand": "2026-10-10T16:18:57.566Z",
+  "reproductible": true,
+  "sarifIdentique": true,
+  "ecarts": [],
+  "passes": [
+    {
+      "n": 1,
+      "fichiers": 1644,
+      "lignes": 302355,
+      "constats": 62,
+      "parNiveau": {
+        "error": 42,
+        "warning": 20,
+        "note": 0
+      },
+      "empreinteSarif": "a8998e04c6cef992849de36073b8aecaf5c9e10cc2b61a520a6f54fe35773188"
+    },
+    {
+      "n": 2,
+      "fichiers": 1644,
+      "lignes": 302355,
+      "constats": 62,
+      "parNiveau": {
+        "error": 42,
+        "warning": 20,
+        "note": 0
+      },
+      "empreinteSarif": "a8998e04c6cef992849de36073b8aecaf5c9e10cc2b61a520a6f54fe35773188"
+    }
+  ],
+  "interpretation": "Décomptes ET contenu SARIF identiques sur deux passes indépendantes : le rapport est reproductible."
+}

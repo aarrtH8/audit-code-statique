@@ -1,0 +1,1890 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "AuditCodeStatique",
+          "informationUri": "https://aarrth8.github.io/audit-code-statique/",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "secret-en-dur",
+              "name": "secret_en_dur",
+              "shortDescription": {
+                "text": "Secret probable en dur"
+              },
+              "fullDescription": {
+                "text": "Une valeur ressemblant à un secret est écrite dans le code source."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Révoquer la clé exposée, la déplacer dans une variable d'environnement, purger l'historique Git (git filter-repo)."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "security-severity": "9.1",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "cle-aws",
+              "name": "cle_aws",
+              "shortDescription": {
+                "text": "Identifiant d'accès AWS en dur"
+              },
+              "fullDescription": {
+                "text": "Un identifiant de clé d'accès AWS (AKIA…) figure dans le code."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Révoquer immédiatement dans IAM, examiner CloudTrail pour tout usage non autorisé, utiliser des rôles IAM."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "security-severity": "9.4",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "injection-commande",
+              "name": "injection_commande",
+              "shortDescription": {
+                "text": "Commande système construite par concaténation"
+              },
+              "fullDescription": {
+                "text": "Une commande est assemblée par concaténation ou interpolation avant exécution."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Passer les arguments sous forme de tableau (execFile style) et refuser toute valeur non validée."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "security-severity": "9.0",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "execution-dynamique",
+              "name": "execution_dynamique",
+              "shortDescription": {
+                "text": "Exécution dynamique de code"
+              },
+              "fullDescription": {
+                "text": "eval ou new Function exécute du code construit à l'exécution."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Remplacer par un analyseur ou une table de correspondance explicite."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "security-severity": "8.2",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "requete-sql-concat",
+              "name": "requete_sql_concat",
+              "shortDescription": {
+                "text": "Requête SQL construite par concaténation"
+              },
+              "fullDescription": {
+                "text": "Une requête SQL est assemblée avec des valeurs non paramétrées."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "security-severity": "8.5",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "cors-ouvert",
+              "name": "cors_ouvert",
+              "shortDescription": {
+                "text": "CORS ouvert à toutes les origines"
+              },
+              "fullDescription": {
+                "text": "L'en-tête autorise n'importe quelle origine."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Restreindre aux origines réellement utilisées."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "security-severity": "6.1",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "http-clair",
+              "name": "http_clair",
+              "shortDescription": {
+                "text": "URL HTTP non chiffrée"
+              },
+              "fullDescription": {
+                "text": "Une ressource est appelée en HTTP, donc sans chiffrement."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Basculer en HTTPS et vérifier les redirections."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "security-severity": "5.3",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "html-direct",
+              "name": "html_direct",
+              "shortDescription": {
+                "text": "Écriture HTML directe"
+              },
+              "fullDescription": {
+                "text": "innerHTML ou document.write insère une chaîne dans le DOM."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "security-severity": "5.8",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "hachage-faible",
+              "name": "hachage_faible",
+              "shortDescription": {
+                "text": "Algorithme de hachage faible"
+              },
+              "fullDescription": {
+                "text": "MD5 ou SHA-1 employé pour un mot de passe ou une intégrité."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Utiliser bcrypt, scrypt ou Argon2id pour les mots de passe."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "security-severity": "6.5",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            },
+            {
+              "id": "tls-desactive",
+              "name": "tls_desactive",
+              "shortDescription": {
+                "text": "Vérification TLS désactivée"
+              },
+              "fullDescription": {
+                "text": "La vérification du certificat du pair est désactivée."
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/rapports/",
+              "help": {
+                "text": "Réactiver la vérification ; installer la chaîne d'autorités correcte."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "security-severity": "7.0",
+                "tags": [
+                  "security",
+                  "audit-statique"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "commandLine": "audit-sarif.mjs https://github.com/blocknine0/geomacro",
+          "properties": {
+            "fichiersAnalyses": 1644,
+            "lignesAnalysees": 302355,
+            "analyseStatique": true,
+            "codeExecute": false
+          }
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "https://github.com/blocknine0/geomacro"
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/telegram-b2-d1-consumer.yml"
+                },
+                "region": {
+                  "startLine": 224,
+                  "startColumn": 13,
+                  "snippet": {
+                    "text": "npx -y \"wrangler@${WRANGLER_VERSION}\" d1 execute DB --remote --json --config \"$D1_CONFIG\" --command \"UPDATE telegram_signal_lead_queue SET attempt_count=attempt_count+1,last_attempt_at=datetime('now')"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-agent-hot-topic-readiness.ts"
+                },
+                "region": {
+                  "startLine": 44,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query: any = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-gdelt-dependency-live.mjs"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-global-production-coverage.mjs"
+                },
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let q = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-global-realtime-intelligence-100.mjs"
+                },
+                "region": {
+                  "startLine": 83,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-hot-topic-family-readiness.ts"
+                },
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query: any = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-sovereign-fiscal-production-diagnostics.ts"
+                },
+                "region": {
+                  "startLine": 90,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query: any = db.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/audit-ucdp-quality-reasons.ts"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let query: any = db.from(table).select(select).range(from, from + PAGE_SIZE - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/commercial/private-pilot-demand-report.mjs"
+                },
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { data, error } = await db.from(table).select(columns).order(orderColumn).range(start, Math.min(start + 499, limit - 1));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/compute-gri-v11.js"
+                },
+                "region": {
+                  "startLine": 888,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": ".insert(rows.slice(i, i + chunkSize));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/compute-gri-v11.js"
+                },
+                "region": {
+                  "startLine": 902,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/compute-gri-v12.js"
+                },
+                "region": {
+                  "startLine": 883,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": ".insert(rows.slice(i, i + chunkSize));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/compute-gri-v12.js"
+                },
+                "region": {
+                  "startLine": 897,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/db/check-migration-safety.mjs"
+                },
+                "region": {
+                  "startLine": 245,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": "String.raw`\\bdelete\\s+from\\s+(${qualifiedSqlIdentifier})(?=\\s|;|$)`,"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/db/check-migration-safety.mjs"
+                },
+                "region": {
+                  "startLine": 349,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "/\\bdelete\\s+from\\b/i.test("
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/db/check-migration-safety.mjs"
+                },
+                "region": {
+                  "startLine": 375,
+                  "startColumn": 11,
+                  "snippet": {
+                    "text": "/\\bdelete\\s+from\\b/gi,"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/drain-live-structure.mjs"
+                },
+                "region": {
+                  "startLine": 152,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "events_updated: outputs.reduce((n, row) => n + Number(row?.events_updated ?? 0), 0),"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/early-warning/ecb-rss-core.mjs"
+                },
+                "region": {
+                  "startLine": 96,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": ".update(`${guid}\\n${publishedAt}\\n${title}`, \"utf8\")"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "hachage-faible",
+          "level": "warning",
+          "message": {
+            "text": "Algorithme de hachage faible. MD5 ou SHA-1 employé pour un mot de passe ou une intégrité. Correction : Utiliser bcrypt, scrypt ou Argon2id pour les mots de passe."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ingest-gdelt-v2-events-live.mjs"
+                },
+                "region": {
+                  "startLine": 278,
+                  "startColumn": 1,
+                  "snippet": {
+                    "text": "const exportMd5 = createHash(\"md5\").update(zipBuffer).digest(\"hex\")"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "6.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ingest-gri-benchmarks.js"
+                },
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": "if (insertError) throw new Error(`${def.benchmark_key} insert failed: ${insertError.message}`);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/legacy/compute-gri-v10.js"
+                },
+                "region": {
+                  "startLine": 393,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/lib/gri-db-client.mjs"
+                },
+                "region": {
+                  "startLine": 471,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": ": `DO UPDATE SET ${updateKeys.map((key) => `${identifier(key)} = EXCLUDED.${identifier(key)}`).join(\",\")}`;"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/marketing/auto-distribute-alert.mjs"
+                },
+                "region": {
+                  "startLine": 387,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "const idempotencyKey = crypto.createHash('sha256').update(`${alert.alert_id}:${channel}`).digest('hex');"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/b2-archive-gro-bundle.ts"
+                },
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "if (selected.length > 0 && rawBundleBytes + memberGzip.length > MAX_RAW_BUNDLE_BYTES) break;"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/b2-archive-observation-bundle.mjs"
+                },
+                "region": {
+                  "startLine": 81,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "if (selected.length > 0 && rawBytes + payloadBytes.length > MAX_RAW_BUNDLE_BYTES) break;"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/b2-compact-structured-event-bundle.mjs"
+                },
+                "region": {
+                  "startLine": 297,
+                  "startColumn": 1,
+                  "snippet": {
+                    "text": "const hotBytesBefore = updates.reduce((sum, item) => sum + item.current_bytes, 0);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/b2-compact-structured-event-bundle.mjs"
+                },
+                "region": {
+                  "startLine": 298,
+                  "startColumn": 1,
+                  "snippet": {
+                    "text": "const hotBytesAfter = updates.reduce((sum, item) => sum + item.pointer_bytes, 0);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/b2-fragment-archive-offload.mjs"
+                },
+                "region": {
+                  "startLine": 123,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "verification: \"source-hash+b2-readback-hash+immutable-sidecar+fully-handled-gate+storage-api-delete+absence-proof\", results }));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "hachage-faible",
+          "level": "warning",
+          "message": {
+            "text": "Algorithme de hachage faible. MD5 ou SHA-1 employé pour un mot de passe ou une intégrité. Correction : Utiliser bcrypt, scrypt ou Argon2id pour les mots de passe."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/publish-b2-public-intelligence-direct-postgres.mjs"
+                },
+                "region": {
+                  "startLine": 642,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "const md5 = createHash(\"md5\").update(zip).digest(\"hex\");"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "6.5"
+          }
+        },
+        {
+          "ruleId": "secret-en-dur",
+          "level": "error",
+          "message": {
+            "text": "Secret probable en dur. Une valeur ressemblant à un secret est écrite dans le code source. Correction : Révoquer la clé exposée, la déplacer dans une variable d'environnement, purger l'historique Git (git filter-repo)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/verify-hosting-alignment.mjs"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 1,
+                  "snippet": {
+                    "text": "const LOVABLE_MIRROR_SECRET = \"LOVABLE_MIRROR_TOKEN\";"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "9.1"
+          }
+        },
+        {
+          "ruleId": "http-clair",
+          "level": "warning",
+          "message": {
+            "text": "URL HTTP non chiffrée. Une ressource est appelée en HTTP, donc sans chiffrement. Correction : Basculer en HTTPS et vérifier les redirections."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/ops/verify-public-ask-production.mjs"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "for (const forbidden of [\"raw_payload\", \"provider_name\", \"publisher_name\", \"source_url\", \"https://\", \"http://\"]) {"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.3"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/replay-gri-history-v12.js"
+                },
+                "region": {
+                  "startLine": 376,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_replay_snapshots').insert(rows.slice(i, i + size));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/replay-gri-history.js"
+                },
+                "region": {
+                  "startLine": 376,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_replay_snapshots').insert(rows.slice(i, i + size));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "http-clair",
+          "level": "warning",
+          "message": {
+            "text": "URL HTTP non chiffrée. Une ressource est appelée en HTTP, donc sans chiffrement. Correction : Basculer en HTTPS et vérifier les redirections."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/run-live-flash-corroborate-local.ts"
+                },
+                "region": {
+                  "startLine": 105,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const request = new Request(\"http://geomacro.local/live-flash-corroborate\", {"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.3"
+          }
+        },
+        {
+          "ruleId": "http-clair",
+          "level": "warning",
+          "message": {
+            "text": "URL HTTP non chiffrée. Une ressource est appelée en HTTP, donc sans chiffrement. Correction : Basculer en HTTPS et vérifier les redirections."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/run-live-flash-ingest-local.ts"
+                },
+                "region": {
+                  "startLine": 98,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "const request = new Request(\"http://geomacro.local/live-flash-ingest\", {"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.3"
+          }
+        },
+        {
+          "ruleId": "http-clair",
+          "level": "warning",
+          "message": {
+            "text": "URL HTTP non chiffrée. Une ressource est appelée en HTTP, donc sans chiffrement. Correction : Basculer en HTTPS et vérifier les redirections."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/run-live-structure-local.ts"
+                },
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const request = new Request(\"http://geomacro.local/live-structure-intelligence\", {"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.3"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/validate-gri-v12.js"
+                },
+                "region": {
+                  "startLine": 162,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let q = supabase.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/validate-gri-v12.js"
+                },
+                "region": {
+                  "startLine": 341,
+                  "startColumn": 9,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/validate-gri.js"
+                },
+                "region": {
+                  "startLine": 162,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "let q = supabase.from(table).select(select).range(from, from + pageSize - 1);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/validate-gri.js"
+                },
+                "region": {
+                  "startLine": 341,
+                  "startColumn": 9,
+                  "snippet": {
+                    "text": "const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 121,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "$('funnelCards').innerHTML=funnelCards.map(([k,v])=>'<div class=\"card\"><div class=\"k\">'+esc(k)+'</div><div class=\"v\">'+esc(v)+'</div></div>').join('');"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 128,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "$('cards').innerHTML=cards.map(([k,v])=>'<div class=\"card\"><div class=\"k\">'+esc(k)+'</div><div class=\"v\">'+esc(v)+'</div></div>').join('');"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 137,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "$('growthTable').innerHTML=growthTable(j.data); $('growthStatusText').innerHTML='<span class=\"ok\">Loaded '+esc(j.data.length)+' draft(s). No external publication performed.</span>';"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 138,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "}catch(e){$('growthStatusText').innerHTML='<span class=\"danger\">'+esc(e.message)+'</span>'}"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 147,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "$('growthStatusText').innerHTML='<span class=\"ok\">Draft '+esc(action)+'d. No external publication performed.</span>';"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 149,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "}catch(e){$('growthStatusText').innerHTML='<span class=\"danger\">'+esc(e.message)+'</span>'}"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 155,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "$('funnelRollup').innerHTML=table(rollup);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 156,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "$('funnelTable').innerHTML=table(attempts);"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 161,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "if(opsToken.length<32){$('status').innerHTML='<span class=\"danger\">Enter the owner token.</span>';return}"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 166,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "summarize(j.data); renderDeveloperFunnel(j.data); $('usageTable').innerHTML=table(j.data.recent_usage); $('paymentTable').innerHTML=table(j.data.recent_payments); $('usageRollup').innerHTML=table(j.da"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 167,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "$('content').classList.remove('hidden'); $('status').innerHTML='<span class=\"ok\">Loaded '+esc(j.data.generated_at)+'</span>';"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 169,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "}catch(e){$('status').innerHTML='<span class=\"danger\">'+esc(e.message)+'</span>'}"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 179,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "const url=location.origin+j.public_path; $('proofStatus').innerHTML='<span class=\"ok\">Published:</span> <a style=\"color:#b8cdf2\" target=\"_blank\" rel=\"noopener\" href=\"'+esc(url)+'\">'+esc(url)+'</a>';"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "html-direct",
+          "level": "warning",
+          "message": {
+            "text": "Écriture HTML directe. innerHTML ou document.write insère une chaîne dans le DOM. Correction : Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/routes/internal/commercial-ops.get.ts"
+                },
+                "region": {
+                  "startLine": 180,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "}catch(e){$('proofStatus').innerHTML='<span class=\"danger\">'+esc(e.message)+'</span>'}"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "5.8"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/ask-intelligence.server.ts"
+                },
+                "region": {
+                  "startLine": 755,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "selected.reduce((sum, item) => sum + item.similarity, 0) / selected.length;"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/ask-realtime-search.server.ts"
+                },
+                "region": {
+                  "startLine": 242,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": ".update(`${hit.category}\\0${hit.title}\\0${hit.publishedAt ?? \"\"}\\0${index}`)"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/hybrid-ask-intelligence.server.ts"
+                },
+                "region": {
+                  "startLine": 125,
+                  "startColumn": 3,
+                  "snippet": {
+                    "text": "const mean = selected.reduce((sum, item) => sum + item.relevance, 0) / selected.length;"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "secret-en-dur",
+          "level": "error",
+          "message": {
+            "text": "Secret probable en dur. Une valeur ressemblant à un secret est écrite dans le code source. Correction : Révoquer la clé exposée, la déplacer dans une variable d'environnement, purger l'historique Git (git filter-repo)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/testnet-public-access-contract.ts"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "public_api_key: \"gmk_public_arc_testnet_v1\","
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "9.1"
+          }
+        },
+        {
+          "ruleId": "secret-en-dur",
+          "level": "error",
+          "message": {
+            "text": "Secret probable en dur. Une valeur ressemblant à un secret est écrite dans le code source. Correction : Révoquer la clé exposée, la déplacer dans une variable d'environnement, purger l'historique Git (git filter-repo)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/testnet-public-access-contract.ts"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "public_api_key: \"gmk_public_base_sepolia_v1\","
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "9.1"
+          }
+        },
+        {
+          "ruleId": "secret-en-dur",
+          "level": "error",
+          "message": {
+            "text": "Secret probable en dur. Une valeur ressemblant à un secret est écrite dans le code source. Correction : Révoquer la clé exposée, la déplacer dans une variable d'environnement, purger l'historique Git (git filter-repo)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/lib/testnet-public-access-contract.ts"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": "public_api_key: \"gmk_public_polygon_amoy_v1\","
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "9.1"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "supabase/functions/gro-archive-maintain/index.ts"
+                },
+                "region": {
+                  "startLine": 139,
+                  "startColumn": 7,
+                  "snippet": {
+                    "text": "const updated = await fetch(`${url}/rest/v1/geomacro_risk_objects?${filter}`, {"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        },
+        {
+          "ruleId": "requete-sql-concat",
+          "level": "error",
+          "message": {
+            "text": "Requête SQL construite par concaténation. Une requête SQL est assemblée avec des valeurs non paramétrées. Correction : Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "supabase/functions/live-flash-corroborate/country-window.ts"
+                },
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 5,
+                  "snippet": {
+                    "text": ".select(`${COUNTRY_FLASH_SELECT},live_flash_event_countries!inner(country_iso3)`, { count: \"exact\" })"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "security-severity": "8.5"
+          }
+        }
+      ]
+    }
+  ]
+}

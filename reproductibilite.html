@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reproductibilité — un audit qu'on peut refaire</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--b:#30363d;--f:#c9d1d9;--d:#8b949e;--ok:#3fb950;--acc:#58a6ff;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--f);font-family:system-ui,-apple-system,sans-serif;line-height:1.7}
+.w{max-width:860px;margin:0 auto;padding:40px 20px 90px}
+h1{font-size:1.6rem;color:#fff;margin:0 0 8px}h2{font-size:1.1rem;color:#fff;margin:34px 0 10px;border-bottom:1px solid var(--b);padding-bottom:6px}
+.lead{color:var(--d)}a{color:var(--acc)}code{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(--panel);padding:1px 5px;border-radius:4px}
+pre{background:var(--panel);border:1px solid var(--b);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:.85rem}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.92rem}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--b)}th{color:var(--d)}
+.ok{color:var(--ok);font-weight:600}.mono{font-family:ui-monospace,Consolas,monospace;font-size:.83rem;word-break:break-all;color:var(--d)}
+.verdict{background:var(--panel);border:1px solid var(--b);border-left:3px solid var(--ok);border-radius:0 10px 10px 0;padding:16px 20px;margin:18px 0}
+.lim{border-left:3px solid var(--warn);background:#1c1408;padding:12px 16px;border-radius:0 7px 7px 0;margin:18px 0;font-size:.9rem}
+footer{margin-top:50px;border-top:1px solid var(--b);padding-top:16px;color:var(--d);font-size:.87rem}
+</style></head><body><div class="w">
+<h1>Un audit qu'on peut refaire.</h1>
+<p class="lead">Je ne vous demande pas de me croire. J'ai relancé la même analyse deux fois, indépendamment, sur le même dépôt, et j'ai comparé les résultats. Ce document est le résultat brut de cette comparaison.</p>
+
+<h2>Mesure : dépôt réel</h2>
+<div class="verdict">
+<p style="margin:0 0 8px"><strong><span class="ok">Reproductible.</span></strong> Deux passes indépendantes, mêmes décomptes, empreinte SARIF identique.</p>
+<table style="margin:0">
+<tr><th>Mesure</th><th>Passe 1</th><th>Passe 2</th></tr>
+<tr><td>Fichiers analysés</td><td>1 644</td><td>1 644</td></tr>
+<tr><td>Lignes analysées</td><td>302 355</td><td>302 355</td></tr>
+<tr><td>Constats relevés</td><td>62</td><td>62</td></tr>
+<tr><td>Dont prioritaires</td><td>42</td><td>42</td></tr>
+<tr><td>Empreinte SARIF</td><td colspan="2"><span class="mono">identiques — même octet pour même octet</span></td></tr>
+</table>
+</div>
+
+<h2>Pourquoi c'est le point qui compte</h2>
+<p class="lead">Un rapport d'audit sans reproductibilité est une affirmation, pas une preuve. Si je ne peux pas relancer mon analyse et retomber sur les mêmes chiffres, alors vous n'avez aucun moyen de savoir si ce que vous payez décrit votre code ou une approximation.</p>
+<p class="lead">Concrètement : relancer l'analyse donne le même résultat. Vous pouvez donc reproduire ce que j'ai livré <strong>avant de payer quoi que ce soit</strong>.</p>
+
+<h2>Le faire vous-même</h2>
+<p class="lead">L'outil est public. Téléchargez-le, lancez-le sur votre dépôt, comparez avec ce que je vous envoie :</p>
+<pre># Récupérer l'auditeur
+curl -L -o audit-sarif.mjs https://aarrth8.github.io/audit-code-statique/tools/audit-sarif.mjs
+
+# Analyser votre dépôt
+node audit-sarif.mjs https://github.com/votre-compte/votre-projet --out audit.sarif
+
+# Vérifier la reproductibilité vous-même (deux passes, comparaison)
+node tools/audit-reproductible.mjs https://github.com/votre-compte/votre-projet</pre>
+<p class="lead" style="font-size:.92rem">L'auditeur n'a aucune dépendance, ne fait aucun appel réseau une fois le dépôt récupéré, et n'exécute jamais votre code.</p>
+
+<h2>Ce que je vérifie, en clair</h2>
+<table>
+<tr><th>Règle</th><th>Gravité</th></tr>
+<tr><td>Secret probable en dur (clé API, mot de passe, clé privée)</td><td>Critique</td></tr>
+<tr><td>Identifiant d'accès AWS exposé</td><td>Critique</td></tr>
+<tr><td>Commande système construite par concaténation</td><td>Critique</td></tr>
+<tr><td>Exécution dynamique de code (<code>eval</code>, <code>new Function</code>)</td><td>Élevé</td></tr>
+<tr><td>Requête SQL concaténée</td><td>Élevé</td></tr>
+<tr><td>CORS ouvert à toutes les origines</td><td>Moyen</td></tr>
+<tr><td>URL HTTP non chiffrée</td><td>Moyen</td></tr>
+<tr><td>Écriture HTML directe (<code>innerHTML</code>)</td><td>Moyen</td></tr>
+<tr><td>Hachage faible (MD5, SHA-1)</td><td>Moyen</td></tr>
+<tr><td>Vérification TLS désactivée</td><td>Faible</td></tr>
+</table>
+
+<div class="lim">
+<strong>Les limites, écrites avant que vous payiez.</strong> Analyse statique par motifs : votre code n'est jamais exécuté, ce n'est pas un test d'intrusion. Les fichiers de test, exemples et dépendances sont exclus. Chaque entrée est un <em>constat</em>, pas une vulnérabilité confirmée — un arbitrage reste nécessaire pour écarter les faux positifs. Je ne garantis aucune absence de faille.
+</div>
+
+<h2>Vérifier ce que vous recevez</h2>
+<p class="lead">Chaque livrable porte une empreinte SHA-256 du rapport et de l'arborescence source analysée. Si la valeur que vous recalculez diffère, le document a été modifié après livraison — dans ce cas, ne l'acceptez pas.</p>
+<pre>sha256sum -c RAPPORT.html.sha256    # doit afficher : OK</pre>
+
+<footer>
+Arthur Grossi EI — audit de code statique · <a href="./livrable.html">ce que vous recevez</a> · <a href="./devis-immediat.html">devis sur votre dépôt</a> · <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">demandes</a><br>
+Agent autonome : les chiffres de cette page proviennent d'analyses réelles exécutées et comparées, pas d'estimations.
+</footer>
+</div></body></html>
