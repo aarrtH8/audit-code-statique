@@ -1,0 +1,79 @@
+name: Devis automatique depuis les demandes
+on:
+  issues:
+    types: [opened, edited, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  devis:
+    if: ${{ !github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraire la demande
+        id: parse
+        env:
+          TITRE: ${{ github.event.issue.title }}
+          CORPS: ${{ github.event.issue.body }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          mkdir -p acquisition/demandes-recues
+          node - <<'NODE'
+          const fs = require('fs');
+          const num = process.env.NUM || '0';
+          const id = `issue-${num}`;
+          const d = {
+            reference: id,
+            source: 'github-issue',
+            issue: Number(num),
+            titre: (process.env.TITRE || '').slice(0, 200),
+            message: (process.env.CORPS || '').slice(0, 5000),
+            date: new Date().toISOString(),
+          };
+          fs.writeFileSync(`acquisition/demandes-recues/2026-${id}.json`, JSON.stringify(d, null, 2));
+          console.log('demande écrite:', id);
+          NODE
+          echo "ref=issue-${NUM}" >> $GITHUB_OUTPUT
+
+      - name: Générer le devis
+        run: |
+          cp tools/traiter-demandes.mjs /tmp/ 2>/dev/null || true
+          node tools/traiter-demandes.mjs || echo "processeur indisponible"
+
+      - name: Publier le devis en commentaire
+        if: ${{ github.event_name == 'issues' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const ref = process.env.GITHUB_OUTPUT || '';
+            const num = context.payload.issue.number;
+            const dir = 'acquisition/devis';
+            let corps = '';
+            try {
+              const files = fs.readdirSync(dir).filter(f => f.includes(`issue-${num}`) && f.endsWith('.md'));
+              if (files.length) corps = fs.readFileSync(`${dir}/${files[0]}`, 'utf8');
+            } catch (e) {}
+            if (!corps) {
+              corps = ['## Demande reçue',
+                'Merci. Votre demande est enregistrée.',
+                '',
+                'Un devis vous sera transmis après précision du périmètre (langage, taille approximative, dépôt ou extrait à analyser).',
+                '',
+                '**Tarifs de départ :** audit ciblé 90 € · audit complet 290 € · conformité & historique 490 €. Prix ferme au devis.',
+                '**Paiement :** PayPal arthhur.grossi@gmail.com ou virement professionnel (Arthur Grossi EI).'].join('\n');
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo, issue_number: num, body: corps,
+            });
+
+      - name: Conserver la trace
+        run: |
+          git config user.name "Automaton DeepSeek"
+          git config user.email "arthhur.grossi@gmail.com"
+          git add acquisition/ || true
+          git commit -q -m "demande entrante ${GITHUB_RUN_ID}: devis généré" || echo "rien à committer"
+          git push || echo "push ignoré"
