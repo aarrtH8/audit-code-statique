@@ -10,8 +10,8 @@
  *   5. marque la demande « rapport produit » (jamais « payée » : ça, seul le créateur
  *      peut le faire avec une preuve de réception).
  *
- * Aucune promesse non tenue : si le clone échoue, la demande est marquée « échec »
- * avec la raison exacte. Rien n'est inventé.
+ * Robustesse : une demande sans champ `ref` reçoit une référence dérivée (hash du dépôt),
+ * le script ne plante jamais sur une entrée incomplète. Un échec de clone est consigné.
  *
  *   node tools/traiter-demandes.mjs            traite toutes les demandes en attente
  *   node tools/traiter-demandes.mjs --ref <R>  traite une seule référence
@@ -28,22 +28,37 @@ const LIV = join(HOME, 'livraisons');
 const TMP = join(HOME, '.tmp-clones');
 const REF = process.argv.includes('--ref') ? process.argv[process.argv.indexOf('--ref') + 1] : null;
 
+/** Référence de livraison sûre : celle fournie, sinon dérivée du dépôt, sinon du nom de fichier. */
+function refSur(d, fichier) {
+  if (d.ref && /^[A-Za-z0-9_-]+$/.test(d.ref)) return d.ref;
+  const base = d.depot ? createHash('sha256').update(d.depot).digest('hex').slice(0, 10).toUpperCase()
+                       : fichier.replace(/\.json$/, '').slice(0, 12);
+  return 'AUTO-' + base;
+}
+
 if (!existsSync(DEM)) { console.log('Aucune demande.'); process.exit(0); }
 if (!existsSync(LIV)) mkdirSync(LIV, { recursive: true });
 if (!existsSync(TMP)) mkdirSync(TMP, { recursive: true });
 
-const fichiers = readdirSync(DEM).filter(f => f.endsWith('.json'))
-  .filter(f => !REF || f === REF + '.json');
+const fichiers = readdirSync(DEM).filter(f => f.endsWith('.json'));
 
-let traitees = 0, echecs = 0;
+let traitees = 0, echecs = 0, ignorees = 0;
 
 for (const f of fichiers) {
   const chemin = join(DEM, f);
-  const d = JSON.parse(readFileSync(chemin, 'utf8'));
-  if (d.rapportProduit) { console.log(`  ${d.ref} : déjà traité.`); continue; }
+  let d;
+  try { d = JSON.parse(readFileSync(chemin, 'utf8')); }
+  catch (e) { console.log(`  ${f} : JSON illisible (${e.message}) — ignoré.`); ignorees++; continue; }
 
-  console.log(`\n=== ${d.ref} : ${d.depot} ===`);
-  const dossier = join(TMP, d.ref);
+  if (d.rapportProduit) { console.log(`  ${d.ref} : déjà traité.`); continue; }
+  if (!d.depot) { console.log(`  ${f} : aucune URL de dépôt — ignoré.`); ignorees++; continue; }
+
+  const ref = refSur(d, f);
+  if (!d.ref) d.ref = ref;
+  if (REF && ref !== REF) continue;
+
+  console.log(`\n=== ${ref} : ${d.depot} ===`);
+  const dossier = join(TMP, ref);
   try {
     if (existsSync(dossier)) rmSync(dossier, { recursive: true, force: true });
     execFileSync('git', ['clone', '--depth', '1', d.depot, dossier], { stdio: 'pipe', timeout: 120000 });
@@ -56,7 +71,7 @@ for (const f of fichiers) {
     echecs++; continue;
   }
 
-  const dest = join(LIV, d.ref);
+  const dest = join(LIV, ref);
   mkdirSync(dest, { recursive: true });
   let ok = false, sortie = '';
   try {
@@ -74,12 +89,12 @@ for (const f of fichiers) {
   if (ok && existsSync(rapport)) {
     const sha = createHash('sha256').update(readFileSync(rapport)).digest('hex');
     writeFileSync(join(dest, 'MANIFEST.json'), JSON.stringify({
-      ref: d.ref, depot: d.depot, quand: new Date().toISOString(),
+      ref, depot: d.depot, quand: new Date().toISOString(),
       rapport: 'rapport.md', sha256: sha,
-      commande: `node tools/audit-statique.mjs <clone> --sortie rapport.md`,
-      note: 'Analyse statique de motifs. Code non exécuté, dépôt non modifié. Un motif n\'est pas une vulnérabilité confirmée.',
+      commande: 'node tools/audit-statique.mjs <clone> --sortie rapport.md',
+      note: "Analyse statique de motifs. Code non exécuté, dépôt non modifié. Un motif n'est pas une vulnérabilité confirmée.",
     }, null, 2));
-    d.rapportProduit = true; d.rapport = `livraisons/${d.ref}/rapport.md`; d.sha256 = sha;
+    d.rapportProduit = true; d.rapport = `livraisons/${ref}/rapport.md`; d.sha256 = sha;
     traitees++;
   } else if (!d.echec) {
     d.echec = { quand: new Date().toISOString(), etape: 'analyse', raison: 'rapport non produit' };
@@ -87,5 +102,5 @@ for (const f of fichiers) {
   writeFileSync(chemin, JSON.stringify(d, null, 2));
 }
 
-console.log(`\n${traitees} rapport(s) produit(s), ${echecs} échec(s) de clone.`);
+console.log(`\n${traitees} rapport(s) produit(s), ${echecs} échec(s) de clone, ${ignorees} ignorée(s).`);
 console.log('État « payée » : jamais posé par ce script — seule une preuve de réception réelle le permet.');
