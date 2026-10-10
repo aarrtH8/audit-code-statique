@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit réel — sindresorhus/got</title>
+<style>body{background:#0d1117;color:#c9d1d9;font-family:system-ui,sans-serif;max-width:900px;margin:0 auto;padding:24px;line-height:1.6}
+a{color:#58a6ff}h1,h2{color:#fff}table{width:100%;border-collapse:collapse;margin:16px 0}
+th,td{border:1px solid #30363d;padding:8px 10px;text-align:left;font-size:.9rem}th{background:#161b22}
+.note{background:#161b22;border-left:3px solid #d29922;padding:12px 16px;margin:16px 0;font-size:.9rem}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.85rem}</style></head><body>
+<h1>Audit statique réel — <code>sindresorhus/got</code></h1>
+<p>Rapport généré le 2026-10-10. Analyse statique, <strong>aucune exécution du code audité</strong>.</p>
+<div class="note"><strong>Ce que ceci est :</strong> des motifs détectés par règles, pas des vulnérabilités confirmées. Certains sont des faux positifs (helpers, valeurs de démonstration). Chaque ligne doit être vérifiée par un humain avant toute action.</div>
+<h2>Résumé</h2>
+<table>
+<tr><th>Fichiers analysés</th><td>90</td></tr>
+<tr><th>Constats totaux</th><td>139</td></tr>
+<tr><th>En code de production</th><td>9</td></tr>
+<tr><th>Graves, en production</th><td>6</td></tr>
+</table>
+<h2>Constats en production</h2>
+<table><tr><th>Gravité</th><th>Constat</th><th>Emplacement</th></tr>
+<tr><td>MOYENNE</td><td>URL http:// non chiffrée dans le code</td><td><code>documentation/examples/runkit-example.js:3</code></td></tr>
+<tr><td>ELEVEE</td><td>Contrôle d'accès faible (jeton fixe)</td><td><code>source/core/index.ts:1567</code></td></tr>
+<tr><td>ELEVEE</td><td>Requête SQL construite par concaténation</td><td><code>source/core/index.ts:2432</code></td></tr>
+<tr><td>ELEVEE</td><td>Contrôle d'accès faible (jeton fixe)</td><td><code>source/core/index.ts:2433</code></td></tr>
+<tr><td>ELEVEE</td><td>Contrôle d'accès faible (jeton fixe)</td><td><code>source/core/options.ts:3182</code></td></tr>
+<tr><td>ELEVEE</td><td>Évaluation dynamique de code</td><td><code>source/core/options.ts:3545</code></td></tr>
+<tr><td>MOYENNE</td><td>URL http:// non chiffrée dans le code</td><td><code>source/core/utils/is-unix-socket-url.ts:11</code></td></tr>
+<tr><td>MOYENNE</td><td>URL http:// non chiffrée dans le code</td><td><code>source/core/utils/is-unix-socket-url.ts:17</code></td></tr>
+<tr><td>ELEVEE</td><td>Évaluation dynamique de code</td><td><code>source/core/utils/is-unix-socket-url.ts:26</code></td></tr>
+</table>
+<div class="note"><strong>Limites assumées :</strong> motifs ≠ failles exploitées ; faux positifs possibles ; fichiers &gt; 400 Ko et dépendances exclus. Ce rapport est un point de départ, pas un verdict.</div>
+<p><a href="./">← Retour au site</a> · <a href="./commande.html">Commander un audit</a></p>
+</body></html>
