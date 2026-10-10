@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapport d'audit statique — https://github.com/blocknine0/geomacro</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--bord:#30363d;--fg:#c9d1d9;--dim:#8b949e;--crit:#f85149;--eleve:#db6d28;--moyen:#d29922;--bas:#58a6ff;--ok:#3fb950}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;line-height:1.65}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px}h1{color:#fff;font-size:1.5rem;margin:0 0 4px}
+h2{color:#fff;font-size:1.12rem;margin-top:34px;border-bottom:1px solid var(--bord);padding-bottom:6px}
+.sub{color:var(--dim);font-size:.9rem}code{font-family:ui-monospace,Consolas,monospace;font-size:.85rem}
+.grille{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--bord);border-radius:8px;padding:12px 16px;min-width:120px}
+.stat .n{font-size:1.4rem;font-weight:700;color:#fff}.stat .l{font-size:.78rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.constat{background:var(--panel);border:1px solid var(--bord);border-left-width:4px;border-radius:8px;padding:12px 16px;margin:12px 0}
+.constat.critique{border-left-color:var(--crit)}.constat.eleve{border-left-color:var(--eleve)}
+.constat.moyen{border-left-color:var(--moyen)}.constat.bas{border-left-color:var(--bas)}
+.entet{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.entet code{color:var(--dim)}
+.badge{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
+.badge.critique{background:#3d1418;color:var(--crit)}.badge.eleve{background:#3a2110;color:var(--eleve)}
+.badge.moyen{background:#3d2f10;color:var(--moyen)}.badge.bas{background:#10243d;color:var(--bas)}
+pre{background:#010409;border:1px solid var(--bord);border-radius:6px;padding:9px 11px;overflow:auto;margin:8px 0}
+.k{color:var(--dim);font-weight:600}
+.vide{color:var(--dim);font-style:italic}
+.lim{background:var(--panel);border-left:3px solid var(--moyen);padding:12px 16px;margin:18px 0;font-size:.88rem;color:var(--dim)}
+.verdict{font-size:1.05rem;font-weight:700;color:#fff}
+footer{margin-top:44px;border-top:1px solid var(--bord);padding-top:16px;color:var(--dim);font-size:.84rem}
+a{color:#58a6ff}
+</style></head><body><div class="wrap">
+<h1>Rapport d'audit statique</h1>
+<p class="sub">Cible : <code>https://github.com/blocknine0/geomacro</code> · Généré le 2026-10-10 16:12:42 · 37 dossier(s) de tests/exemples écarté(s)</p>
+
+<div class="grille">
+  <div class="stat"><div class="n">31<span style="font-size:.8rem">/100</span></div><div class="l">Indice de propreté</div></div>
+  <div class="stat"><div class="n">213</div><div class="l">Constats</div></div>
+  <div class="stat"><div class="n" style="color:var(--crit)">4</div><div class="l">Critiques</div></div>
+  <div class="stat"><div class="n">1641</div><div class="l">Fichiers analysés</div></div>
+  <div class="stat"><div class="n">301 331</div><div class="l">Lignes lues</div></div>
+</div>
+
+<p><span class="verdict">Verdict : Préoccupant.</span>
+Densité de risque 6.97 points / 1 000 lignes.</p>
+
+<div class="lim">
+<strong>Ce que ce rapport est et n'est pas.</strong>
+Analyse statique par motifs : le code n'a <strong>jamais été exécuté</strong>.
+Un constat décrit une <em>construction à risque détectée dans le texte source</em>, pas une vulnérabilité
+forcément exploitable. Les tests, exemples et valeurs fictives sont écartés par défaut (option <code>--avec-tests</code> pour les inclure).
+Ce rapport ne garantit pas l'absence de vulnérabilité : il hiérarchise les points à examiner.
+</div>
+
+<h2>Constats critiques (4)</h2>
+<div class="constat critique">
+  <div class="entet"><span class="badge critique">Critique</span>
+    <strong>Secret probable en dur</strong><code>scripts/ops/verify-hosting-alignment.mjs:11</code></div>
+  <pre>const LOVABLE_MIRROR_SECRET = &quot;LOVABLE_MIRROR_TOKEN&quot;;</pre>
+  <p><span class="k">Pourquoi :</span> Une clé en clair dans le dépôt reste dans l'historique Git même après suppression.</p>
+  <p><span class="k">Correction :</span> Révoquer la clé, la déplacer dans une variable d'environnement, purger l'historique.</p>
+</div>
+
+<div class="constat critique">
+  <div class="entet"><span class="badge critique">Critique</span>
+    <strong>Secret probable en dur</strong><code>src/lib/testnet-public-access-contract.ts:7</code></div>
+  <pre>public_api_key: &quot;gmk_public_arc_testnet_v1&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une clé en clair dans le dépôt reste dans l'historique Git même après suppression.</p>
+  <p><span class="k">Correction :</span> Révoquer la clé, la déplacer dans une variable d'environnement, purger l'historique.</p>
+</div>
+
+<div class="constat critique">
+  <div class="entet"><span class="badge critique">Critique</span>
+    <strong>Secret probable en dur</strong><code>src/lib/testnet-public-access-contract.ts:12</code></div>
+  <pre>public_api_key: &quot;gmk_public_base_sepolia_v1&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une clé en clair dans le dépôt reste dans l'historique Git même après suppression.</p>
+  <p><span class="k">Correction :</span> Révoquer la clé, la déplacer dans une variable d'environnement, purger l'historique.</p>
+</div>
+
+<div class="constat critique">
+  <div class="entet"><span class="badge critique">Critique</span>
+    <strong>Secret probable en dur</strong><code>src/lib/testnet-public-access-contract.ts:17</code></div>
+  <pre>public_api_key: &quot;gmk_public_polygon_amoy_v1&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une clé en clair dans le dépôt reste dans l'historique Git même après suppression.</p>
+  <p><span class="k">Correction :</span> Révoquer la clé, la déplacer dans une variable d'environnement, purger l'historique.</p>
+</div>
+<h2>Constats élevés (146)</h2>
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/day6-authorized-federico-pilot-once.yml:624</code></div>
+  <pre>- selected country: ${TARGET_ISO3:-not_selected}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/fragment-b2-resolver-backed-offload.yml:51</code></div>
+  <pre>DELETE_SOURCE: ${{ inputs.delete_source }}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/fragment-b2-targeted-cleanup.yml:38</code></div>
+  <pre>B2_FRAGMENT_TARGET_DELETE: ${{ inputs.delete_source == 'true' &amp;&amp; '1' || '0' }}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/structured-evidence-b2-delete-batch.yml:37</code></div>
+  <pre>STRUCTURED_EVIDENCE_DELETE_OLDER_DAYS: ${{ inputs.older_days }}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/structured-evidence-b2-delete-batch.yml:38</code></div>
+  <pre>STRUCTURED_EVIDENCE_DELETE_LIMIT: ${{ inputs.limit }}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/structured-evidence-b2-delete-canary.yml:31</code></div>
+  <pre>STRUCTURED_EVIDENCE_DELETE_OLDER_DAYS: ${{ inputs.older_days }}</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>.github/workflows/telegram-b2-d1-consumer.yml:224</code></div>
+  <pre>npx -y &quot;wrangler@${WRANGLER_VERSION}&quot; d1 execute DB --remote --json --config &quot;$D1_CONFIG&quot; --command &quot;UPDATE telegram_signal_lead_queue SET attempt_count=attempt</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-agent-hot-topic-readiness.ts:44</code></div>
+  <pre>let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-gdelt-dependency-live.mjs:88</code></div>
+  <pre>let query = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-global-production-coverage.mjs:41</code></div>
+  <pre>let q = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-global-realtime-intelligence-100.mjs:83</code></div>
+  <pre>let query = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-hot-topic-family-readiness.ts:43</code></div>
+  <pre>let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-sovereign-fiscal-production-diagnostics.ts:90</code></div>
+  <pre>let query: any = db.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/audit-ucdp-quality-reasons.ts:34</code></div>
+  <pre>let query: any = db.from(table).select(select).range(from, from + PAGE_SIZE - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/backfill-source-domain.js:69</code></div>
+  <pre>console.error(`  ❌ Failed to update row ${row.id}:`, updateError.message);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/backfill-source-domain.js:76</code></div>
+  <pre>console.log(`\nDone. Backfilled ${updated} row(s), ${failed} failed.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/backfill-tx-hashes.js:163</code></div>
+  <pre>`  ❌ [${item.label}] ${marketId} update error — ${updErr.message}`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/backfill-tx-hashes.js:175</code></div>
+  <pre>`\nDone. Updated=${updated}, Already had=${alreadyHad}, ` +</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/commercial/private-pilot-demand-report.mjs:37</code></div>
+  <pre>const { data, error } = await db.from(table).select(columns).order(orderColumn).range(start, Math.min(start + 499, limit - 1));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:888</code></div>
+  <pre>.insert(rows.slice(i, i + chunkSize));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:892</code></div>
+  <pre>`source disposition insert failed: ${error.message}`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:902</code></div>
+  <pre>const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:903</code></div>
+  <pre>if (error) throw new Error(`contribution insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:1470</code></div>
+  <pre>if (snapshotError) throw new Error(`GRI draft snapshot insert failed: ${snapshotError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v11.js:1536</code></div>
+  <pre>console.log(`✅ Published immutable GRI proof package ${inserted.id} with ${calculation.contributions.length} contributions.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:883</code></div>
+  <pre>.insert(rows.slice(i, i + chunkSize));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:887</code></div>
+  <pre>`source disposition insert failed: ${error.message}`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:897</code></div>
+  <pre>const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:898</code></div>
+  <pre>if (error) throw new Error(`contribution insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:1465</code></div>
+  <pre>if (snapshotError) throw new Error(`GRI draft snapshot insert failed: ${snapshotError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/compute-gri-v12.js:1531</code></div>
+  <pre>console.log(`✅ Published immutable GRI proof package ${inserted.id} with ${calculation.contributions.length} contributions.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/db/check-migration-safety.mjs:245</code></div>
+  <pre>String.raw`\bdelete\s+from\s+(${qualifiedSqlIdentifier})(?=\s|;|$)`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/db/check-migration-safety.mjs:349</code></div>
+  <pre>/\bdelete\s+from\b/i.test(</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/db/check-migration-safety.mjs:375</code></div>
+  <pre>/\bdelete\s+from\b/gi,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/db/check-migration-safety.mjs:406</code></div>
+  <pre>`${file}: forbidden stored-function DELETE FROM ${target}`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/db/check-migration-safety.mjs:422</code></div>
+  <pre>`${file}: stale runtime DELETE allowlist entry for ${allowedTarget}`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/drain-live-structure.mjs:152</code></div>
+  <pre>events_updated: outputs.reduce((n, row) =&gt; n + Number(row?.events_updated ?? 0), 0),</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/early-warning/ecb-rss-core.mjs:96</code></div>
+  <pre>.update(`${guid}\n${publishedAt}\n${title}`, &quot;utf8&quot;)</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/export-admitted-events-for-structure.mjs:824</code></div>
+  <pre>`Manifest insert failed (${manifestError.message}); orphan cleanup also failed (${cleanupError.message})`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/finalize-markets.js:466</code></div>
+  <pre>console.log(`  ⚠️ Skipping resolved-flag update for ${marketId}: no service-role key, cannot sync positions safely.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/import-source-endpoint-evidence.mjs:95</code></div>
+  <pre>`live_source_certification_records?select=source_id,endpoint_url,canonical_url&amp;limit=${pageSize}&amp;offset=${offset}`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-gri-benchmarks.js:75</code></div>
+  <pre>if (insertError) throw new Error(`${def.benchmark_key} insert failed: ${insertError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:2768</code></div>
+  <pre>`GRI reassessment insert failed for ${event.id}: ${error.message}`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:2943</code></div>
+  <pre>`GRI reassessment done. Inserted=${inserted}, ` +</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3697</code></div>
+  <pre>`  🧪 WOULD INSERT [${gated.category}] ` +</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3738</code></div>
+  <pre>`  ✅ Inserted [${gated.category}]: &quot;${gated.title}&quot; (severity ${assessment.severity}, delta ${delta})`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3754</code></div>
+  <pre>? `Would insert ${categoryInserted} event(s) for ${category.name}.`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3755</code></div>
+  <pre>: `Inserted ${categoryInserted} event(s) for ${category.name}.`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3763</code></div>
+  <pre>? `\nDone. Total unique would-insert: ${totalInserted} event(s).`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-news.js:3764</code></div>
+  <pre>: `\nDone. Total unique inserted: ${totalInserted} event(s).`</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ingest-wgi-political-stability-live.ts:121</code></div>
+  <pre>throw new Error(`${iso3}: selected WGI bundle unexpectedly rejected: ${result.reason}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/legacy/compute-gri-v10.js:393</code></div>
+  <pre>const { error } = await supabase.from('gri_contributions').insert(rows.slice(i, i + chunkSize));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/legacy/compute-gri-v10.js:394</code></div>
+  <pre>if (error) throw new Error(`contribution insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/legacy/compute-gri-v10.js:571</code></div>
+  <pre>if (snapshotError) throw new Error(`GRI draft snapshot insert failed: ${snapshotError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/legacy/compute-gri-v10.js:600</code></div>
+  <pre>console.log(`✅ Published immutable GRI proof package ${inserted.id} with ${calculation.contributions.length} contributions.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:398</code></div>
+  <pre>return `EXISTS (SELECT 1 FROM public.${identifier(relation)} AS ${identifier(alias)} WHERE ${this.#relationshipCondition(relation, identifier(alias))})`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:413</code></div>
+  <pre>const alias = identifier(`__rel_select_${index}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:415</code></div>
+  <pre>parts.push(`(SELECT COALESCE(jsonb_agg(jsonb_build_object(${objectArgs.join(&quot;,&quot;)})), '[]'::jsonb) FROM public.${identifier(item.relation)} AS ${alias} WHERE ${t</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:430</code></div>
+  <pre>return `SELECT row_to_json(q)::text FROM (SELECT ${this.#selectProjectionSql()} FROM ${table}${this.#where()}${this.#tail()}) q;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:450</code></div>
+  <pre>const insert = `INSERT INTO ${table} (${cols}) SELECT ${sourceCols} FROM jsonb_populate_recordset(NULL::${table}, ${payloadJson}::jsonb)`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:457</code></div>
+  <pre>return `WITH changed AS (${insert} RETURNING *) SELECT row_to_json(q)::text FROM (SELECT ${this.returningColumns} FROM changed) q;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:471</code></div>
+  <pre>: `DO UPDATE SET ${updateKeys.map((key) =&gt; `${identifier(key)} = EXCLUDED.${identifier(key)}`).join(&quot;,&quot;)}`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:472</code></div>
+  <pre>const upsert = `${insert} ON CONFLICT (${conflictSql}) ${action}`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:474</code></div>
+  <pre>return `WITH changed AS (${upsert} RETURNING *) SELECT row_to_json(q)::text FROM (SELECT ${this.returningColumns} FROM changed) q;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:480</code></div>
+  <pre>const deletion = `DELETE FROM ${table}${this.#where()}`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:482</code></div>
+  <pre>return `WITH changed AS (${deletion} RETURNING *) SELECT row_to_json(q)::text FROM (SELECT ${this.returningColumns} FROM changed) q;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:497</code></div>
+  <pre>const update = `UPDATE ${table} SET ${assignments}${this.#where()}`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:499</code></div>
+  <pre>return `WITH changed AS (${update} RETURNING *) SELECT row_to_json(q)::text FROM (SELECT ${this.returningColumns} FROM changed) q;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/lib/gri-db-client.mjs:568</code></div>
+  <pre>const sql = `SELECT to_jsonb(public.${identifier(name)}(${namedArgs}))::text;`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/marketing/auto-distribute-alert.mjs:387</code></div>
+  <pre>const idempotencyKey = crypto.createHash('sha256').update(`${alert.alert_id}:${channel}`).digest('hex');</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-gro-bundle.ts:89</code></div>
+  <pre>if (selected.length &gt; 0 &amp;&amp; rawBundleBytes + memberGzip.length &gt; MAX_RAW_BUNDLE_BYTES) break;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-observation-bundle.mjs:81</code></div>
+  <pre>if (selected.length &gt; 0 &amp;&amp; rawBytes + payloadBytes.length &gt; MAX_RAW_BUNDLE_BYTES) break;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-raw-batch.mjs:40</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-deleted/${snapshot.snapshot_id}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-source-certification-evidence-run.mjs:224</code></div>
+  <pre>throw new Error(`SOURCE_CERT_EVIDENCE_EDGE_DELETE_UNCONFIRMED_${deleteEdgesError?.code ?? &quot;count&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-source-certification-evidence-run.mjs:233</code></div>
+  <pre>throw new Error(`SOURCE_CERT_EVIDENCE_NODE_DELETE_UNCONFIRMED_${deleteNodesError?.code ?? &quot;count&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-structuring-run-history.mjs:158</code></div>
+  <pre>throw new Error(`STRUCTURING_RUN_ARCHIVE_DELETE_FAILED_${deleteError?.code ?? &quot;count&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-archive-structuring-run-history.mjs:172</code></div>
+  <pre>const deletionProofKey = `geomacro-evidence/v1/index/structuring-run-history-deleted/${bundleSha}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-compact-structured-event-bundle.mjs:297</code></div>
+  <pre>const hotBytesBefore = updates.reduce((sum, item) =&gt; sum + item.current_bytes, 0);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-compact-structured-event-bundle.mjs:298</code></div>
+  <pre>const hotBytesAfter = updates.reduce((sum, item) =&gt; sum + item.pointer_bytes, 0);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-country-ingest-offload.mjs:114</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-bundles-deleted/${bundleId}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-delete-structured-evidence-canary.mjs:76</code></div>
+  <pre>if (parentError) throw new Error(`STRUCTURED_EVIDENCE_DELETE_PARENT_QUERY_FAILED_${parentError.code ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-delete-structured-evidence-canary.mjs:88</code></div>
+  <pre>if (evidenceError) throw new Error(`STRUCTURED_EVIDENCE_DELETE_QUERY_FAILED_${evidenceError.code ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-delete-verified-structured-evidence-bundles.mjs:147</code></div>
+  <pre>if (error) throw new Error(`STRUCTURED_EVIDENCE_PHASE_B_BRIDGE_INSERT_FAILED_${error.code ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-delete-verified-structured-evidence-bundles.mjs:181</code></div>
+  <pre>if (error) throw new Error(`STRUCTURED_EVIDENCE_PHASE_B_DELETE_FAILED_${error.code ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-delete-verified-structured-evidence-bundles.mjs:200</code></div>
+  <pre>if (error) throw new Error(`STRUCTURED_EVIDENCE_PHASE_B_ROLLBACK_INSERT_FAILED_${error.code ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-archive-offload.mjs:86</code></div>
+  <pre>if (insertError) throw new Error(`B2_FRAGMENT_POINTER_INSERT_FAILED_${insertError.code ?? &quot;unknown&quot;}: ${insertError.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-archive-offload.mjs:102</code></div>
+  <pre>throw new Error(`B2_FRAGMENT_SOURCE_DELETE_PROBE_INDETERMINATE_${id}_${postDeleteStatus || &quot;no_status&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-archive-offload.mjs:105</code></div>
+  <pre>const deletionProofKey = `geomacro-evidence/v1/index/live-fragments-deleted/${id}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-archive-offload.mjs:113</code></div>
+  <pre>if (markError) throw new Error(`B2_FRAGMENT_DELETE_MARK_FAILED_${markError.code ?? &quot;unknown&quot;}: ${markError.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-archive-offload.mjs:123</code></div>
+  <pre>verification: &quot;source-hash+b2-readback-hash+immutable-sidecar+fully-handled-gate+storage-api-delete+absence-proof&quot;, results }));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-resolver-backed-offload.mjs:128</code></div>
+  <pre>if (error) throw new Error(`B2_FRAGMENT_RESOLVER_POINTER_INSERT_FAILED_${error.code ?? &quot;unknown&quot;}: ${error.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-resolver-backed-offload.mjs:204</code></div>
+  <pre>const deletionProofKey = `geomacro-evidence/v1/index/live-fragments-deleted/${fragmentId}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-resolver-backed-offload.mjs:228</code></div>
+  <pre>if (markError) throw new Error(`B2_FRAGMENT_RESOLVER_DELETE_MARK_FAILED_${markError.code ?? &quot;unknown&quot;}: ${markError.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-targeted-cleanup.mjs:119</code></div>
+  <pre>if (error) throw new Error(`B2_FRAGMENT_TARGET_POINTER_INSERT_FAILED_${error.code ?? &quot;unknown&quot;}: ${error.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-targeted-cleanup.mjs:162</code></div>
+  <pre>const deletionProofKey = `geomacro-evidence/v1/index/live-fragments-deleted/${fragmentId}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-targeted-cleanup.mjs:173</code></div>
+  <pre>if (markError) throw new Error(`B2_FRAGMENT_TARGET_DELETE_MARK_FAILED_${markError.code ?? &quot;unknown&quot;}: ${markError.message ?? &quot;unknown&quot;}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-fragment-targeted-cleanup.mjs:190</code></div>
+  <pre>const preparedKey = `geomacro-evidence/v1/index/live-fragments-delete-prepared/${fragmentId}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-raw-delete-canary.mjs:69</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-deleted/${id}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-raw-prune-batch.mjs:37</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-deleted/${row.snapshot_id}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-raw-storage-bundle-maintenance.mjs:39</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-bundles-deleted/${bundleId}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/b2-raw-storage-maintenance.mjs:129</code></div>
+  <pre>const deletionKey = `geomacro-evidence/v1/index/raw-deleted/${id}.json`;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/backup-private-commercial-revenue-ledger.mjs:208</code></div>
+  <pre>console.log(`Plaintext export deleted: ${deletePlaintext}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/d1-gro-index-backfill.ts:176</code></div>
+  <pre>const statements = verified.map((row) =&gt; `INSERT INTO risk_object_index (object_id,schema_version,subject_type,subject_id,generated_at,expires_at,verification_s</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/d1-shadow-backfill.mjs:195</code></div>
+  <pre>statements.push(`INSERT INTO source_state (source_key,enabled,certification_status,rights_status,endpoint_status,schema_status,freshness_status,provenance_statu</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/d1-shadow-backfill.mjs:198</code></div>
+  <pre>statements.push(`INSERT INTO country_domain_state (country_code,domain,readiness_status,certified_source_count,review_source_count,unavailable_source_count,last</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/direct-postgres-supabase-lite.ts:114</code></div>
+  <pre>return `SELECT row_to_json(q)::text FROM (SELECT ${this.columns} FROM public.${this.table}${where.length ? ` WHERE ${where.join(&quot; AND &quot;)}` : &quot;&quot;}${order.length ?</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/nonproduction-rollback-incident-drill.mjs:52</code></div>
+  <pre>console.log(`PASS: nonproduction rollback/incident control drill selected rollback target ${rollbackSha}.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/phase-a-runtime-freshness-repair.mjs:123</code></div>
+  <pre>if (!Number.isFinite(deltaSeconds) || deltaSeconds &gt; 7200 || deltaSeconds &lt; -1800) throw new Error(`GDELT_LASTUPDATE_TIME_INVALID:${Math.round(deltaSeconds)}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/phase-a-runtime-freshness-repair.mjs:212</code></div>
+  <pre>select public.promote_source_certification_evidence_graph_run(${sqlText(runId)},${sqlText(ACTOR)});</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/provision-ephemeral-risk-gate-staging.ts:217</code></div>
+  <pre>if (clientError) fail(`client insert failed: ${clientError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/sync-current-country-gro-to-d1.ts:147</code></div>
+  <pre>const upsert = `INSERT INTO risk_object_index (object_id,schema_version,subject_type,subject_id,generated_at,expires_at,verification_status,commercial_eligibili</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/ops/sync-global-current-country-gro-to-d1.ts:312</code></div>
+  <pre>`INSERT INTO risk_object_index (object_id,schema_version,subject_type,subject_id,generated_at,expires_at,verification_status,commercial_eligibility_status,signi</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history-v12.js:376</code></div>
+  <pre>const { error } = await supabase.from('gri_replay_snapshots').insert(rows.slice(i, i + size));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history-v12.js:377</code></div>
+  <pre>if (error) throw new Error(`replay snapshot insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history-v12.js:498</code></div>
+  <pre>if (runError) throw new Error(`replay run insert failed: ${runError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history.js:376</code></div>
+  <pre>const { error } = await supabase.from('gri_replay_snapshots').insert(rows.slice(i, i + size));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history.js:377</code></div>
+  <pre>if (error) throw new Error(`replay snapshot insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/replay-gri-history.js:498</code></div>
+  <pre>if (runError) throw new Error(`replay run insert failed: ${runError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/resolve-disputes.js:505</code></div>
+  <pre>if (voteInsertError) console.log(`  ⚠️ Supabase jury_votes insert failed (${voteInsertError.message}) — vote is on-chain regardless.`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/resolve-markets.js:584</code></div>
+  <pre>console.error(`  ⚠️ On-chain resolve succeeded but Supabase update failed for ${marketId}:`, updateErr.message);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/sync-lifecycle.js:317</code></div>
+  <pre>console.log(`  ❌ ${marketId}: Supabase update FAILED — ${updateError.message} (code: ${updateError.code ?? &quot;n/a&quot;})`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/sync-lifecycle.js:334</code></div>
+  <pre>console.log(`  ⚠️ ${marketId}: market_disputes insert failed — ${disputeInsertError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/sync-lifecycle.js:350</code></div>
+  <pre>console.log(`Done. ${changed} market(s) updated. ${events.length - processedCount} remaining for next run (out of a full time-budget stop, not a count cap).`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/sync-stakes.js:256</code></div>
+  <pre>console.log(`  [${label}] Done. Inserted: ${inserted}, Skipped: ${skipped}, Failed: ${failed}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri-v12.js:162</code></div>
+  <pre>let q = supabase.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri-v12.js:335</code></div>
+  <pre>if (runError) throw new Error(`validation run insert failed: ${runError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri-v12.js:341</code></div>
+  <pre>const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri-v12.js:342</code></div>
+  <pre>if (error) throw new Error(`validation metric insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri.js:162</code></div>
+  <pre>let q = supabase.from(table).select(select).range(from, from + pageSize - 1);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri.js:335</code></div>
+  <pre>if (runError) throw new Error(`validation run insert failed: ${runError.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri.js:341</code></div>
+  <pre>const { error } = await supabase.from('gri_validation_metrics').insert(rows.slice(i, i + 500));</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>scripts/validate-gri.js:342</code></div>
+  <pre>if (error) throw new Error(`validation metric insert failed: ${error.message}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/components/foundation/live.tsx:50</code></div>
+  <pre>&lt;span&gt;{rel ? `Updated ${rel}` : &quot;Update time unavailable&quot;}&lt;/span&gt;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/ask-intelligence.server.ts:661</code></div>
+  <pre>summary: `${selected.length} stored records are most relevant to this broad current-risk question across ${categories.join(&quot;, &quot;) || &quot;the current risk set&quot;}. ${c</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/ask-intelligence.server.ts:670</code></div>
+  <pre>: `The selected set has a mean stored severity of ${meanSeverity.toFixed(1)}/100, led by ${titleOf(top)}. This is a deterministic summary of stored records, not</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/ask-intelligence.server.ts:755</code></div>
+  <pre>selected.reduce((sum, item) =&gt; sum + item.similarity, 0) / selected.length;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/ask-realtime-search.server.ts:242</code></div>
+  <pre>.update(`${hit.category}\0${hit.title}\0${hit.publishedAt ?? &quot;&quot;}\0${index}`)</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/hybrid-ask-intelligence.server.ts:125</code></div>
+  <pre>const mean = selected.reduce((sum, item) =&gt; sum + item.relevance, 0) / selected.length;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/hybrid-ask-intelligence.server.ts:140</code></div>
+  <pre>summary: `Geomacro found ${selected.length} relevant verified intelligence records for your question${categories.length ? ` across ${categories.join(&quot;, &quot;)}` : &quot;</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>src/lib/webhook-event-outbox.server.ts:359</code></div>
+  <pre>`Webhook outbox insert failed: ${error.message}`,</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/archive-verify-read/index.ts:64</code></div>
+  <pre>else if (kind === &quot;raw-bundle&quot; &amp;&amp; bundleId.test(id)) key = part === &quot;archive&quot; ? `geomacro-evidence/v1/raw-bundles/${id}.json.gz` : part === &quot;proof&quot; ? `geomacro-</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/archive-verify-read/index.ts:65</code></div>
+  <pre>else if (kind === &quot;raw&quot; &amp;&amp; /^[0-9a-f-]{36}$/i.test(id)) { const p = String(body?.source_path ?? &quot;&quot;); if (part === &quot;archive&quot; &amp;&amp; /^raw\/v1\/[A-Za-z0-9_./-]+\.gz$/</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/gro-archive-maintain/index.ts:139</code></div>
+  <pre>const updated = await fetch(`${url}/rest/v1/geomacro_risk_objects?${filter}`, {</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/gro-archive-maintain/index.ts:144</code></div>
+  <pre>if (!updated.ok) throw Error(`POINTER_UPDATE_${updated.status}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/live-flash-corroborate/country-window.ts:37</code></div>
+  <pre>.select(`${COUNTRY_FLASH_SELECT},live_flash_event_countries!inner(country_iso3)`, { count: &quot;exact&quot; })</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+
+<div class="constat eleve">
+  <div class="entet"><span class="badge eleve">Élevé</span>
+    <strong>Requête SQL construite par concaténation</strong><code>supabase/functions/log-history-archive/index.ts:121</code></div>
+  <pre>const page = await query(`select timestamp,id,source,event_message,log_attributes from logs order by timestamp,id limit 500 offset ${offset}`);</pre>
+  <p><span class="k">Pourquoi :</span> Concaténer une entrée dans une requête ouvre la porte à l'injection SQL.</p>
+  <p><span class="k">Correction :</span> Utiliser des requêtes paramétrées.</p>
+</div>
+<h2>Constats moyens (63)</h2>
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Hachage faible pour mot de passe</strong><code>scripts/ingest-gdelt-v2-events-live.mjs:278</code></div>
+  <pre>const exportMd5 = createHash(&quot;md5&quot;).update(zipBuffer).digest(&quot;hex&quot;)</pre>
+  <p><span class="k">Pourquoi :</span> MD5/SHA1 sont inadaptés au stockage de mots de passe.</p>
+  <p><span class="k">Correction :</span> Utiliser bcrypt, scrypt ou Argon2.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Hachage faible pour mot de passe</strong><code>scripts/ops/publish-b2-public-intelligence-direct-postgres.mjs:642</code></div>
+  <pre>const md5 = createHash(&quot;md5&quot;).update(zip).digest(&quot;hex&quot;);</pre>
+  <p><span class="k">Pourquoi :</span> MD5/SHA1 sont inadaptés au stockage de mots de passe.</p>
+  <p><span class="k">Correction :</span> Utiliser bcrypt, scrypt ou Argon2.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>URL HTTP non chiffrée</strong><code>scripts/ops/verify-public-ask-production.mjs:57</code></div>
+  <pre>for (const forbidden of [&quot;raw_payload&quot;, &quot;provider_name&quot;, &quot;publisher_name&quot;, &quot;source_url&quot;, &quot;https://&quot;, &quot;http://&quot;]) {</pre>
+  <p><span class="k">Pourquoi :</span> Données (jetons, mots de passe) lisibles en transit.</p>
+  <p><span class="k">Correction :</span> Passer en HTTPS.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>URL HTTP non chiffrée</strong><code>scripts/run-live-flash-corroborate-local.ts:105</code></div>
+  <pre>const request = new Request(&quot;http://geomacro.local/live-flash-corroborate&quot;, {</pre>
+  <p><span class="k">Pourquoi :</span> Données (jetons, mots de passe) lisibles en transit.</p>
+  <p><span class="k">Correction :</span> Passer en HTTPS.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>URL HTTP non chiffrée</strong><code>scripts/run-live-flash-ingest-local.ts:98</code></div>
+  <pre>const request = new Request(&quot;http://geomacro.local/live-flash-ingest&quot;, {</pre>
+  <p><span class="k">Pourquoi :</span> Données (jetons, mots de passe) lisibles en transit.</p>
+  <p><span class="k">Correction :</span> Passer en HTTPS.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>URL HTTP non chiffrée</strong><code>scripts/run-live-structure-local.ts:108</code></div>
+  <pre>const request = new Request(&quot;http://geomacro.local/live-structure-intelligence&quot;, {</pre>
+  <p><span class="k">Pourquoi :</span> Données (jetons, mots de passe) lisibles en transit.</p>
+  <p><span class="k">Correction :</span> Passer en HTTPS.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/a2a/index.get.ts:14</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/a2a/[...path].ts:44</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/commercial/structural.options.ts:9</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/commercial/structural.post.ts:38</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/early-warning.get.ts:17</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/early-warning.options.ts:10</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/api/x402/bazaar-status.get.ts:21</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/routes/.well-known/geomacro-risk-keys.json.get.ts:9</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/routes/.well-known/jwks.json.get.ts:13</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/routes/.well-known/x402.get.ts:7</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>server/routes/.well-known/x402.json.get.ts:7</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:121</code></div>
+  <pre>$('funnelCards').innerHTML=funnelCards.map(([k,v])=&gt;'&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;k&quot;&gt;'+esc(k)+'&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;'+esc(v)+'&lt;/div&gt;&lt;/div&gt;').join('');</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:128</code></div>
+  <pre>$('cards').innerHTML=cards.map(([k,v])=&gt;'&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;k&quot;&gt;'+esc(k)+'&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;'+esc(v)+'&lt;/div&gt;&lt;/div&gt;').join('');</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:137</code></div>
+  <pre>$('growthTable').innerHTML=growthTable(j.data); $('growthStatusText').innerHTML='&lt;span class=&quot;ok&quot;&gt;Loaded '+esc(j.data.length)+' draft(s). No external publicatio</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:138</code></div>
+  <pre>}catch(e){$('growthStatusText').innerHTML='&lt;span class=&quot;danger&quot;&gt;'+esc(e.message)+'&lt;/span&gt;'}</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:147</code></div>
+  <pre>$('growthStatusText').innerHTML='&lt;span class=&quot;ok&quot;&gt;Draft '+esc(action)+'d. No external publication performed.&lt;/span&gt;';</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:149</code></div>
+  <pre>}catch(e){$('growthStatusText').innerHTML='&lt;span class=&quot;danger&quot;&gt;'+esc(e.message)+'&lt;/span&gt;'}</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:155</code></div>
+  <pre>$('funnelRollup').innerHTML=table(rollup);</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:156</code></div>
+  <pre>$('funnelTable').innerHTML=table(attempts);</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:161</code></div>
+  <pre>if(opsToken.length&lt;32){$('status').innerHTML='&lt;span class=&quot;danger&quot;&gt;Enter the owner token.&lt;/span&gt;';return}</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:166</code></div>
+  <pre>summarize(j.data); renderDeveloperFunnel(j.data); $('usageTable').innerHTML=table(j.data.recent_usage); $('paymentTable').innerHTML=table(j.data.recent_payments</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:167</code></div>
+  <pre>$('content').classList.remove('hidden'); $('status').innerHTML='&lt;span class=&quot;ok&quot;&gt;Loaded '+esc(j.data.generated_at)+'&lt;/span&gt;';</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:169</code></div>
+  <pre>}catch(e){$('status').innerHTML='&lt;span class=&quot;danger&quot;&gt;'+esc(e.message)+'&lt;/span&gt;'}</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:179</code></div>
+  <pre>const url=location.origin+j.public_path; $('proofStatus').innerHTML='&lt;span class=&quot;ok&quot;&gt;Published:&lt;/span&gt; &lt;a style=&quot;color:#b8cdf2&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; </pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>Écriture HTML directe (risque XSS)</strong><code>server/routes/internal/commercial-ops.get.ts:180</code></div>
+  <pre>}catch(e){$('proofStatus').innerHTML='&lt;span class=&quot;danger&quot;&gt;'+esc(e.message)+'&lt;/span&gt;'}</pre>
+  <p><span class="k">Pourquoi :</span> Injecter une donnée non échappée dans le DOM exécute du script dans le navigateur.</p>
+  <p><span class="k">Correction :</span> Utiliser textContent ou échapper.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/lib/category-intelligence-alias.server.ts:87</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/lib/geomacro-mcp.server.ts:34</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/lib/mainnet-intelligence-endpoint.server.ts:47</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.agent.risk.ts:40</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.demo.preflight.ts:9</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.early-warning.ts:17</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.intelligence.state.ts:192</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.intelligence.state.ts:209</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.tameion.approve.ts:8</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.tameion.confirm.ts:8</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.tameion.decision.ts:14</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.x402.circle_.intelligence.ts:37</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.x402.nevermined_.intelligence.ts:32</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.x402.risk.ts:30</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>src/routes/api.x402.risk_.availability.ts:11</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>supabase/functions/public-early-warning/index.ts:65</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>supabase/functions/public-risk-indices/index.ts:71</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/control-plane/src/index.mjs:136</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/control-plane/src/index.mjs:438</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;:&quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/control-plane/src/index.mjs:513</code></div>
+  <pre>&quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/global-risk-edge/src/index.mjs:155</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/global-risk-edge/src/index.mjs:282</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/global-risk-edge/src/index.mjs:298</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/global-risk-edge/src/index.mjs:344</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/intelligence-edge/src/index.mjs:284</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/intelligence-edge/src/index.mjs:351</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/intelligence-edge/src/index.mjs:364</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/intelligence-edge/src/index.mjs:424</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/risk-indices-edge/src/index.mjs:160</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/risk-indices-edge/src/index.mjs:220</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/risk-indices-edge/src/index.mjs:236</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+
+<div class="constat moyen">
+  <div class="entet"><span class="badge moyen">Moyen</span>
+    <strong>CORS ouvert à toutes les origines</strong><code>workers/risk-indices-edge/src/index.mjs:281</code></div>
+  <pre>&quot;access-control-allow-origin&quot;: &quot;*&quot;,</pre>
+  <p><span class="k">Pourquoi :</span> Une origine générique autorise n'importe quel site à lire les réponses de l'API.</p>
+  <p><span class="k">Correction :</span> Restreindre aux origines réellement utilisées.</p>
+</div>
+<h2>Constats faibles (0)</h2><p class="vide">Aucun constat de cette catégorie.</p>
+
+<h2>Plan de correction priorisé</h2>
+<ol>
+<li><strong>Immédiat</strong> — révoquer tout secret exposé, retirer les exécutions dynamiques atteignables par une entrée.</li>
+<li><strong>Sous 7 jours</strong> — corriger les injections et l'échappement des sorties.</li>
+<li><strong>Ce mois</strong> — restreindre CORS, passer en HTTPS, remplacer les hachages faibles.</li>
+
+<li><strong>Ensuite</strong> — ajouter cette analyse en intégration continue pour éviter la réintroduction.</li>
+</ol>
+
+<footer>
+Rapport produit par l'auditeur statique autonome (aucun code exécuté, aucun fichier modifié).<br>
+Prestation : audit de code statique — Arthur Grossi EI · arthhur.grossi@gmail.com<br>
+Faux positifs à arbitrer lors de la restitution.
+</footer>
+</div></body></html>
