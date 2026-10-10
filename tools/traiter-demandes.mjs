@@ -1,120 +1,91 @@
 #!/usr/bin/env node
 /**
- * traiter-demandes.mjs — transforme une demande entrante en devis prêt à envoyer.
- * Lit acquisition/demandes-recues/*.json, écrit un devis .md + .html par demande non traitée.
- * Aucun envoi : la livraison reste une action humaine vérifiée.
+ * traiter-demandes.mjs — transforme une demande reçue en livraison réelle.
+ *
+ * Pour chaque demande non traitée dans demandes/, ce script :
+ *   1. clone le dépôt demandé (lecture seule, aucun commit, aucune exécution de code) ;
+ *   2. lance l'analyse statique de motifs déjà écrite ;
+ *   3. produit un rapport fichier:ligne dans livraisons/<ref>/rapport.md ;
+ *   4. grave un MANIFEST.json avec le hash du rapport et la commande exacte utilisée ;
+ *   5. marque la demande « rapport produit » (jamais « payée » : ça, seul le créateur
+ *      peut le faire avec une preuve de réception).
+ *
+ * Aucune promesse non tenue : si le clone échoue, la demande est marquée « échec »
+ * avec la raison exacte. Rien n'est inventé.
+ *
+ *   node tools/traiter-demandes.mjs            traite toutes les demandes en attente
+ *   node tools/traiter-demandes.mjs --ref <R>  traite une seule référence
  */
-import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const RACINE = process.cwd();
-const ENTREE = join(RACINE, 'acquisition', 'demandes-recues');
-const SORTIE = join(RACINE, 'acquisition', 'devis');
-if (!existsSync(SORTIE)) mkdirSync(SORTIE, { recursive: true });
+const HOME = join(dirname(fileURLToPath(import.meta.url)), '..');
+const DEM = join(HOME, 'demandes');
+const LIV = join(HOME, 'livraisons');
+const TMP = join(HOME, '.tmp-clones');
+const REF = process.argv.includes('--ref') ? process.argv[process.argv.indexOf('--ref') + 1] : null;
 
-const GRILLE = [
-  { max: 3000, palier: 'Audit ciblé', prix: 90, jours: '2 à 5' },
-  { max: 20000, palier: 'Audit complet', prix: 290, jours: '5 à 10' },
-  { max: Infinity, palier: 'Audit de conformité & historique', prix: 490, jours: 'à convenir' },
-];
+if (!existsSync(DEM)) { console.log('Aucune demande.'); process.exit(0); }
+if (!existsSync(LIV)) mkdirSync(LIV, { recursive: true });
+if (!existsSync(TMP)) mkdirSync(TMP, { recursive: true });
 
-function palierPour(lignes) {
-  if (!Number.isFinite(lignes) || lignes <= 0) return { palier: 'à préciser au devis', prix: null, jours: 'à convenir', surMesure: true };
-  return GRILLE.find(g => lignes <= g.max);
-}
+const fichiers = readdirSync(DEM).filter(f => f.endsWith('.json'))
+  .filter(f => !REF || f === REF + '.json');
 
-function deviseDemandee(d) {
-  const t = JSON.stringify(d).toLowerCase();
-  if (/eur|€|euro/.test(t)) return 'EUR (€)';
-  if (/usd|\$/.test(t)) return 'USD ($)';
-  if (/chf/.test(t)) return 'CHF';
-  return 'EUR (€)';
-}
-
-const fichiers = existsSync(ENTREE) ? readdirSync(ENTREE).filter(f => f.endsWith('.json') && /^2026-/.test(f)) : [];
-let traites = 0;
+let traitees = 0, echecs = 0;
 
 for (const f of fichiers) {
-  const src = join(ENTREE, f);
-  let d; try { d = JSON.parse(readFileSync(src, 'utf8')); } catch { continue; }
-  const id = d.reference || d.id || f.replace(/\.json$/, '');
-  const mdPath = join(SORTIE, `devis-${id}.md`);
-  if (existsSync(mdPath)) continue;
+  const chemin = join(DEM, f);
+  const d = JSON.parse(readFileSync(chemin, 'utf8'));
+  if (d.rapportProduit) { console.log(`  ${d.ref} : déjà traité.`); continue; }
 
-  const lignes = Number(d.lignesCode || d.kloc ? (d.lignesCode || d.kloc * 1000) : NaN);
-  const p = palierPour(lignes);
-  const dev = 'EUR (€)';
-  const date = new Date().toISOString().slice(0, 10);
+  console.log(`\n=== ${d.ref} : ${d.depot} ===`);
+  const dossier = join(TMP, d.ref);
+  try {
+    if (existsSync(dossier)) rmSync(dossier, { recursive: true, force: true });
+    execFileSync('git', ['clone', '--depth', '1', d.depot, dossier], { stdio: 'pipe', timeout: 120000 });
+    console.log('  clone OK');
+  } catch (e) {
+    const raison = String(e.stderr || e.message).split('\n').slice(0, 3).join(' ').slice(0, 300);
+    console.log(`  CLONE ÉCHOUÉ : ${raison}`);
+    d.rapportProduit = false; d.echec = { quand: new Date().toISOString(), etape: 'clone', raison };
+    writeFileSync(chemin, JSON.stringify(d, null, 2));
+    echecs++; continue;
+  }
 
-  const md = `# Devis — audit de code statique
+  const dest = join(LIV, d.ref);
+  mkdirSync(dest, { recursive: true });
+  let ok = false, sortie = '';
+  try {
+    sortie = execFileSync('node', [join(HOME, 'tools', 'audit-statique.mjs'), dossier, '--sortie', join(dest, 'rapport.md')],
+      { cwd: HOME, encoding: 'utf8', timeout: 300000 });
+    ok = true;
+    console.log(`  analyse OK : ${sortie.trim().split('\n').slice(-1)[0]}`);
+  } catch (e) {
+    const raison = String(e.stderr || e.message).slice(0, 300);
+    console.log(`  ANALYSE ÉCHOUÉE : ${raison}`);
+    d.echec = { quand: new Date().toISOString(), etape: 'analyse', raison };
+  }
 
-- **Référence demande :** ${id}
-- **Date du devis :** ${date}
-- **Prestataire :** Arthur Grossi EI
-- **Contact :** arthhur.grossi@gmail.com
-- **Validité :** 30 jours
-
-## Demande reçue
-${d.message || d.besoin || '(voir fiche de demande)'}
-${d.depot ? `\n- Dépôt / périmètre indiqué : ${d.depot}` : ''}
-${d.email ? `\n- Contact client : ${d.email}` : ''}
-
-## Prestation proposée
-- **Palier :** ${p.palier}
-- **Prix de départ :** ${p.prix != null ? p.prix + ' ' + dev : 'fixé après précision du périmètre'}
-- **Délai indicatif :** ${p.jours} jours ouvrés
-
-## Périmètre inclus
-- Analyse statique (règles : secrets, injection, exécution dynamique, contrôle d'accès, transport, CORS).
-- Rapport fichier + ligne, classé par gravité, **faux positifs signalés et écartés**.
-- Distinction explicite entre *motifs détectés* et *vulnérabilités confirmées*.
-- Plan de correction priorisé.
-
-## Ce qui n'est pas inclus
-- L'exécution du code audité (jamais fait).
-- Un test d'intrusion ou une garantie « zéro vulnérabilité ».
-- Toute publication du code sans accord écrit du client.
-
-## Paiement
-- PayPal : arthhur.grossi@gmail.com — ou virement professionnel (titulaire Arthur Grossi EI).
-- Montant et devise fermes au devis, avant commande.
-- La réception effective (PayPal ou banque) est confirmée avant livraison finale.
-
-## Prochaine étape
-Répondre à ce devis en confirmant le périmètre et le dépôt à analyser. Aucun engagement avant votre accord.
-`;
-  writeFileSync(mdPath, md);
-
-  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Devis ${esc(id)}</title>
-<style>body{font-family:system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;line-height:1.6;color:#111}
-h1{font-size:1.5rem}h2{font-size:1.1rem;border-bottom:1px solid #ccc;padding-bottom:4px;margin-top:28px}
-table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left;font-size:.92rem}
-.tag{display:inline-block;background:#eef;border:1px solid #99f;border-radius:6px;padding:2px 8px;font-size:.8rem}</style></head><body>
-<h1>Devis — audit de code statique <span class="tag">${esc(id)}</span></h1>
-<p><strong>Prestataire :</strong> Arthur Grossi EI · arthhur.grossi@gmail.com · <strong>Date :</strong> ${date} · <strong>Validité :</strong> 30 jours</p>
-<h2>Demande reçue</h2><p>${esc(d.message || d.besoin || '(voir fiche de demande)')}</p>
-${d.depot ? `<p><strong>Dépôt / périmètre :</strong> ${esc(d.depot)}</p>` : ''}
-<h2>Prestation proposée</h2>
-<table><tr><th>Palier</th><td>${esc(p.palier)}</td></tr>
-<tr><th>Prix de départ</th><td>${p.prix != null ? p.prix + ' ' + dev : 'fixé après précision du périmètre'}</td></tr>
-<tr><th>Délai indicatif</th><td>${esc(p.jours)} jours ouvrés</td></tr></table>
-<h2>Périmètre inclus</h2>
-<ul><li>Analyse statique (secrets, injection, exécution dynamique, contrôle d'accès, transport, CORS).</li>
-<li>Rapport fichier + ligne, classé par gravité, faux positifs écartés.</li>
-<li>Motifs détectés vs vulnérabilités confirmées, distingués explicitement.</li>
-<li>Plan de correction priorisé.</li></ul>
-<h2>Non inclus</h2>
-<ul><li>Exécution du code audité. Test d'intrusion. Garantie « zéro vulnérabilité ». Publication du code sans accord écrit.</li></ul>
-<h2>Paiement</h2>
-<p>PayPal : arthhur.grossi@gmail.com — ou virement professionnel, titulaire Arthur Grossi EI.<br>
-Montant et devise fermes au devis, avant commande. Réception effective confirmée avant livraison finale.</p>
-<h2>Prochaine étape</h2>
-<p>Répondre en confirmant le périmètre et le dépôt à analyser. Aucun engagement avant votre accord.</p>
-</body></html>`;
-  writeFileSync(join(SORTIE, `devis-${id}.html`), html);
-
-  console.log(`devis écrit : devis-${id}.md + .html  [${p.palier}${p.prix != null ? ' / ' + p.prix + ' €' : ''}]`);
-  traites++;
+  const rapport = join(dest, 'rapport.md');
+  if (ok && existsSync(rapport)) {
+    const sha = createHash('sha256').update(readFileSync(rapport)).digest('hex');
+    writeFileSync(join(dest, 'MANIFEST.json'), JSON.stringify({
+      ref: d.ref, depot: d.depot, quand: new Date().toISOString(),
+      rapport: 'rapport.md', sha256: sha,
+      commande: `node tools/audit-statique.mjs <clone> --sortie rapport.md`,
+      note: 'Analyse statique de motifs. Code non exécuté, dépôt non modifié. Un motif n\'est pas une vulnérabilité confirmée.',
+    }, null, 2));
+    d.rapportProduit = true; d.rapport = `livraisons/${d.ref}/rapport.md`; d.sha256 = sha;
+    traitees++;
+  } else if (!d.echec) {
+    d.echec = { quand: new Date().toISOString(), etape: 'analyse', raison: 'rapport non produit' };
+  }
+  writeFileSync(chemin, JSON.stringify(d, null, 2));
 }
-console.log(traites ? `${traites} nouvelle(s) demande(s) traitée(s).` : 'Aucune nouvelle demande à traiter.');
+
+console.log(`\n${traitees} rapport(s) produit(s), ${echecs} échec(s) de clone.`);
+console.log('État « payée » : jamais posé par ce script — seule une preuve de réception réelle le permet.');
