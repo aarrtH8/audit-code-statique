@@ -1,0 +1,6 @@
+Carte 70da7133 mise a jour : chaine complete teste bout en bout. Le guichet local
+(tools/guichet.mjs, port 8787) transforme une demande HTTP en devis chiffre a partir
+d'un audit reel — teste sur geomacro (1644 fichiers, 62 constats, 690 EUR) et express
+(3266 lignes, 0 constat, 90 EUR). Chiffrage corrige : total = somme exacte des postes.
+Page devis-immediat.html publiee. Reste : aucun client, aucune reponse. Prochain jalon
+inchange : une demande humaine reelle.
