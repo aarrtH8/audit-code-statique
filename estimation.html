@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estimer le périmètre et le prix — audit de code statique</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--bord:#30363d;--fg:#c9d1d9;--dim:#8b949e;--accent:#58a6ff;--ok:#3fb950;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;line-height:1.65}
+.wrap{max-width:940px;margin:0 auto;padding:26px 20px 80px}h1{color:#fff;font-size:1.65rem;margin:0 0 6px}
+h2{color:#fff;font-size:1.1rem;margin-top:32px}a{color:var(--accent)}.lead{color:var(--dim)}
+textarea{width:100%;min-height:200px;background:#010409;color:var(--fg);border:1px solid var(--bord);border-radius:8px;padding:12px;font-family:ui-monospace,Consolas,monospace;font-size:.84rem;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+button{background:var(--accent);color:#04121f;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:.9rem}
+button.sec{background:transparent;color:var(--fg);border:1px solid var(--bord)}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.row label{display:flex;flex-direction:column;font-size:.85rem;color:var(--dim);gap:4px}
+.row input,.row select{background:#010409;color:var(--fg);border:1px solid var(--bord);border-radius:6px;padding:8px;font-size:.9rem}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:8px;padding:16px 18px;margin:14px 0}
+.prix{font-size:1.5rem;color:#fff;font-weight:700}
+.note{background:var(--panel);border-left:3px solid var(--warn);padding:12px 16px;margin:16px 0;font-size:.88rem;color:var(--dim)}
+table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid var(--bord);padding:8px 10px;text-align:left;font-size:.9rem}th{background:var(--panel);color:#fff}
+.btn{display:inline-block;background:var(--accent);color:#04121f;border-radius:8px;padding:11px 18px;font-weight:700;text-decoration:none;margin-top:8px}
+footer{margin-top:44px;border-top:1px solid var(--bord);padding-top:16px;color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Estimer le périmètre et le prix</h1>
+<p class="lead">Collez tout ou partie de votre code source, ou indiquez directement sa taille. Le calcul se fait <strong>dans votre navigateur</strong> — rien n'est envoyé nulle part.</p>
+
+<div class="note"><strong>Estimation, puis devis ferme.</strong> Ce chiffre est un inducteur honnête basé sur le volume de lignes de code, pour vous situer. Le prix définitif est fixé au devis après précision du périmètre (ce qui est inclus, ce qui ne l'est pas, le dépôt exact à analyser).</div>
+
+<h2>1. Votre code</h2>
+<textarea id="code" placeholder="// collez ici votre JavaScript, TypeScript, Python, PHP, Ruby, Go…&#10;// ou utilisez directement les champs ci-dessous"></textarea>
+<div class="row">
+  <label>Langage principal
+    <select id="lang">
+      <option value="js">JavaScript / TypeScript</option>
+      <option value="py">Python</option>
+      <option value="php">PHP</option>
+      <option value="rb">Ruby</option>
+      <option value="go">Go</option>
+      <option value="autre">Autre / plusieurs</option>
+    </select>
+  </label>
+  <label>Volume estimé (milliers de lignes)
+    <input id="kloc" type="number" min="0" step="0.5" placeholder="ex. 12.5">
+  </label>
+  <label>Nombre de fichiers de code
+    <input id="nf" type="number" min="0" step="1" placeholder="ex. 90">
+  </label>
+  <label>Historique Git (secrets déjà commités ?)
+    <select id="hist"><option value="0">Non / inconnu</option><option value="1">Oui, dépôt ancien</option></select>
+  </label>
+</div>
+<div class="actions">
+  <button id="go">Calculer mon estimation</button>
+  <button class="sec" id="ex">Charger un exemple</button>
+  <button class="sec" id="clr">Effacer</button>
+</div>
+
+<h2>Résultat</h2>
+<div id="resume" class="lead">Aucune estimation lancée.</div>
+<div id="out"></div>
+
+<footer>
+<a href="./">Site</a> · <a href="./tarifs.html">Tarifs</a> · <a href="./audit-statique.html">Auditeur instantané</a> · <a href="./commande.html">Demander un devis</a> · <a href="./suivi.html">Suivi des demandes</a>
+</footer>
+</div>
+
+<script>
+// Détection locale du langage par signature, sans réseau.
+const SIG = {
+  js: /\b(const|let|var|function|=>|require\(|import\s|export\s|module\.exports)\b/,
+  py: /\b(def|import|from\s+\w+\s+import|self\.|print\(|elif|__init__)\b/,
+  php: /<\?php|\$\w+\s*=|\bfunction\s+\w+\s*\(|->\w+\(/,
+  rb: /\bdef\s+\w+|\bend\b|require\s+['"]|attr_|puts\s/,
+  go: /\bpackage\s+\w+|\bfunc\s+\w+|\bimport\s*\(|:=/,
+};
+
+function compter(texte){
+  const lignes = texte.split(/\r?\n/);
+  let vides = 0, commentaires = 0, code = 0;
+  for (const l of lignes){
+    const t = l.trim();
+    if (!t) { vides++; continue; }
+    if (/^(\/\/|#|\/\*|\*|--|<!--)/.test(t)) { commentaires++; continue; }
+    code++;
+  }
+  return { total: lignes.length, vides, commentaires, code };
+}
+
+function devinerLangage(texte){
+  let best = 'js', score = 0;
+  for (const [k, re] of Object.entries(SIG)){
+    const m = texte.match(new RegExp(re.source, 'g'));
+    const s = m ? m.length : 0;
+    if (s > score){ score = s; best = k; }
+  }
+  return best;
+}
+
+function palier(lignesCode, fichiers, hist){
+  const k = lignesCode / 1000;
+  if (hist) return { nom: 'Audit de conformité & historique', prix: 490, jours: 'à convenir au devis',
+    motif: 'dépôt à long historique : analyse de l\'historique Git (secrets déjà commités) incluse' };
+  if (lignesCode <= 3000) return { nom: 'Audit ciblé', prix: 90, jours: '2 à 5 jours ouvrés',
+    motif: `périmètre compact (${fichiers} fichier(s), ${k.toFixed(1)} kLOC)` };
+  if (lignesCode <= 20000) return { nom: 'Audit complet', prix: 290, jours: '5 à 10 jours ouvrés',
+    motif: `application de taille moyenne (${fichiers} fichier(s), ${k.toFixed(1)} kLOC)` };
+  return { nom: 'Audit complet (majoré)', prix: 690, jours: 'à convenir au devis',
+    motif: `volume important (${fichiers} fichier(s), ${k.toFixed(1)} kLOC) : découpage par sous-ensemble recommandé` };
+}
+
+document.getElementById('go').onclick = () => {
+  const texte = document.getElementById('code').value;
+  const nbChamp = Number(document.getElementById('nf').value || 0);
+  const klocChamp = Number(document.getElementById('kloc').value || 0);
+  const hist = document.getElementById('hist').value === '1';
+  const langChamp = document.getElementById('lang').value;
+
+  let lignesCode, fichiers, lang;
+  if (texte.trim()){
+    const c = compter(texte);
+    lignesCode = c.code; // lignes de code réelles, hors vides et commentaires
+    lang = devinerLangage(texte);
+    fichiers = nbChamp || 1;
+  } else if (klocChamp > 0 || nbChamp > 0){
+    lignesCode = Math.round((klocChamp || 0) * 1000) || (nbChamp * 150); // 150 lignes/fichier si seul le nombre est donné
+    fichiers = nbChamp || Math.max(1, Math.round(lignesCode / 150));
+    lang = langChamp;
+  } else {
+    document.getElementById('resume').textContent = 'Collez du code ou indiquez un volume estimé.';
+    document.getElementById('out').innerHTML = '';
+    return;
+  }
+
+  const p = palier(lignesCode, fichiers, hist);
+  const shown = texte.trim() ? lang : langChamp;
+  document.getElementById('resume').innerHTML =
+    `Langage détecté : <strong>${shown}</strong> · lignes de code analysées : <strong>${lignesCode.toLocaleString('fr-FR')}</strong> · fichiers : <strong>${fichiers}</strong>`;
+
+  const sujet = encodeURIComponent(`[Devis] Estimation ${p.nom} — ${fichiers} fichier(s), ${(lignesCode/1000).toFixed(1)} kLOC (${shown})`);
+  const corps = encodeURIComponent(
+`Bonjour,
+
+Estimation obtenue depuis votre page d'estimation.
+- Langage : ${shown}
+- Lignes de code : ${lignesCode}
+- Fichiers de code : ${fichiers}
+- Historique Git à analyser : ${hist ? 'oui' : 'non'}
+
+Estimation indicative : ${p.nom} — à partir de ${p.prix} €, délai ${p.jours}.
+
+Périmètre souhaité : 
+Dépôt ou extrait à analyser : 
+Contraintes particulières : `);
+
+  document.getElementById('out').innerHTML = `
+<div class="card">
+  <div class="lead">Palier recommandé</div>
+  <div style="color:#fff;font-size:1.15rem;font-weight:700">${p.nom}</div>
+  <div class="prix">à partir de ${p.prix} €</div>
+  <div class="lead">Délai indicatif : ${p.jours}</div>
+  <div style="margin-top:8px">Justification : ${p.motif}.</div>
+</div>
+<div class="card">
+  <div class="lead">Périmètre inclus</div>
+  <table>
+    <tr><th>Inclus</th><td>Analyse statique (secrets, injection, exécution dynamique, contrôle d'accès, transport, CORS) · Rapport fichier + ligne classé par gravité · Faux positifs écartés · Motifs détectés vs vulnérabilités confirmées · Plan de correction priorisé</td></tr>
+    <tr><th>Non inclus</th><td>Exécution du code · Test d'intrusion · Garantie « zéro vulnérabilité »</td></tr>
+    <tr><th>Paiement</th><td>PayPal arthhur.grossi@gmail.com ou virement professionnel (Arthur Grossi EI). Montant ferme au devis, avant commande.</td></tr>
+  </table>
+</div>
+<div class="card">
+  <div class="lead">Prochaine étape</div>
+  <p>Ouvrez votre logiciel de messagerie avec la demande pré-remplie, ou copiez-la :</p>
+  <a class="btn" id="mailto" href="mailto:arthhur.grossi@gmail.com?subject=${sujet}&body=${corps}">Préparer ma demande par e-mail →</a>
+  <div class="actions" style="margin-top:12px">
+    <button class="sec" id="copier">Copier la demande</button>
+    <a class="btn" href="./commande.html" style="background:transparent;color:#c9d1d9;border:1px solid #30363d">Ou utiliser le formulaire</a>
+  </div>
+</div>`;
+
+  document.getElementById('copier').onclick = () => {
+    const txt = decodeURIComponent(sujet) + '\n\n' + decodeURIComponent(corps);
+    navigator.clipboard.writeText(txt).then(()=>{
+      const b = document.getElementById('copier'); const o = b.textContent;
+      b.textContent = 'Copié ✓'; setTimeout(()=>b.textContent = o, 1800);
+    }).catch(()=>{});
+  };
+};
+
+document.getElementById('ex').onclick = () => {
+  document.getElementById('code').value =
+`const apiKey = "sk_live_51H8xQ2eZvKYlo2C9abcdef";
+// connexion à la base
+function getUser(id){ return db.query("SELECT * FROM users WHERE id = " + id); }
+function run(input){ eval(input); }
+app.use(cors({ origin: "*" }));
+fetch("http://api.example.com/data");`;
+  document.getElementById('nf').value = 90;
+  document.getElementById('go').click();
+};
+document.getElementById('clr').onclick = () => {
+  document.getElementById('code').value = '';
+  document.getElementById('nf').value = '';
+  document.getElementById('kloc').value = '';
+  document.getElementById('out').innerHTML = '';
+  document.getElementById('resume').textContent = 'Aucune estimation lancée.';
+};
+</script>
+</body>
+</html>
