@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "audit-code-statique",
+          "version": "1.0.0",
+          "informationUri": "https://aarrth8.github.io/audit-code-statique/",
+          "rules": [
+            {
+              "id": "secret",
+              "name": "Secret probable en dur",
+              "shortDescription": {
+                "text": "Secret probable en dur"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Révoquer la clé, la déplacer dans une variable d'environnement, purger l'historique Git."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "aws",
+              "name": "Clé AWS en dur",
+              "shortDescription": {
+                "text": "Clé AWS en dur"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Révoquer dans IAM, utiliser des rôles temporaires."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "cmdinj",
+              "name": "Commande système avec entrée concaténée",
+              "shortDescription": {
+                "text": "Commande système avec entrée concaténée"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Passer les arguments sous forme de tableau, sans shell."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "eval",
+              "name": "Exécution dynamique de code",
+              "shortDescription": {
+                "text": "Exécution dynamique de code"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Remplacer par un analyseur explicite."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "sqli",
+              "name": "Requête SQL construite par concaténation",
+              "shortDescription": {
+                "text": "Requête SQL construite par concaténation"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Utiliser des requêtes paramétrées."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "cors",
+              "name": "CORS ouvert à toutes les origines",
+              "shortDescription": {
+                "text": "CORS ouvert à toutes les origines"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Restreindre aux origines réellement utilisées."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "http",
+              "name": "URL HTTP non chiffrée",
+              "shortDescription": {
+                "text": "URL HTTP non chiffrée"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Passer en HTTPS."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "innerHTML",
+              "name": "Écriture HTML directe (risque XSS)",
+              "shortDescription": {
+                "text": "Écriture HTML directe (risque XSS)"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Utiliser textContent ou échapper."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "mdp",
+              "name": "Hachage faible pour mot de passe",
+              "shortDescription": {
+                "text": "Hachage faible pour mot de passe"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Utiliser bcrypt, scrypt ou Argon2."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "verif",
+              "name": "Vérification TLS désactivée",
+              "shortDescription": {
+                "text": "Vérification TLS désactivée"
+              },
+              "helpUri": "https://aarrth8.github.io/audit-code-statique/",
+              "help": {
+                "text": "Réactiver la vérification TLS."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "cible": "https://github.com/expressjs/express",
+            "analyseStatique": true,
+            "codeExecute": false
+          }
+        }
+      ],
+      "results": []
+    }
+  ]
+}
