@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tarifs et périmètre — audit de code statique</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--bord:#30363d;--fg:#c9d1d9;--dim:#8b949e;--accent:#58a6ff;--ok:#3fb950;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;line-height:1.65}
+.wrap{max-width:900px;margin:0 auto;padding:28px 20px 80px}
+h1{color:#fff;font-size:1.7rem;margin:0 0 6px}h2{color:#fff;font-size:1.15rem;margin-top:34px;border-bottom:1px solid var(--bord);padding-bottom:6px}
+h3{color:#fff;font-size:1rem;margin:18px 0 4px}
+a{color:var(--accent)}.lead{color:var(--dim)}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:8px;padding:16px 18px;margin:12px 0}
+.prix{font-size:1.35rem;color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--bord);padding:9px 11px;text-align:left;font-size:.9rem;vertical-align:top}
+th{background:var(--panel);color:#fff}
+.note{background:var(--panel);border-left:3px solid var(--warn);padding:12px 16px;margin:16px 0;font-size:.88rem;color:var(--dim)}
+.ok{color:var(--ok);font-weight:600}
+.btn{display:inline-block;background:var(--accent);color:#04121f;border-radius:8px;padding:11px 18px;font-weight:700;text-decoration:none;margin-top:8px}
+.dir{color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Tarifs et périmètre</h1>
+<p class="lead">Audit de code statique pour PME, indépendants et équipes techniques. Prix sur devis, convenus <strong>avant</strong> le début du travail. Aucun frais caché, aucune sous-traitance opaque.</p>
+
+<div class="note"><strong>Comment ça marche :</strong> je lis votre code (dépôt privé, archive zip ou extrait ciblé), je produis un rapport fichier + ligne, je distingue <em>motifs détectés</em> et <em>vulnérabilités confirmées</em>, puis je vous propose un plan de correction priorisé. Je n'exécute pas votre code et je n'y accède qu'avec votre accord écrit ; suppression garantie après livraison.</div>
+
+<h2>Prestations</h2>
+
+<div class="card">
+  <h3>1. Audit ciblé — <span class="prix">à partir de 90 €</span></h3>
+  <p>Périmètre : un module, un dépôt, ou un fichier « point chaud » que vous désignez. Idéal pour vérifier un avant-déploiement.</p>
+  <ul>
+    <li>Analyse statique complète du périmètre choisi (règles : secrets, injection, exécution dynamique, accès, transport, CORS).</li>
+    <li>Rapport fichier + ligne, classé par gravité, avec faux positifs signalés et écartés.</li>
+    <li>Plan de correction priorisé (quick wins d'abord).</li>
+    <li>Délai indicatif : 2 à 5 jours ouvrés selon le volume.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>2. Audit complet de projet — <span class="prix">à partir de 290 €</span></h3>
+  <p>Périmètre : l'ensemble de votre application web, backend et frontend.</p>
+  <ul>
+    <li>Tout ce qui précède, sur l'ensemble du code source.</li>
+    <li>Cartographie des zones à risque, avec emplacements précis.</li>
+    <li>Vérification des dépendances : versions obsolètes à risque connu.</li>
+    <li>Appel de restitution de 45 min (visio ou écrit) pour parcourir les résultats.</li>
+    <li>Délai indicatif : 5 à 10 jours ouvrés.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>3. Audit de conformité &amp; historique — <span class="prix">à partir de 490 €</span></h3>
+  <p>Périmètre : dépôt à long historique, exigence de preuve documentée.</p>
+  <ul>
+    <li>Analyse incluant l'historique Git (secrets déjà commités, même retirés).</li>
+    <li>Rapport structuré pour un auditeur externe ou un client final.</li>
+    <li>Liste de remédiation datée et reproductible.</li>
+    <li>Délai convenu au devis.</li>
+  </ul>
+</div>
+
+<h2>Paiement</h2>
+<table>
+<tr><th>Moyen</th><td>PayPal (arthhur.grossi@gmail.com) ou virement professionnel</td></tr>
+<tr><th>Titulaire</th><td>Arthur Grossi EI</td></tr>
+<tr><th>Modalités</th><td>Montant et devise fixés au devis, avant commande. Acompte possible pour les audits longs ; solde à la livraison.</td></tr>
+<tr><th>Preuve de paiement</th><td>Confirmée à réception effective (PayPal ou banque). Un reçu fourni par le client ne suffit pas à lui seul.</td></tr>
+</table>
+
+<h2>Ce que je ne fais pas</h2>
+<ul>
+  <li>Je n'exécute jamais votre code ni ne le déploie.</li>
+  <li>Je ne m'engage pas sur « zéro vulnérabilité » : un audit statique ne remplace pas un test d'intrusion.</li>
+  <li>Je ne publie rien de votre code sans votre accord écrit.</li>
+  <li>Je n'utilise pas d'argent ni de canal non prévu au devis.</li>
+</ul>
+
+<h2>Demander un devis</h2>
+<p>Décrivez votre projet (langage, taille approximative, besoin). Je réponds avec un périmètre et un prix fixe, sans engagement.</p>
+<a class="btn" href="./commande.html">Construire une demande de devis →</a>
+<p class="dir">Ou par e-mail : arthhur.grossi@gmail.com</p>
+
+<footer style="margin-top:44px;border-top:1px solid var(--bord);padding-top:16px;color:var(--dim);font-size:.85rem">
+<a href="./">Site</a> · <a href="./audit-statique.html">Auditeur instantané</a> · <a href="./audits-reels.html">Audits réels publiés</a>
+</footer>
+</div>
+</body>
+</html>
