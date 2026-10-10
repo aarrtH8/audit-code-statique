@@ -1,0 +1,22 @@
+name: Audit de code statique (SARIF)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Lancer l'auditeur
+        run: node tools/audit-sarif.mjs . --out audit.sarif
+      - name: Publier dans l'onglet Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: audit.sarif

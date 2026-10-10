@@ -1,125 +1,157 @@
 #!/usr/bin/env node
 /**
- * audit-sarif.mjs <dossier|url-git> [--out audit.sarif]
- * Même moteur de règles que audit-depot.mjs, mais sort au format SARIF 2.1.0.
- * SARIF est lu nativement par GitHub (onglet Security), VS Code et GitLab :
- * les constats apparaissent sur la ligne exacte du code, sans copier-coller.
- * Aucun code exécuté.
+ * audit-sarif.mjs <depot|url> [--out rapport.sarif]
+ *
+ * Produit un rapport SARIF 2.1.0 lisible nativement par :
+ *   - l'onglet « Security » de GitHub (upload-sarif) ;
+ *   - VS Code (extension SARIF Viewer) : le constat s'affiche sur la ligne fautive ;
+ *   - GitLab, Azure DevOps, SonarQube.
+ *
+ * C'est le format attendu par un développeur. Un rapport HTML se lit une fois ;
+ * un SARIF s'intègre dans son outillage et reste.
+ *
+ * Analyse statique par motifs. Le code n'est jamais exécuté.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, statSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
-import { createHash } from 'node:crypto';
 
 const IGNORE = new Set(['node_modules','.git','dist','build','.next','vendor','__pycache__','coverage','.venv','venv','.cache']);
 const TEXTE = new Set(['.js','.mjs','.cjs','.ts','.tsx','.jsx','.py','.rb','.php','.go','.java','.cs','.env','.yml','.yaml','.sh','.sql','.conf','.ini','.tf']);
 const MAX = 512 * 1024;
 
+// Chaque règle porte une aide à la correction : c'est ce qui distingue un audit utile d'une liste d'alertes.
+const REGLES = [
+  { id:'secret-en-dur', niveau:'error', sev:'9.1', titre:'Secret probable en dur',
+    texte:'Une valeur ressemblant à un secret est écrite dans le code source.',
+    aide:'Révoquer la clé exposée, la déplacer dans une variable d\'environnement, purger l\'historique Git (git filter-repo).',
+    re:/(api[_-]?key|secret|passwd|password|private[_-]?key|access[_-]?key)\s*[:=]\s*['"][A-Za-z0-9_\-\.\/\+]{16,}['"]/i },
+  { id:'cle-aws', niveau:'error', sev:'9.4', titre:'Identifiant d\'accès AWS en dur',
+    texte:'Un identifiant de clé d\'accès AWS (AKIA…) figure dans le code.',
+    aide:'Révoquer immédiatement dans IAM, examiner CloudTrail pour tout usage non autorisé, utiliser des rôles IAM.',
+    re:/\bAKIA[0-9A-Z]{16}\b/ },
+  { id:'injection-commande', niveau:'error', sev:'9.0', titre:'Commande système construite par concaténation',
+    texte:'Une commande est assemblée par concaténation ou interpolation avant exécution.',
+    aide:'Passer les arguments sous forme de tableau (execFile style) et refuser toute valeur non validée.',
+    re:/(exec|execSync|spawnSync|spawn)\s*\(\s*[^)]{0,80}(\+|\$\{)/ },
+  { id:'execution-dynamique', niveau:'error', sev:'8.2', titre:'Exécution dynamique de code',
+    texte:'eval ou new Function exécute du code construit à l\'exécution.',
+    aide:'Remplacer par un analyseur ou une table de correspondance explicite.',
+    re:/\b(eval|new\s+Function)\s*\(/ },
+  { id:'requete-sql-concat', niveau:'error', sev:'8.5', titre:'Requête SQL construite par concaténation',
+    texte:'Une requête SQL est assemblée avec des valeurs non paramétrées.',
+    aide:'Utiliser des requêtes préparées / des paramètres liés (placeholder + tableau de valeurs).',
+    re:/(SELECT|INSERT|UPDATE|DELETE)[^;'"`]{0,120}(\+\s*[\w$]|`\s*\$\{)/i },
+  { id:'cors-ouvert', niveau:'warning', sev:'6.1', titre:'CORS ouvert à toutes les origines',
+    texte:'L\'en-tête autorise n\'importe quelle origine.',
+    aide:'Restreindre aux origines réellement utilisées.',
+    re:/origin\s*:\s*['"]\*['"]/i },
+  { id:'http-clair', niveau:'warning', sev:'5.3', titre:'URL HTTP non chiffrée',
+    texte:'Une ressource est appelée en HTTP, donc sans chiffrement.',
+    aide:'Basculer en HTTPS et vérifier les redirections.',
+    re:/["'`]http:\/\/(?!localhost|127\.0\.0\.1|0\.0\.0\.0|www\.w3\.org|example\.com|schemas)/ },
+  { id:'html-direct', niveau:'warning', sev:'5.8', titre:'Écriture HTML directe',
+    texte:'innerHTML ou document.write insère une chaîne dans le DOM.',
+    aide:'Utiliser textContent, ou assainir la valeur avec une bibliothèque dédiée.',
+    re:/\.innerHTML\s*=\s*[^=]|document\.write\s*\(/ },
+  { id:'hachage-faible', niveau:'warning', sev:'6.5', titre:'Algorithme de hachage faible',
+    texte:'MD5 ou SHA-1 employé pour un mot de passe ou une intégrité.',
+    aide:'Utiliser bcrypt, scrypt ou Argon2id pour les mots de passe.',
+    re:/(createHash\s*\(\s*['"](md5|sha1)['"]|\b(md5|sha1)\s*\()/i },
+  { id:'tls-desactive', niveau:'warning', sev:'7.0', titre:'Vérification TLS désactivée',
+    texte:'La vérification du certificat du pair est désactivée.',
+    aide:'Réactiver la vérification ; installer la chaîne d\'autorités correcte.',
+    re:/(rejectUnauthorized\s*:\s*false|verify\s*=\s*False)/ },
+];
+
 const args = process.argv.slice(2);
 const cible = args.find(a => !a.startsWith('--'));
 const iOut = args.indexOf('--out');
 const sortie = iOut >= 0 ? args[iOut + 1] : 'audit.sarif';
-const avecTests = args.includes('--avec-tests');
-if (!cible) { console.error('Usage: node tools/audit-sarif.mjs <dossier|url-git> [--out audit.sarif]'); process.exit(2); }
+if (!cible) { console.error('Usage: node tools/audit-sarif.mjs <depot|url> [--out rapport.sarif]'); process.exit(2); }
 
-let racine = cible;
+let racine, nom;
 if (/^(https?:\/\/|git@)/.test(cible)) {
-  const tmp = mkdtempSync(join(tmpdir(), 'audit-'));
-  try { execFileSync('git', ['clone','-q','--depth','1',cible,tmp], { stdio:'pipe', timeout:180000 }); racine = tmp; }
-  catch (e) { console.error('Clone impossible :', String(e.message).split('\n')[0]); process.exit(3); }
-} else if (!existsSync(cible)) { console.error('Introuvable :', cible); process.exit(3); }
+  racine = mkdtempSync(join(tmpdir(), 'sarif-'));
+  execFileSync('git', ['clone','-q','--depth','1',cible,racine], { stdio:'pipe', timeout:180000 });
+  nom = cible;
+} else {
+  if (!existsSync(cible)) { console.error('Introuvable :', cible); process.exit(3); }
+  racine = cible; nom = cible;
+}
 
 function* marche(d){ let e; try { e = readdirSync(d,{withFileTypes:true}); } catch { return; }
   for (const x of e){ if (IGNORE.has(x.name)) continue; const p = join(d,x.name);
     if (x.isDirectory()) yield* marche(p); else if (x.isFile()) yield p; } }
 
-const estFichierTest = rel =>
-  /(^|\/)(test|tests|spec|__tests__|fixtures|examples?|benchmark)\//i.test(rel) ||
-  /\.(test|spec)\.[a-z]+$/i.test(rel) || /(^|\/)[^/]*\.(mock|stub)\.[a-z]+$/i.test(rel);
-const EXEMPLE = /(example|exemple|dummy|fake|placeholder|your[_-]?key|xxxx|abc123|changeme|sk_test_|test[_-]?key|<[A-Z_]+>)/i;
-
-// Une seule source de vérité pour les règles : réutilisée par le rapport HTML.
-const REGLES = [
-  { id:'secret', g:'error', t:'Secret probable en dur',
-    re:/(api[_-]?key|secret|passwd|password|private[_-]?key|access[_-]?key)\s*[:=]\s*['"]([A-Za-z0-9_\-\.\/\+]{16,})['"]/i,
-    aide:'Révoquer la clé, la déplacer dans une variable d\'environnement, purger l\'historique Git.' },
-  { id:'aws', g:'error', t:'Clé AWS en dur', re:/\bAKIA[0-9A-Z]{16}\b/,
-    aide:'Révoquer dans IAM, utiliser des rôles temporaires.' },
-  { id:'cmdinj', g:'error', t:'Commande système avec entrée concaténée',
-    re:/(exec|execSync|spawnSync|spawn)\s*\(\s*[^)]{0,80}(\+|\$\{)/,
-    aide:'Passer les arguments sous forme de tableau, sans shell.' },
-  { id:'eval', g:'warning', t:'Exécution dynamique de code', re:/\b(eval|new\s+Function)\s*\(/,
-    aide:'Remplacer par un analyseur explicite.' },
-  { id:'sqli', g:'warning', t:'Requête SQL construite par concaténation',
-    re:/(SELECT|INSERT|UPDATE|DELETE)[^;'"`]{0,120}(\+\s*[\w$]|`\s*\$\{)/i,
-    aide:'Utiliser des requêtes paramétrées.' },
-  { id:'cors', g:'warning', t:'CORS ouvert à toutes les origines',
-    re:/Access-Control-Allow-Origin['"]?\s*[:=]\s*['"]\*['"]|origin\s*:\s*['"]\*['"]/i,
-    aide:'Restreindre aux origines réellement utilisées.' },
-  { id:'http', g:'warning', t:'URL HTTP non chiffrée',
-    re:/["'`]http:\/\/(?!localhost|127\.0\.0\.1|0\.0\.0\.0|www\.w3\.org|example\.com)/,
-    aide:'Passer en HTTPS.' },
-  { id:'innerHTML', g:'warning', t:'Écriture HTML directe (risque XSS)',
-    re:/\.innerHTML\s*=\s*[^=]|document\.write\s*\(/,
-    aide:'Utiliser textContent ou échapper.' },
-  { id:'mdp', g:'warning', t:'Hachage faible pour mot de passe',
-    re:/(createHash\s*\(\s*['"](md5|sha1)['"]|\b(md5|sha1)\s*\()/i,
-    aide:'Utiliser bcrypt, scrypt ou Argon2.' },
-  { id:'verif', g:'note', t:'Vérification TLS désactivée',
-    re:/(rejectUnauthorized\s*:\s*false|verify\s*=\s*False|InsecureSkipVerify\s*:\s*true)/,
-    aide:'Réactiver la vérification TLS.' },
-];
-
 const resultats = [];
+let fichiersAnalyses = 0, lignesAnalysees = 0;
+
 for (const f of marche(racine)) {
   const rel = relative(racine, f).replace(/\\/g,'/');
-  if (!avecTests && estFichierTest(rel)) continue;
+  if (/(^|\/)(test|tests|spec|__tests__|fixtures|examples?|mocks?)\//i.test(rel) || /\.(test|spec|min)\.[a-z]+$/i.test(rel)) continue;
   let st; try { st = statSync(f); } catch { continue; }
   if (st.size > MAX) continue;
   const dot = rel.lastIndexOf('.'); const ext = dot >= 0 ? rel.slice(dot).toLowerCase() : '';
-  if (!TEXTE.has(ext) && !/(^|\/)(\.env|Dockerfile|Makefile)/.test(rel)) continue;
+  if (!TEXTE.has(ext) && !/(^|\/)(\.env|Dockerfile)/.test(rel)) continue;
   let contenu; try { contenu = readFileSync(f,'utf8'); } catch { continue; }
-  contenu.split(/\r?\n/).forEach((l, i) => {
+  if (contenu.includes('\u0000')) continue; // binaire
+  fichiersAnalyses++;
+  const lignes = contenu.split(/\r?\n/);
+  lignesAnalysees += lignes.length;
+  lignes.forEach((l, i) => {
     const t = l.trim();
-    if (t.startsWith('//') || t.startsWith('#') || t.startsWith('*')) return;
+    // On écarte les commentaires : un exemple cité dans un commentaire n'est pas une faille.
+    if (t.startsWith('//') || t.startsWith('#') || t.startsWith('*') || t.startsWith('/*')) return;
     for (const r of REGLES) {
       if (!r.re.test(l)) continue;
-      if ((r.id === 'secret' || r.id === 'aws') && EXEMPLE.test(l)) continue;
-      const titre = r.id === 'secret' ? l.trim().replace(/['"][^'"]{6,}['"]/g, '"…"') : t.slice(0,160);
-      const empreinte = createHash('sha256').update(`${r.id}|${rel}|${i+1}`).digest('hex').slice(0,24);
       resultats.push({
-        ruleId: r.id,
-        level: r.g,
-        message: { text: `${r.t}. ${r.aide}` },
-        locations: [{ physicalLocation: { artifactLocation: { uri: rel }, region: { startLine: i+1, snippet: { text: titre.slice(0,160) } } } }],
-        partialFingerprints: { primaryLocationLineHash: empreinte },
+        regle: r,
+        emplacement: { uri: rel, region: { startLine: i+1, startColumn: Math.max(1, l.indexOf(t.slice(0,20))+1), snippet: { text: t.slice(0,200) } } },
       });
     }
   });
 }
 
+const parGravite = { error: 0, warning: 0, note: 0 };
+for (const x of resultats) parGravite[x.regle.niveau] = (parGravite[x.regle.niveau] || 0) + 1;
+
 const sarif = {
-  $schema: 'https://json.schemastore.org/sarif-2.1.0.json',
+  $schema: 'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json',
   version: '2.1.0',
   runs: [{
     tool: {
       driver: {
-        name: 'audit-code-statique', version: '1.0.0', informationUri: 'https://aarrth8.github.io/audit-code-statique/',
+        name: 'AuditCodeStatique',
+        informationUri: 'https://aarrth8.github.io/audit-code-statique/',
+        version: '1.0.0',
         rules: REGLES.map(r => ({
-          id: r.id, name: r.t, shortDescription: { text: r.t },
-          helpUri: 'https://aarrth8.github.io/audit-code-statique/',
+          id: r.id,
+          name: r.id.replace(/-/g,'_'),
+          shortDescription: { text: r.titre },
+          fullDescription: { text: r.texte },
+          helpUri: 'https://aarrth8.github.io/audit-code-statique/rapports/',
           help: { text: r.aide },
-          defaultConfiguration: { level: r.g },
-          properties: { tags: ['security'] },
+          defaultConfiguration: { level: r.niveau },
+          properties: { 'security-severity': r.sev, tags: ['security','audit-statique'] },
         })),
       },
     },
-    invocations: [{ executionSuccessful: true, properties: { cible, analyseStatique: true, codeExecute: false } }],
-    results: resultats,
+    invocations: [{ executionSuccessful: true, commandLine: `audit-sarif.mjs ${cible}`,
+      properties: { fichiersAnalyses, lignesAnalysees, analyseStatique: true, codeExecute: false } }],
+    artifacts: [{ location: { uri: nom } }],
+    results: resultats.map(x => ({
+      ruleId: x.regle.id,
+      level: x.regle.niveau,
+      message: { text: `${x.regle.titre}. ${x.regle.texte} Correction : ${x.regle.aide}` },
+      locations: [{ physicalLocation: { artifactLocation: { uri: x.emplacement.uri }, region: x.emplacement.region } }],
+      properties: { 'security-severity': x.regle.sev },
+    })),
   }],
 };
 
 writeFileSync(sortie, JSON.stringify(sarif, null, 2));
-const parNiveau = resultats.reduce((a, r) => (a[r.level] = (a[r.level]||0)+1, a), {});
-console.log(JSON.stringify({ cible, resultats: resultats.length, parNiveau, sarif: sortie }, null, 2));
+console.log(JSON.stringify({ cible: nom, fichiersAnalyses, lignesAnalysees, constats: resultats.length,
+  parNiveau: parGravite, regles: REGLES.length, sarif: sortie,
+  note: 'Format SARIF 2.1.0 — lisible par GitHub Security, VS Code, GitLab. Analyse statique, code non execute.' }, null, 2));
