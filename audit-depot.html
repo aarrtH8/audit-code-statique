@@ -114,6 +114,22 @@ const bar = progEl.querySelector('i');
 function log(m) { logEl.style.display = 'block'; logEl.textContent += m + '\n'; logEl.scrollTop = logEl.scrollHeight; }
 function setProg(p) { progEl.style.display = 'block'; bar.style.width = Math.max(0, Math.min(100, p)) + '%'; }
 
+
+function pontCommande(repo, n, resume){
+  const t = encodeURIComponent('[Audit] Rapport complet — ' + repo + '
+
+Contexte : audit libre-service effectue, ' + n + ' constat(s) (' + resume + ').
+Je souhaite le rapport complet avec croisement du contexte d appel et tri du bruit.
+
+Depot : https://github.com/' + repo + '
+Langage principal : (a preciser)
+Ce qui me preoccupe : (a preciser)');
+  return '<div class="n" style="border-left-color:#58a6ff;margin-top:16px">'
+    + '<strong>Etape suivante :</strong> les alertes ci-dessus sont brutes. Un rapport complet croise ces motifs avec le contexte d appel, ecarte le bruit (tests, exemples) et priorise ce qui compte reellement.'
+    + '<br><br><a class="cta" style="background:#3fb950;color:#04120a;text-decoration:none;padding:11px 18px;border-radius:9px;font-weight:700;display:inline-block" href="https://github.com/aarrtH8/audit-code-statique/issues/new?title=&body=' + t + '">Demander le rapport complet pour ' + repo + ' -></a>'
+    + '<br><span class="muted">Ouvre une demande pre-remplie avec ce depot. Prix sur devis, convenu avant commande.</span></div>';
+}
+
 function analyserFichier(chemin, texte) {
   const out = [];
   texte.split('\n').forEach((l, i) => {
@@ -176,6 +192,7 @@ async function auditer(repo) {
       </div>`;
     });
     if (trouves.length > 120) h += `<p class="muted">… et ${trouves.length - 120} autres constats (tronqué à l'affichage).</p>`;
+    h += pontCommande(repo, trouves.length, resume);
     h += `<div class="n" style="margin-top:14px"><strong>Ce que ce rapport ne dit pas :</strong> impacts réels non confirmés, dépendances non vérifiées, configuration serveur non examinée. Un audit complet croise ces motifs avec le contexte d'appel.</div>`;
     out.innerHTML = h;
   } catch (e) {
