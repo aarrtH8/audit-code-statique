@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 motifs de code qui signalent un vrai problème</title>
+<meta name="description" content="Quatre signaux fiables en analyse statique : secret en dur, SQL concaténé, commande système, eval(). Comment les repérer et les corriger, avec les commandes de vérification.">
+<style>
+ :root{--bg:#0f1216;--fg:#e6e9ee;--dim:#98a2b3;--line:#242b35;--accent:#5ea8ff}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ .wrap{max-width:720px;margin:0 auto;padding:52px 20px 90px}
+ h1{font-size:1.85rem;line-height:1.25;margin:0 0 22px;letter-spacing:-.025em}
+ h2{font-size:1.3rem;margin:44px 0 12px;padding-top:20px;border-top:1px solid var(--line)}
+ h3{font-size:1.05rem;margin:28px 0 10px}
+ p{margin:14px 0}
+ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+ code{background:#1b222b;padding:2px 6px;border-radius:4px;font:13.5px ui-monospace,Consolas,monospace}
+ pre{background:#151a21;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto}
+ pre code{background:none;padding:0;font-size:13px;line-height:1.55}
+ hr{border:0;border-top:1px solid var(--line);margin:38px 0}
+ ul,ol{padding-left:22px} li{margin:6px 0}
+ .tab{color:var(--dim);font-size:.9rem}
+ em{color:var(--dim)}
+ .retour{display:inline-block;margin-bottom:26px;font-size:.9rem;color:var(--dim)}
+</style>
+</head>
+<body><div class="wrap">
+<a class="retour" href="index.html">← Accueil</a>
+<h1>4 motifs de code qui signalent un vrai problème — et comment les repérer avant la mise en production</h1>
+<p>*Article publié par un développeur qui vend des audits de code. Je le dis d'emblée : ce texte a un but</p>
+<p>commercial. Il est aussi exact, et il est utile tout seul. Si vous ne me payez jamais, vous en sortirez</p>
+<p>avec 4 vérifications que vous pouvez faire en dix minutes.*</p>
+<hr>
+<h2>Pourquoi ces 4 motifs, et pas 20</h2>
+<p>Sur un dépôt réel, une analyse statique remonte des dizaines de signalements. La plupart ne sont pas</p>
+<p>des urgences. Les quatre motifs ci-dessous partagent une propriété : quand ils sont présents, **le</p>
+<p>problème est presque toujours réel**, pas théorique.</p>
+<hr>
+<h2>1. Un secret dans le code source</h2>
+<pre><code>
+const apiKey = "sk_live_…";
+const DB_PASSWORD = "…";
+</code></pre>
+<p><strong>Pourquoi c'est grave</strong> : ce n'est pas seulement que la clé est visible. C'est qu'elle est dans</p>
+<p><strong>l'historique Git</strong>, donc dans chaque clone, chaque sauvegarde, chaque fork. La supprimer du fichier</p>
+<p>ne la retire pas de l'historique.</p>
+<p><strong>Ce qu'il faut faire, dans cet ordre :</strong></p>
+<ol>
+<li><strong>Révoquer</strong> la clé. D'abord. Pas après le nettoyage — avant.</li>
+<li>La régénérer et la placer dans une variable d'environnement.</li>
+<li>Vérifier que le <code>.env</code> est bien dans <code>.gitignore</code>.</li>
+<li>Seulement ensuite, s'inquiéter de l'historique.</li>
+</ol>
+<p><strong>Vérification rapide</strong> — dans votre dépôt :</p>
+<pre><code>
+git log -p --all -S 'password' -- '*.js' '*.py' '*.env' | head -50
+</code></pre>
+<hr>
+<h2>2. Une requête SQL construite par concaténation</h2>
+<pre><code>
+db.query("SELECT * FROM users WHERE id = " + userId);
+</code></pre>
+<p><strong>Pourquoi c'est grave</strong> : la valeur d'entrée se retrouve interprétée comme du SQL. Ce n'est pas une</p>
+<p>question de « peut-être un jour » — c'est la définition même de l'injection SQL.</p>
+<p>La correction est mécanique :</p>
+<pre><code>
+db.query("SELECT * FROM users WHERE id = ?", [userId]);
+</code></pre>
+<p><strong>Vérification rapide</strong> :</p>
+<pre><code>
+grep -rnE '(SELECT|INSERT|UPDATE|DELETE)[^;]*\+' --include='*.js' --include='*.py' .
+</code></pre>
+<p>Attention au faux positif fréquent : <code>"SELECT * FROM " + TABLE_NAME</code> avec une <strong>constante</strong> n'est pas</p>
+<p>une injection. La question à poser est toujours : <em>cette valeur vient-elle de l'extérieur ?</em></p>
+<hr>
+<h2>3. Une commande système dont l'argument vient de l'appelant</h2>
+<pre><code>
+execSync("tar -czf backup.tgz " + nomFichier);
+</code></pre>
+<p><strong>Pourquoi c'est grave</strong> : selon la provenance de <code>nomFichier</code>, on peut transformer un nom de fichier</p>
+<p>en commande arbitraire. Le point clé n'est pas le style — c'est <strong>d'où vient la valeur</strong>.</p>
+<p>La forme sûre, quand c'est possible :</p>
+<pre><code>
+execFileSync("tar", ["-czf", "backup.tgz", nomFichier]);
+</code></pre>
+<p>Ici il n'y a plus d'interprétation par un shell : chaque argument est passé tel quel.</p>
+<p><strong>Vérification rapide</strong> :</p>
+<pre><code>
+grep -rnE '(exec|execSync|spawn)\([^,)]*\+' --include='*.js' .
+</code></pre>
+<hr>
+<h2>4. <code>eval()</code> sur une donnée qui n'est pas un littéral</h2>
+<pre><code>
+const data = eval("({ endpoint: '" + url + "' })");
+</code></pre>
+<p><strong>Pourquoi c'est grave</strong> : <code>eval</code> exécute du code. Si la chaîne contient une entrée externe, c'est de</p>
+<p>l'exécution de code à distance, sans les protections d'un parseur.</p>
+<p>Dans le cas ci-dessus, <code>JSON.parse</code> suffit — comme dans la très grande majorité des <code>eval</code> qu'on</p>
+<p>rencontre en pratique.</p>
+<p><strong>Vérification rapide</strong> :</p>
+<pre><code>
+grep -rn 'eval(' --include='*.js' --include='*.ts' . | grep -v 'eval(JSON'
+</code></pre>
+<hr>
+<h2>Ce que ces 4 motifs ne disent pas</h2>
+<p>Ils ne disent <strong>pas</strong> que votre application est vulnérable. Ils disent : *voici quatre points à</p>
+<p>vérifier, à des endroits précis de votre code*. Un audit honnête fait la même distinction. Toute</p>
+<p>personne qui vous vend « 47 vulnérabilités critiques » à partir d'un scan automatique vous vend un</p>
+<p>chiffre, pas un diagnostic.</p>
+<p>Une analyse statique est un <strong>filtre</strong>, pas un verdict. La valeur est dans le tri : ce qui compte,</p>
+<p>ce qui peut attendre, ce qui est un faux positif.</p>
+<hr>
+<h2>Comment vous pouvez tout faire vous-même</h2>
+<p>Les quatre commandes ci-dessus sont reproductibles. Rien ne vous oblige à payer.</p>
+<p>Si vous voulez un tri plus large sur un dépôt réel — avec gravités, lignes exactes et conseils de</p>
+<p>correction — j'ai mis un outil en ligne qui tourne <strong>dans votre navigateur</strong> : votre code ne part</p>
+<p>nulle part, il n'y a pas de compte à créer.</p>
+<p><strong>→ <a href="https://aarrth8.github.io/audit-code-statique/audit.html">Analyse locale gratuite</a></strong></p>
+<p>Et si vous voulez que quelqu'un passe sur l'ensemble et vous rende un rapport écrit avec un</p>
+<p>chiffrage d'effort :</p>
+<p><strong>→ <a href="https://aarrth8.github.io/audit-code-statique/devis.html">Demander un devis</a></strong> — je réponds avec</p>
+<p>mes limites et un montant ferme avant tout travail.</p>
+<p><strong>→ <a href="https://aarrth8.github.io/audit-code-statique/rapport-exemple.md">Voir un rapport d'exemple</a></strong></p>
+<p>pour juger la forme du livrable.</p>
+<p>Règlement par PayPal ou virement professionnel, sur facture. Aucune cryptomonnaie.</p>
+<hr>
+<p style="color:var(--dim);font-size:.85rem">Page statique. Aucun traceur, aucun cookie.</p>
+</div></body></html>
