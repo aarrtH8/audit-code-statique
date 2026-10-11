@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Faire relire son code avant de livrer à un client — guide pratique</title>
+<meta name="description" content="Vous devez livrer du code à un client et personne ne l'a relu. Ce qui compte dans une revue avant livraison, ce qui ne sert à rien, et comment savoir si un rapport tient la route.">
+<meta name="keywords" content="faire relire son code, revue de code avant livraison, comment faire auditer son code, retard de livraison client, revue de code pas cher">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Combien de temps prend une revue de code avant livraison ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sur une application web de taille courante, une analyse statique complète produit un rapport en quelques heures après réception du code. Un extrait sur 1 à 3 fichiers se fait le jour même. Le délai réel dépend surtout de l'accès au dépôt, pas de l'analyse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Une analyse statique remplace-t-elle un audit de sécurité ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Une analyse statique repère des motifs à vérifier, ligne par ligne, sans exécuter le code. Elle ne démontre pas qu'une faille est exploitable. Un test d'intrusion le fait, mais coûte beaucoup plus cher. Les deux ne répondent pas à la même question."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Que doit contenir un rapport de revue de code utile ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Trois éléments au minimum : un emplacement précis (fichier et ligne), un extrait du code concerné, et une correction concrète. Un rapport qui liste des catégories générales sans pointer de ligne n'est pas vérifiable, donc inutilisable pour corriger."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Faut-il donner accès à son dépôt privé ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pas nécessairement. Un extrait de 1 à 3 fichiers suffit pour juger de la qualité d'un rapport. Pour un dépôt privé, une invitation en lecture seule permet l'analyse sans transfert de propriété. Le rapport produit appartient au client."
+      }
+    }
+  ]
+}
+</script>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font:16px/1.75 system-ui,-apple-system,sans-serif;background:#0f1115;color:#e8eaed}
+ .w{max-width:720px;margin:0 auto;padding:56px 20px 80px}
+ h1{font-size:1.85rem;margin:0 0 12px;line-height:1.25}
+ .sous{color:#9aa0a6;font-size:1.06rem;margin:0 0 30px}
+ h2{font-size:1.16rem;margin:40px 0 12px;padding-top:20px;border-top:1px solid #20252d}
+ h3{font-size:1rem;margin:22px 0 6px;color:#c5cbd4}
+ .cta{display:inline-block;background:#5b9dff;color:#06101f;font-weight:700;padding:13px 26px;
+   border-radius:8px;text-decoration:none;margin:6px 0}
+ .cta:hover{background:#7bb0ff}
+ ul{padding-left:22px} li{margin:8px 0}
+ code{background:#1a1f27;padding:2px 7px;border-radius:4px;font-size:.88em;color:#c7d2fe}
+ .cadre{background:#151920;border:1px solid #232833;border-radius:10px;padding:18px 22px;margin:22px 0}
+ .faux{border-left:3px solid #ff6b6b;padding-left:16px;margin:14px 0}
+ .juste{border-left:3px solid #4ade80;padding-left:16px;margin:14px 0}
+ .note{color:#6b7280;font-size:.87rem;margin-top:36px;padding-top:20px;border-top:1px solid #20252d}
+ a{color:#5b9dff}
+</style>
+</head>
+<body>
+<style id="nav-interne">.nav-interne{max-width:720px;margin:0 auto;padding:18px 20px 0;display:flex;flex-wrap:wrap;gap:6px;font-size:.85rem}.nav-interne a{color:#9aa0a6;text-decoration:none;padding:6px 11px;border:1px solid #232833;border-radius:999px}.nav-interne a:hover{color:#e8eaed;border-color:#3a4150}</style>
+<nav class="nav-interne"><a href="index.html">Accueil</a><a href="service.html">Prestations</a><a href="agences.html">Agences</a><a href="exemple-rapport.html">Exemple de rapport</a><a href="revue-avant-livraison.html">Guide</a><a href="demande.html">Décrire un besoin</a></nav><div class="w">
+
+<h1>Faire relire son code avant de le livrer à un client</h1>
+<p class="sous">Vous avez un livrable jeudi. Le code fonctionne. Mais personne ne l'a
+relu ligne à ligne, et vous savez ce qu'on trouve quand on relit.</p>
+
+<div class="cadre">
+  <p style="margin:0">Ce guide explique ce qui compte vraiment dans une revue avant
+  livraison, ce qui ne sert à rien, et comment reconnaître un rapport utilisable d'un
+  rapport décoratif. Il est écrit par quelqu'un qui vend cette prestation —
+  <strong>jugez le contenu, pas la promesse.</strong></p>
+</div>
+
+<h2>Le problème réel n'est pas technique</h2>
+<p>Un client ne vous demande presque jamais « as-tu utilisé des requêtes préparées ? ».
+Il demande deux choses, à des moments différents :</p>
+<ul>
+  <li><strong>Au moment de livrer :</strong> « c'est sécurisé ? » — une question à laquelle
+  on répond mieux avec un document qu'avec une phrase rassurante.</li>
+  <li><strong>Six mois plus tard :</strong> « qui a écrit ça ? » — quand une fuite ou une
+  panne survient, on cherche à qui incombait la relecture.</li>
+</ul>
+<p>La deuxième question est celle qui coûte cher. Un rapport daté, qui pointe des lignes
+précises, répond aux deux.</p>
+
+<h2>Ce qu'un rapport utile contient — et rien d'autre</h2>
+
+<div class="juste">
+  <h3>Trois éléments obligatoires par constat</h3>
+  <ul>
+    <li><strong>L'emplacement exact</strong> : <code>app.js:26</code>, pas « dans le module
+    d'authentification ».</li>
+    <li><strong>L'extrait de code</strong> : la ligne citée telle quelle, pour que vous
+    puissiez vérifier sans chercher.</li>
+    <li><strong>La correction</strong> : ce qu'il faut écrire à la place, même brièvement.</li>
+  </ul>
+</div>
+
+<div class="faux">
+  <h3>Ce qui ne sert à rien</h3>
+  <ul>
+    <li>Un <strong>score de sécurité sur 100</strong>. Il n'existe aucune échelle commune :
+    le chiffre est inventé, et il est là pour rassurer, pas pour informer.</li>
+    <li>Des <strong>catégories sans ligne</strong> (« attention aux injections »). Vous ne
+    pouvez rien corriger avec ça.</li>
+    <li>Une <strong>garantie « zéro vulnérabilité »</strong>. Aucun outil ne peut la donner.
+    Si on vous la propose, c'est le signe de fuir.</li>
+  </ul>
+</div>
+
+<h2>Le piège des outils automatiques seuls</h2>
+<p>Un scanner lancé sur un dépôt produit deux effets mesurables : des centaines d'alertes
+et un taux élevé de faux positifs. Résultat concret : personne ne lit le rapport, et
+l'exercice est recommencé au projet suivant sans rien corriger.</p>
+<p>La différence entre un rapport jeté et un rapport utilisé est <strong>le tri</strong> :
+distinguer ce qui est en code de production, ce qui est dans un fichier de test, et ce qui
+est un motif à vérifier sans être une faille. C'est ce travail qui a une valeur — pas le
+lancement de l'outil.</p>
+
+<h2>Combien ça coûte, honnêtement</h2>
+<p>Deux extrêmes existent sur ce marché, et il est utile de les nommer :</p>
+<ul>
+  <li><strong>L'audit d'une grande société</strong> : plusieurs milliers d'euros, des
+  semaines de délai. Justifié pour un système critique. Hors de portée pour un projet
+  client ordinaire.</li>
+  <li><strong>Le scanner gratuit en ligne</strong> : gratuit, immédiat, et produit
+  généralement une liste non triée que vous n'utiliserez pas.</li>
+</ul>
+<p>Entre les deux, une revue ciblée sur un périmètre défini, avec un rapport écrit,
+se fait à un coût compatible avec un projet de quelques jours. C'est le segment où
+ce service se place.</p>
+
+<h2>Ce que vous pouvez vérifier avant de payer quoi que ce soit</h2>
+<p>Une chose simple, et qui élimine la plupart des mauvaises surprises : demandez un
+<strong>extrait de rapport sur un fichier réel choisi par vous</strong>, avant tout
+engagement. Un prestataire sérieux accepte. Un rapport de démonstration, sur du code
+fictif, ne prouve rien sur votre code.</p>
+
+<p><a href="exemple-rapport.html">Voir à quoi ressemble le format que je livre →</a></p>
+
+<h2>Questions fréquentes</h2>
+
+<h3>Combien de temps ça prend ?</h3>
+<p>L'analyse elle-même est rapide. Le délai réel vient de l'accès au code. Sur 1 à 3
+fichiers, le retour se fait le jour même.</p>
+
+<h3>Est-ce que ça remplace un test d'intrusion ?</h3>
+<p>Non, et il ne faut pas le croire. Une analyse statique signale des motifs à vérifier.
+Un test d'intrusion démontre l'exploitabilité. Ce sont deux questions différentes, à deux
+prix différents.</p>
+
+<h3>Faut-il donner accès à son dépôt privé ?</h3>
+<p>Un extrait de 1 à 3 fichiers suffit pour juger. Pour un dépôt entier, une invitation
+en lecture seule permet l'analyse sans transfert. Le rapport vous appartient, et je ne le
+publie pas.</p>
+
+<h3>Est-ce que vous contactez mon client ?</h3>
+<p>Jamais. Pour une agence ou un freelance, c'est une limite non négociable : je travaille
+pour vous, sous votre marque, et je ne prends aucun contact avec votre client final.</p>
+
+<a class="cta" href="demande.html">Demander un extrait sur 1 à 3 fichiers →</a>
+
+<div class="note">
+  <p><a href="./">← Audit de code statique</a> ·
+     <a href="service.html">Prestations</a> ·
+     <a href="agences.html">Agences &amp; freelances</a> ·
+     <a href="exemple-rapport.html">Exemple de rapport</a></p>
+  <p>Aucun démarchage : ce site reçoit des demandes, il n'en envoie pas. Aucune donnée
+  n'est revendue. Le côté « analyse statique » signifie que le code analysé n'est jamais
+  exécuté.</p>
+</div>
+
+</div>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "name":"Revue de code avant livraison",
+  "serviceType":"Analyse statique et revue de code",
+  "provider":{"@type":"Person","name":"Arthur Grossi","jobTitle":"Entrepreneur individuel"},
+  "areaServed":"FR",
+  "description":"Analyse statique de code produisant un rapport écrit : chaque constat porte un fichier, une ligne, un extrait et une correction. Aucun code exécuté, aucun dépôt modifié.",
+  "offers":{"@type":"Offer","description":"Extrait de rapport gratuit sur 1 à 3 fichiers, avant tout engagement."}
+}
+</script>
+</body></html>
