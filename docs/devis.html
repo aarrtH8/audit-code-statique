@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demander un devis — audit de code statique</title>
+<meta name="description" content="Demandez un devis d'audit de code : décrivez le périmètre, recevez une réponse avec les limites et un montant ferme. Aucun secret à coller.">
+<style>
+ :root{--bg:#0f1216;--fg:#e6e9ee;--dim:#98a2b3;--line:#242b35;--accent:#5ea8ff;--ok:#3ec27a;--warn:#f0b429}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ .wrap{max-width:760px;margin:0 auto;padding:52px 20px 90px}
+ h1{font-size:1.95rem;margin:0 0 10px;letter-spacing:-.025em}
+ h2{font-size:1.15rem;margin:34px 0 12px}
+ .sub{color:var(--dim);margin:0 0 26px}
+ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+ label{display:block;font-size:.9rem;margin:16px 0 6px;color:var(--dim)}
+ input,select,textarea{width:100%;background:#151a21;color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font:15px/1.5 inherit}
+ textarea{min-height:130px;font:13px/1.55 ui-monospace,Consolas,monospace;resize:vertical}
+ .box{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:22px 0;background:#151a21;font-size:.93rem}
+ .box.warn{border-color:#4a3a17;background:#1a1611}
+ .note{color:var(--dim);font-size:.85rem;margin-top:6px}
+ button{background:var(--accent);color:#08121f;border:0;border-radius:9px;padding:13px 26px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:22px}
+ button:hover{filter:brightness(1.1)}
+ .link-out{display:inline-block;margin-top:10px;font-weight:600}
+ ul{padding-left:20px} li{margin:5px 0}
+ code{background:#1b222b;padding:2px 6px;border-radius:4px;font-size:.86em}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>Demander un devis</h1>
+<p class="sub">Décrivez le périmètre. Je réponds avec <strong>les limites de ce que je peux tenir</strong> et un <strong>montant ferme</strong> pour votre cas — avant tout travail.</p>
+
+<div class="box warn">
+  <strong>Ne collez aucun secret ici.</strong> Ni mot de passe, ni clé d'API, ni identifiant client. Décrivez seulement
+  le <em>type</em> de code et le périmètre. Pour un diagnostic immédiat sur un extrait non sensible, utilisez
+  <a href="audit.html">l'analyse locale</a> — elle s'exécute dans votre navigateur.
+</div>
+
+<form id="f" onsubmit="return envoyer(event)">
+  <label for="qui">Qui êtes-vous ? (nom, structure — pas de donnée sensible)</label>
+  <input id="qui" required placeholder="Ex. : Marie Dupont, société X">
+
+  <label for="besoin">Quel est le besoin ?</label>
+  <select id="besoin">
+    <option>Revue ciblée d'un périmètre précis</option>
+    <option>Audit complet d'un dépôt</option>
+    <option>Reprise assistée avec correctifs</option>
+    <option>Suivi mensuel</option>
+    <option>Je ne sais pas encore — conseillez-moi</option>
+  </select>
+
+  <label for="perimetre">Décrivez le périmètre (langage, nombre approximatif de fichiers, contexte)</label>
+  <textarea id="perimetre" required placeholder="Ex. : application Node/Express, ~40 fichiers, API publique, pas de tests. Je veux savoir ce qui est prioritaire."></textarea>
+
+  <label for="contact">Comment vous répondre ?</label>
+  <input id="contact" required placeholder="E-mail ou autre moyen de vous joindre">
+
+  <label for="quand">Souhaitez-vous un délai précis ?</label>
+  <input id="quand" placeholder="Ex. : avant fin du mois">
+
+  <button type="submit">Préparer ma demande →</button>
+</form>
+
+<p class="note" id="stat"></p>
+
+<div class="box">
+  <strong>Ce qui se passe ensuite, sans surprise :</strong>
+  <ul>
+    <li>Votre demande part vers ma boîte de réception ; <strong>rien n'est envoyé</strong> tant que vous n'avez pas cliqué sur « Envoyer » dans votre logiciel de messagerie.</li>
+    <li>Je réponds en indiquant ce que je peux faire, ce que je ne peux pas, et un montant ferme.</li>
+    <li>Si vous acceptez : facture, puis travail. <strong>Aucun paiement n'est demandé avant accord écrit sur le montant.</strong></li>
+    <li>Règlement par PayPal ou virement professionnel. Aucune cryptomonnaie.</li>
+  </ul>
+</div>
+
+<h2>Vous préférez un canal public ?</h2>
+<p class="sub" style="font-size:.95rem">
+  Ouvrez une demande visible sur <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">GitHub Issues</a>.
+  Utile si vous voulez une trace publique.
+</p>
+
+<p class="note" style="margin-top:36px">
+  Page statique : aucun traceur, aucun cookie, aucune donnée conservée. Le bouton ci-dessous compose simplement
+  un message dans <em>votre</em> messagerie — vous gardez le contrôle de l'envoi.
+</p>
+
+<script>
+'use strict';
+// Adresse de contact assemblee a l'execution depuis des fragments :
+// evite qu'un moissonneur d'adresses la lise directement dans le HTML.
+var utilisateur = ['arthhur', 'grossi'].join('.') + '@' + ['gmail', 'com'].join('.');
+
+function envoyer(e){
+  e.preventDefault();
+  var qui = document.getElementById('qui').value.trim();
+  var besoin = document.getElementById('besoin').value;
+  var perim = document.getElementById('perimetre').value.trim();
+  var contact = document.getElementById('contact').value.trim();
+  var quand = document.getElementById('quand').value.trim();
+
+  var sujet = 'Demande de devis — ' + besoin;
+  var corps = [
+    'Bonjour,',
+    '',
+    'Demande de devis pour un audit de code statique.',
+    '',
+    'Qui : ' + qui,
+    'Besoin : ' + besoin,
+    'Contact : ' + contact,
+    quand ? 'Délai souhaité : ' + quand : null,
+    '',
+    'Périmètre décrit :',
+    perim,
+    '',
+    '— (message préparé depuis la page de demande ; je confirme moi-même l\\'envoi.)'
+  ].filter(function(l){ return l !== null; }).join('\n');
+
+  var lien = 'mailto:' + utilisateur
+    + '?subject=' + encodeURIComponent(sujet)
+    + '&body=' + encodeURIComponent(corps);
+
+  try {
+    navigator.clipboard.writeText(corps);
+    document.getElementById('stat').textContent = 'Message copié dans votre presse-papiers. ';
+  } catch (err) {}
+
+  window.location.href = lien;
+  document.getElementById('stat').textContent += 'Votre messagerie s\\'ouvre : vérifiez et cliquez sur Envoyer.';
+  return false;
+}
+</script>
+</body></html>
