@@ -71,3 +71,14 @@ Dont 7 en code de production, 0 en tests/docs.
   element.innerHTML = commentaire;
   ```
 
+<!-- SCELLEMENT-SHA256 : début -->
+## Empreinte du rapport (SHA-256)
+
+`fb157e2a7829ae8dcf3a4653db30a0dab303bd451d74b1a9568b412649dcc018`
+
+Calculée sur ce document hors ce bloc de scellement, le 2026-10-11.
+Vérifiable côté client : ouvrez `verifier-empreinte.html`,
+sélectionnez ce fichier, collez l'empreinte ci-dessus — le calcul se fait dans votre
+navigateur, aucune donnée n'est transmise. Une empreinte identique prouve que le fichier
+est intact tel que livré.
+<!-- SCELLEMENT-SHA256 : fin -->
