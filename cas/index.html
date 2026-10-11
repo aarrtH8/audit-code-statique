@@ -1,0 +1,21 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cas courants d'audit de code statique</title>
+<meta name="description" content="Six cas concrets que cherche un audit statique : secrets en dur, injection SQL, MD5, CORS/CSRF, erreurs avalées, dates et fuseaux.">
+<style>body{font:16px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:760px;margin:48px auto;padding:0 20px}
+h1{font-size:25px}ul{padding-left:20px}li{margin:10px 0}a{color:#06c}small{color:#777}</style>
+</head><body>
+<h1>Six cas que je cherche dans du code réel</h1>
+<p>Chaque page explique un problème courant, montre le code fautif et sa correction,
+puis indique comment le repérer automatiquement. Ce sont des explications générales —
+pas le résultat d'un audit sur votre code.</p>
+<ul>
+<li><a href="cas/secrets-en-dur.html">Secrets en dur dans le code : comment les repérer</a><br><small>Clé API, mot de passe ou jeton écrit en clair dans un fichier source : pourquoi c'est un problème et comment le trouver dans un dépôt.</small></li>
+<li><a href="cas/injection-sql-concatenation.html">Injection SQL par concaténation : le cas le plus courant</a><br><small>Comment une requête SQL construite par concaténation de chaînes devient injectable, et pourquoi les requêtes préparées ne couvrent pas tous les cas.</small></li>
+<li><a href="cas/md5-sha1-mots-de-passe.html">Pourquoi MD5 et SHA-1 sont inadaptés aux mots de passe</a><br><small>MD5 et SHA-1 sont rapides : c'est exactement ce qui les rend mauvais pour hacher un mot de passe. Ce qu'il faut utiliser à la place.</small></li>
+<li><a href="cas/cors-etoile-et-csrf.html">CORS ouvert et CSRF désactivé : deux réglages qui s'annulent</a><br><small>Un CORS en étoile et un CSRF désactivé se combinent pour ouvrir une application à des requêtes non désirées. Comment le repérer.</small></li>
+<li><a href="cas/erreurs-avalees.html">Erreurs avalées : le bug qui ne laisse pas de trace</a><br><small>Un catch vide transforme une panne visible en échec silencieux. Pourquoi c'est risqué et comment le repérer dans un dépôt.</small></li>
+<li><a href="cas/dates-fuseaux.html">Dates et fuseaux : les décalages qui ne plantent jamais</a><br><small>Une date en heure locale, un mois entre 0 et 11, un passage à l'heure d'été : ces erreurs se propagent sans lever d'exception.</small></li>
+</ul>
+<p style="margin-top:28px"><a href="audit-autonome.html">Lancer l'auditeur instantané &rarr;</a></p>
+</body></html>
