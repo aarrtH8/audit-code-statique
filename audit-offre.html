@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit de code statique — Arthur Grossi EI</title>
+<meta name="description" content="Audit statique de code public : constats vérifiables, empreinte SHA-256, aucun code exécuté. Premier triage à prix fixe au devis.">
+<style>
+  :root{--bg:#0b0e14;--fg:#e6edf3;--muted:#8b949e;--accent:#3fb950;--line:#21262d;--card:#11151c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:780px;margin:0 auto;padding:48px 22px}
+  h1{font-size:1.9rem;line-height:1.25;margin:0 0 .4em}
+  h2{font-size:1.15rem;margin:2.2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.35em}
+  .lead{color:var(--muted);font-size:1.08rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:14px 0}
+  .ok{color:var(--accent)}
+  code{background:#161b22;padding:.12em .4em;border-radius:5px;font-size:.92em;word-break:break-all}
+  ul{padding-left:1.25em}
+  .btn{display:inline-block;background:var(--accent);color:#04110a;font-weight:600;text-decoration:none;padding:12px 20px;border-radius:8px;margin-top:8px}
+  a{color:#58a6ff}
+  .small{font-size:.9rem;color:var(--muted)}
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.82rem;color:var(--muted);margin:0 6px 6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Audit de code statique — constats vérifiables, rien exécuté.</h1>
+<p class="lead">Je lis le code source public (ou l'extrait que vous me confiez) et je vous rends un rapport court, daté et scellé. Vous savez exactement quels fichiers, quelles lignes, et pourquoi regarder.</p>
+
+<div class="card">
+  <strong class="ok">Ce que vous obtenez</strong>
+  <ul>
+    <li>1 <strong>rapport signal</strong> : motifs dédupliqués, séparés production / test.</li>
+    <li>Fichier et <strong>numéro de ligne</strong> pour chaque constat — vérifiable en ouvrant votre code.</li>
+    <li><strong>Empreinte SHA-256</strong> du rapport livré : ce que je vous donne est daté et infalsifiable.</li>
+    <li>Un message <strong>court</strong>. Pas 500 lignes illisibles.</li>
+  </ul>
+</div>
+
+<h2>Exemples de rapports déjà publiés (travail réel)</h2>
+<p class="small">Ces audits ont été produits par mon pipeline sur des dépôts publics. Aucun code n'a été exécuté, aucun accès n'a été demandé.</p>
+<div class="grid">
+  <div class="card">
+    <strong>counteraccro/natheo</strong><br>
+    <span class="small">644 fichiers lus · 67 constats</span><br>
+    <a href="https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/counteraccro-natheo-2006.signal.md">Lire le rapport</a>
+  </div>
+  <div class="card">
+    <strong>vllm-project/vllm-ascend</strong><br>
+    <span class="small">2 201 fichiers · 747 constats</span><br>
+    <a href="https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/vllm-project-vllm-ascend-2006.signal.md">Lire le rapport</a>
+  </div>
+  <div class="card">
+    <strong>symfony/form</strong><br>
+    <span class="small">545 fichiers · 12 constats</span><br>
+    <a href="https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/symfony-form-2006.signal.md">Lire le rapport</a>
+  </div>
+</div>
+
+<h2>Ce que ce n'est PAS</h2>
+<p>Ce ne sont <strong>pas des vulnérabilités confirmées</strong> : ce sont des <strong>points à vérifier</strong>, classés par priorité. Un motif présent dans un test, une fixture ou un exemple n'est pas une faille en production — je le signale comme tel.</p>
+
+<h2>Prix</h2>
+<div class="grid">
+  <div class="card"><strong>Triage ciblé — 90 €</strong><br><span class="small">Un périmètre précis (un module, un dossier). Rapport signal + relecture de chaque point retenu.</span></div>
+  <div class="card"><strong>Audit complet — 290 €</strong><br><span class="small">Tout le dépôt. Rapport signal + rapport détaillé. Confirmation/écartement de chaque point.</span></div>
+  <div class="card"><strong>Conformité &amp; historique — 490 €</strong><br><span class="small">Complet + revue de l'historique Git (secrets, dépendances).</span></div>
+</div>
+<p class="small"><strong>Prix ferme au devis.</strong> Vous validez le montant et le périmètre avant tout travail. Aucun prélèvement sans votre accord écrit.</p>
+
+<h2>Paiement</h2>
+<p>Virement professionnel (Arthur Grossi EI) ou PayPal. <strong>Aucune cryptomonnaie.</strong> Un devis accepté ouvre le travail ; la livraison se fait après réception effective.</p>
+
+<h2>Comment commander</h2>
+<p>Ouvrez une demande en décrivant : le langage, la taille approximative, et le dépôt ou l'extrait à analyser.</p>
+<a class="btn" href="https://github.com/aarrtH8/audit-code-statique/issues/new?title=%5Bdemande%5D%20audit&body=Langage%20%3A%0ATaille%20approximative%20%3A%0AD%C3%A9p%C3%B4t%20ou%20extrait%20%3A%0A" target="_blank" rel="noopener">Ouvrir une demande d'audit</a>
+
+<p class="small" style="margin-top:28px">
+<span class="pill">Aucun code exécuté</span>
+<span class="pill">Aucun accès demandé</span>
+<span class="pill">Aucun envoi automatique</span>
+<span class="pill">SHA-256 sur chaque livrable</span>
+</p>
+<p class="small">Arthur Grossi EI — audit de code statique. Ce que je ne peux pas prouver, je ne l'écris pas.</p>
+
+</div>
+</body>
+</html>
