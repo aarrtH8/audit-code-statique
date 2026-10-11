@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Revue de code — veille d'appels d'offres ouverts (France)</title>
+<meta name="description" content="Veille publique : avis d'appels d'offres français encore ouverts portant sur la revue, la reprise ou l'audit de code. Dates limites réelles, relevées dans BOAMP.">
+<style>
+ :root { --bg:#0f1216; --fg:#e6e9ee; --dim:#98a2b3; --line:#242b35; --accent:#5ea8ff; --ok:#3ec27a; --warn:#f0b429; --bad:#f0614f; }
+ * { box-sizing:border-box }
+ body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+ .wrap { max-width:1000px; margin:0 auto; padding:48px 20px 80px; }
+ h1 { font-size:1.9rem; margin:0 0 8px; letter-spacing:-.02em; }
+ .sub { color:var(--dim); margin:0 0 32px; }
+ .box { border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:0 0 28px; background:#151a21; }
+ .box strong { color:var(--accent); }
+ table { width:100%; border-collapse:collapse; font-size:.94rem; }
+ th { text-align:left; color:var(--dim); font-weight:600; padding:10px 8px; border-bottom:1px solid var(--line); }
+ td { padding:12px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+ td.ent { font-weight:600; }
+ .pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:.8rem; white-space:nowrap; }
+ .pill.urgent { background:#3a1a17; color:var(--bad); }
+ .pill.ouvert { background:#3a3117; color:var(--warn); }
+ .pill.large { background:#17301f; color:var(--ok); }
+ .pill.na { background:#222932; color:var(--dim); }
+ tr.urgent td.ent { color:var(--bad); }
+ footer { margin-top:40px; color:var(--dim); font-size:.88rem; border-top:1px solid var(--line); padding-top:20px; }
+ code { background:#1b222b; padding:2px 6px; border-radius:4px; font-size:.9em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Veille : appels d'offres ouverts sur la revue / reprise de code</h1>
+  <p class="sub">Relevé BOAMP du 2026-10-11 14:08Z — 6 avis encore ouverts, 0 clôturés.</p>
+
+  <div class="box">
+    <strong>Ce que cette page est :</strong> une veille technique et honnête. Je lis les avis d'appels
+    d'offres où une organisation a <em>écrit</em> qu'elle cherchait une revue, une reprise ou un audit de code.
+    Les dates limites ci-dessous sont celles réellement publiées dans l'enregistrement public BOAMP.
+  </div>
+  <div class="box">
+    <strong>Ce que cette page n'est pas :</strong> une promesse de résultat. Un avis « ouvert » n'est pas
+    un marché gagné, ni même un marché accessible : il faut encore lire le règlement de consultation
+    (pièces exigées, critères, surface financière). Aucun de ces marchés n'est attribué à ce jour.
+  </div>
+
+  <table>
+    <thead><tr><th>Acheteur</th><th>Objet publié</th><th>Date limite</th><th>État</th></tr></thead>
+    <tbody>
+      <tr class="ouvert">
+        <td class="ent">SA AEROPORT MONTPELLIER MEDITERRANEE</td>
+        <td>Fourniture, mise en oeuvre et maintenance applicative d'une solution pour un Système d'Inf</td>
+        <td>2026-10-19</td>
+        <td><span class="pill ouvert">OUVERT (8 j)</span></td>
+      </tr>
+      <tr class="ouvert">
+        <td class="ent">Ordre national des pédicure-podologues</td>
+        <td>Prestation de refonte applicative de l'application Tableau de l'Ordre National des Pédicur</td>
+        <td>2026-10-19</td>
+        <td><span class="pill ouvert">OUVERT (8 j)</span></td>
+      </tr>
+      <tr class="ouvert">
+        <td class="ent">ANSES</td>
+        <td>Refonte du socle technique de l'application Salsa (système d'alerte sanitaire de l'Anses) </td>
+        <td>2026-10-26</td>
+        <td><span class="pill ouvert">OUVERT (15 j)</span></td>
+      </tr>
+      <tr class="large">
+        <td class="ent">Toulouse Métropole</td>
+        <td>26mc0291pa - Fourniture, Mise En oeuvre, Hébergement Et Maintenance D'Une Solution Applica</td>
+        <td>2026-10-30</td>
+        <td><span class="pill large">OUVERT large (19 j)</span></td>
+      </tr>
+      <tr class="large">
+        <td class="ent">DSAF.</td>
+        <td>Tierce maintenance applicative des applications et des sites webs des Services du Premier </td>
+        <td>2026-11-04</td>
+        <td><span class="pill large">OUVERT large (24 j)</span></td>
+      </tr>
+      <tr class="large">
+        <td class="ent">SG-SAAM-Mission des achats</td>
+        <td>Prestations de tierce maintenance applicative (TMA) et prestations associées relatives aux</td>
+        <td>2026-11-16</td>
+        <td><span class="pill large">OUVERT large (36 j)</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">REGIE DES EAUX DU PAYS D'AIX</td>
+        <td>Tierce maintenance applicative et prestations associées pour la solution de supervision de</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">CHAMBRES D'AGRICULTURE FRANCE</td>
+        <td>TIERCE MAINTENANCE APPLICATIVE DE L'APPLICATION OPUS, SOLUTION INDUSTRALISEE DE PRODUCTION</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">SDIS de Saône-et-Loire</td>
+        <td>Sourcing - projet d'acquisition d'un logiciel de réalité virtuelle pour le SDIS de Saône-e</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">Agence de la biomédecine</td>
+        <td>Tierce Maintenance Applicative (TMA) du parc applicatif Low Code Outsystems</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">OPCO ATLAS</td>
+        <td>Renouvellement de la Tierce Maintenance Applicative (TMA) et de l'hébergement du site inte</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+      <tr class="na">
+        <td class="ent">METEO-FRANCE</td>
+        <td>Prestation de responsable d’assurance qualité logicielle (RAQL) aéronautique suivant la no</td>
+        <td>—</td>
+        <td><span class="pill na">LIMITE NON PUBLIEE — verifier le DCE</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer>
+    <p><strong>Correction assumée :</strong> dans une version précédente de cette veille, j'avais écrit que la
+    date limite n'était « pas publiée ». C'était faux — BOAMP publie <code>datelimitereponse</code> pour
+    plusieurs avis. Cette page utilise la donnée réelle.</p>
+    <p>Source : BOAMP (opendatasoft, jeu <code>boamp</code>). Méthode : filtrage par objet + date de parution
+    ≥ 2026-09-01. Aucune donnée privée, aucun contact nominatif de personne physique n'est publié ici.</p>
+    <p>Besoin d'une revue de votre propre code ? L'<a href="./">audit instantané dans le navigateur</a> ne
+    fait sortir aucun fichier de votre machine.</p>
+  </footer>
+</div>
+</body>
+</html>
