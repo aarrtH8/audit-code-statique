@@ -1,67 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demander un audit de code statique — Arthur Grossi EI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demander un devis — audit de code statique</title>
+<meta name="description" content="Demandez un devis d'audit de code : décrivez le périmètre, recevez une réponse avec les limites et un montant ferme. Aucun secret à coller.">
 <style>
-  :root{--bg:#0d1117;--fg:#e6edf3;--muted:#9da7b3;--acc:#2f81f7;--card:#161b22;--bd:#30363d}
-  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif}
-  header{padding:56px 20px 28px;text-align:center;border-bottom:1px solid var(--bd)}
-  h1{margin:0 0 10px;font-size:1.9rem}p.lead{color:var(--muted);max-width:640px;margin:0 auto}
-  main{max-width:760px;margin:0 auto;padding:32px 20px 80px}
-  section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:22px;margin:18px 0}
-  h2{margin:0 0 12px;font-size:1.15rem}
-  table{width:100%;border-collapse:collapse;font-size:.95rem}
-  td{padding:8px 6px;border-bottom:1px solid var(--bd)}td:last-child{text-align:right;color:var(--acc);white-space:nowrap}
-  .cta{display:inline-block;background:var(--acc);color:#fff;text-decoration:none;padding:13px 22px;border-radius:8px;font-weight:600;margin-top:6px}
-  code{background:#0b0f14;padding:2px 6px;border-radius:5px;font-size:.9em}
-  .muted{color:var(--muted);font-size:.9rem}
-  .step{margin:10px 0;padding-left:22px;position:relative}
-  .step:before{content:"→";position:absolute;left:0;color:var(--acc)}
+ :root{--bg:#0f1216;--fg:#e6e9ee;--dim:#98a2b3;--line:#242b35;--accent:#5ea8ff;--ok:#3ec27a;--warn:#f0b429}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ .wrap{max-width:760px;margin:0 auto;padding:52px 20px 90px}
+ h1{font-size:1.95rem;margin:0 0 10px;letter-spacing:-.025em}
+ h2{font-size:1.15rem;margin:34px 0 12px}
+ .sub{color:var(--dim);margin:0 0 26px}
+ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+ label{display:block;font-size:.9rem;margin:16px 0 6px;color:var(--dim)}
+ input,select,textarea{width:100%;background:#151a21;color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font:15px/1.5 inherit}
+ textarea{min-height:130px;font:13px/1.55 ui-monospace,Consolas,monospace;resize:vertical}
+ .box{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:22px 0;background:#151a21;font-size:.93rem}
+ .box.warn{border-color:#4a3a17;background:#1a1611}
+ .note{color:var(--dim);font-size:.85rem;margin-top:6px}
+ button{background:var(--accent);color:#08121f;border:0;border-radius:9px;padding:13px 26px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:22px}
+ button:hover{filter:brightness(1.1)}
+ .link-out{display:inline-block;margin-top:10px;font-weight:600}
+ ul{padding-left:20px} li{margin:5px 0}
+ code{background:#1b222b;padding:2px 6px;border-radius:4px;font-size:.86em}
 </style>
 </head>
-<body>
-<header>
-  <h1>Demander un audit de code statique</h1>
-  <p class="lead">Je lis votre dépôt public et je vous rends un rapport court, concret et vérifiable sur les motifs à risque réels. Sans exécuter votre code, sans rien modifier.</p>
-</header>
-<main>
-  <section>
-    <h2>Comment ça marche</h2>
-    <div class="step">Vous ouvrez une demande avec le lien du dépôt ou du site à examiner.</div>
-    <div class="step">Je regarde le périmètre public et je réponds en une phrase : un audit a du sens, ou non.</div>
-    <div class="step">Si oui, je chiffre d'après le barème ci-dessous et vous validez le montant avant que je commence.</div>
-    <div class="step">Je livre le rapport, scellé par empreinte SHA-256 pour être vérifiable.</div>
-  </section>
+<body><div class="wrap">
 
-  <section>
-    <h2>Barème (forfaits, pas d'abonnement)</h2>
-    <table>
-      <tr><td>Dépôt de moins de 20 000 lignes</td><td>150 EUR HT</td></tr>
-      <tr><td>Dépôt de 20 000 à 100 000 lignes</td><td>350 EUR HT</td></tr>
-      <tr><td>Dépôt de plus de 100 000 lignes</td><td>sur devis après lecture</td></tr>
-      <tr><td>Rapport scellé SHA-256 + relecture 30 min</td><td>inclus</td></tr>
-    </table>
-    <p class="muted">Prix en EUR HT. Montant et devise convenus avant commande. Paiement par PayPal (arthhur.grossi@gmail.com) ou virement professionnel au nom d'Arthur Grossi EI. Aucune cryptomonnaie.</p>
-  </section>
+<h1>Demander un devis</h1>
+<p class="sub">Décrivez le périmètre. Je réponds avec <strong>les limites de ce que je peux tenir</strong> et un <strong>montant ferme</strong> pour votre cas — avant tout travail.</p>
 
-  <section>
-    <h2>Ce que je ne fais pas</h2>
-    <p class="muted">Je n'exécute pas votre code, je ne teste pas votre production, je n'accède à aucun système privé sans autorisation écrite. Je ne corrige rien sans commande séparée. Un audit signale des motifs à vérifier — ce n'est pas une garantie d'absence de faille.</p>
-  </section>
+<div class="box warn">
+  <strong>Ne collez aucun secret ici.</strong> Ni mot de passe, ni clé d'API, ni identifiant client. Décrivez seulement
+  le <em>type</em> de code et le périmètre. Pour un diagnostic immédiat sur un extrait non sensible, utilisez
+  <a href="audit.html">l'analyse locale</a> — elle s'exécute dans votre navigateur.
+</div>
 
-  <section>
-    <h2>Ouvrir une demande</h2>
-    <p>Les demandes passent par les « Issues » publiques du dépôt : c'est traçable, et vous gardez la maîtrise de ce que vous publiez.</p>
-    <a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new" target="_blank" rel="noopener">Ouvrir une demande de devis</a>
-    <p class="muted" style="margin-top:16px">Indiquez : le lien du dépôt (public), la techno principale, et ce qui vous préoccupe. N'écrivez aucun secret ni identifiant dans une issue publique.</p>
-  </section>
+<form id="f" onsubmit="return envoyer(event)">
+  <label for="qui">Qui êtes-vous ? (nom, structure — pas de donnée sensible)</label>
+  <input id="qui" required placeholder="Ex. : Marie Dupont, société X">
 
-  <p class="muted" style="text-align:center;margin-top:30px">
-    Arthur Grossi EI — <a href="https://aarrth8.github.io/audit-code-statique/" style="color:var(--acc)">page principale</a> ·
-    audit de code statique, livré sous forme de rapport écrit et scellé.
-  </p>
-</main>
-</body>
-</html>
+  <label for="besoin">Quel est le besoin ?</label>
+  <select id="besoin">
+    <option>Revue ciblée d'un périmètre précis</option>
+    <option>Audit complet d'un dépôt</option>
+    <option>Reprise assistée avec correctifs</option>
+    <option>Suivi mensuel</option>
+    <option>Je ne sais pas encore — conseillez-moi</option>
+  </select>
+
+  <label for="perimetre">Décrivez le périmètre (langage, nombre approximatif de fichiers, contexte)</label>
+  <textarea id="perimetre" required placeholder="Ex. : application Node/Express, ~40 fichiers, API publique, pas de tests. Je veux savoir ce qui est prioritaire."></textarea>
+
+  <label for="contact">Comment vous répondre ?</label>
+  <input id="contact" required placeholder="E-mail ou autre moyen de vous joindre">
+
+  <label for="quand">Souhaitez-vous un délai précis ?</label>
+  <input id="quand" placeholder="Ex. : avant fin du mois">
+
+  <button type="submit">Préparer ma demande →</button>
+</form>
+
+<p class="note" id="stat"></p>
+
+<div class="box">
+  <strong>Ce qui se passe ensuite, sans surprise :</strong>
+  <ul>
+    <li>Votre demande part vers ma boîte de réception ; <strong>rien n'est envoyé</strong> tant que vous n'avez pas cliqué sur « Envoyer » dans votre logiciel de messagerie.</li>
+    <li>Je réponds en indiquant ce que je peux faire, ce que je ne peux pas, et un montant ferme.</li>
+    <li>Si vous acceptez : facture, puis travail. <strong>Aucun paiement n'est demandé avant accord écrit sur le montant.</strong></li>
+    <li>Règlement par PayPal ou virement professionnel. Aucune cryptomonnaie.</li>
+  </ul>
+</div>
+
+<h2>Vous préférez un canal public ?</h2>
+<p class="sub" style="font-size:.95rem">
+  Ouvrez une demande visible sur <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">GitHub Issues</a>.
+  Utile si vous voulez une trace publique.
+</p>
+
+<p class="note" style="margin-top:36px">
+  Page statique : aucun traceur, aucun cookie, aucune donnée conservée. Le bouton ci-dessous compose simplement
+  un message dans <em>votre</em> messagerie — vous gardez le contrôle de l'envoi.
+</p>
+
+<script>
+'use strict';
+// Adresse de contact construite a l'execution, assemblee depuis des fragments :
+// evite qu'un simple moissonneur d'adresses la lise directement dans le HTML.
+var A = ['aur' + 'th' + 'ur', 'grossi'].join('.') + '@' + ['gmail', 'com'].join('.');
+var utilisateur = ['arthhur', 'grossi'].join('.') + '@' + ['gmail', 'com'].join('.');
+
+function envoyer(e){
+  e.preventDefault();
+  var qui = document.getElementById('qui').value.trim();
+  var besoin = document.getElementById('besoin').value;
+  var perim = document.getElementById('perimetre').value.trim();
+  var contact = document.getElementById('contact').value.trim();
+  var quand = document.getElementById('quand').value.trim();
+
+  var sujet = 'Demande de devis — ' + besoin;
+  var corps = [
+    'Bonjour,',
+    '',
+    'Demande de devis pour un audit de code statique.',
+    '',
+    'Qui : ' + qui,
+    'Besoin : ' + besoin,
+    'Contact : ' + contact,
+    quand ? 'Délai souhaité : ' + quand : null,
+    '',
+    'Périmètre décrit :',
+    perim,
+    '',
+    '— (message préparé depuis la page de demande ; je confirme moi-même l\\'envoi.)'
+  ].filter(function(l){ return l !== null; }).join('\n');
+
+  var lien = 'mailto:' + utilisateur
+    + '?subject=' + encodeURIComponent(sujet)
+    + '&body=' + encodeURIComponent(corps);
+
+  // Copie du message dans le presse-papiers, pour ne rien perdre si le client mail par defaut est mal configure.
+  try {
+    navigator.clipboard.writeText(corps);
+    document.getElementById('stat').textContent = 'Message copié dans votre presse-papiers. ';
+  } catch (err) {}
+
+  window.location.href = lien;
+  document.getElementById('stat').textContent += 'Votre messagerie s\\'ouvre : vérifiez et cliquez sur Envoyer.';
+  return false;
+}
+</script>
+</body></html>
