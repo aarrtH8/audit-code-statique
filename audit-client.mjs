@@ -34,9 +34,11 @@ const REGLES = [
   // --- Haute : exécution / secrets / crypto faible / injection ---
   { id:'EXEC_SHELL', gravite:'haute', rx:/\b(execSync|execFileSync|exec|spawnSync|spawn|system|shell_exec|passthru|popen|subprocess\.(run|call|Popen|check_output)|os\.system|Runtime\.getRuntime\(\)\.exec|ProcessBuilder|eval\s*\(|Invoke-Expression|\bchild_process)\s*[.(]/g, quoi:"Exécution de commande / shell" },
   { id:'EVAL', gravite:'haute', rx:/(\beval\s*\(|new\s+Function\s*\(|setTimeout\s*\(\s*['"]|setInterval\s*\(\s*['"])/g, quoi:"Évaluation dynamique de code" },
-  { id:'SECRET', gravite:'haute', rx:/(password|passwd|passphrase|secret|api[_-]?key|apikey|access[_-]?key|auth[_-]?token|private[_-]?key|client[_-]?secret)\s*[:=]\s*['"][^'"\s]{8,}['"]/gi, quoi:"Secret possible en dur" },
+  { id:'SECRET', gravite:'haute', rx:/(password|passwd|passphrase|secret|api[_-]?key|apikey|access[_-]?key|auth[_-]?token|private[_-]?key|client[_-]?secret)\s*[:=]\s*['"]?[^'"\s]{8,}/gi, quoi:"Secret possible en dur" },
+  { id:'DOCKER_LATEST', gravite:'moyenne', rx:/^\s*FROM\s+\S+:latest\b/gim, quoi:'Image Docker non figée (tag latest)' },
+  { id:'ENV_COMMIT', gravite:'haute', rx:/(AWS_SECRET_ACCESS_KEY|AWS_ACCESS_KEY_ID|GITHUB_TOKEN|SLACK_TOKEN|DATABASE_URL|DB_PASSWORD)\s*=\s*\S{8,}/g, quoi:'Secret probable dans un fichier .env versionné' },
   { id:'PRIVATE_KEY', gravite:'haute', rx:/-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/g, quoi:"Clé privée présente dans le code" },
-  { id:'CRYPTO_FAIBLE', gravite:'haute', rx:/\b(md5|sha1)\s*\(|MessageDigest\.getInstance\(\s*['"](MD5|SHA-?1)['"]|Cipher\.getInstance\(\s*['"]?(DES|RC4|RC2)/gi, quoi:"Algorithme cryptographique faible" },
+  { id:'CRYPTO_FAIBLE', gravite:'haute', rx:/\b(md5|sha1)\s*\(|createHash\(\s*['"](md5|sha-?1)['"]|hashlib\.(md5|sha1)|MessageDigest\.getInstance\(\s*['"](MD5|SHA-?1)['"]|Cipher\.getInstance\(\s*['"]?(DES|RC4|RC2)/gi, quoi:"Algorithme cryptographique faible" },
   { id:'DESERIALISATION', gravite:'haute', rx:/(pickle\.loads|marshal\.loads|yaml\.load\s*\(\s*[^,)]*\)|ObjectInputStream|unserialize\s*\()/g, quoi:"Désérialisation potentiellement dangereuse" },
   { id:'TLS_OFF', gravite:'haute', rx:/(rejectUnauthorized\s*:\s*false|verify\s*=\s*False|InsecureSkipVerify\s*:\s*true|CURLOPT_SSL_VERIFYPEER\s*,\s*(0|false))/gi, quoi:"Vérification TLS désactivée" },
   { id:'SQL_INJECTION', gravite:'haute', rx:/(execute\s*\(\s*[`'"].*\$\{|query\s*\(\s*[`'"].*\$\{|executeQuery\s*\(\s*['"].*\+|createQuery\s*\(\s*['"].*\+|\bSELECT\b[^;]{0,120}\+\s*\w+|f['"]\s*SELECT[^'"]*\{)/gi, quoi:"Requête SQL construite par concaténation/interpolation" },
