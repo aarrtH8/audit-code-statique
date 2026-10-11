@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit de code statique — Arthur Grossi EI</title>
+<meta name="description" content="Audit de code statique honnête : chaque constat avec fichier:ligne, motif détecté vs problème confirmé, estimation d'effort par lot. Échantillon gratuit sans engagement.">
+<style>
+  :root { --bg:#0f1115; --fg:#e8eaed; --dim:#9aa0a6; --accent:#5b9dff; --card:#181c22; --line:#2a2f38; --ok:#4ade80; --warn:#fbbf24; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--fg); }
+  .wrap { max-width:860px; margin:0 auto; padding:56px 22px 80px; }
+  h1 { font-size:2.1rem; line-height:1.2; margin:0 0 10px; letter-spacing:-.02em; }
+  .sub { color:var(--dim); font-size:1.05rem; margin:0 0 40px; }
+  h2 { font-size:1.25rem; margin:44px 0 12px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin:14px 0; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.94rem; }
+  th,td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--dim); font-weight:600; font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; }
+  code { background:#0b0d11; padding:2px 6px; border-radius:4px; font-size:.9em; color:#c7d0dd; }
+  .tag { display:inline-block; font-size:.75rem; padding:2px 8px; border-radius:20px; font-weight:600; }
+  .tag-motif { background:#26200e; color:var(--warn); }
+  .tag-conf { background:#0e2418; color:var(--ok); }
+  .honest { border-left:3px solid var(--accent); padding-left:16px; color:var(--dim); font-size:.95rem; }
+  ul { padding-left:20px; }
+  a { color:var(--accent); }
+  .cta { display:inline-block; background:var(--accent); color:#06101f; font-weight:700; padding:12px 22px; border-radius:8px; text-decoration:none; margin-top:8px; }
+  footer { margin-top:60px; padding-top:20px; border-top:1px solid var(--line); color:var(--dim); font-size:.88rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Audit de code statique</h1>
+  <p class="sub">Un rapport utilisable, pas une liste d'alertes sans priorité.<br>
+  Arthur Grossi EI — audit, sécurisation et reprise de code existant.</p>
+
+  <div class="honest">
+    La plupart des audits annoncent « 47 vulnérabilités ». Ça ne dit ni lesquelles comptent,
+    ni dans quel ordre les traiter. Je fais l'inverse : <strong>chaque constat est classé</strong>
+    entre <em>motif détecté</em> (à examiner) et <em>problème confirmé</em> (vérifié en contexte).
+  </div>
+
+  <h2>Comment un rapport est structuré</h2>
+  <table>
+    <thead><tr><th>#</th><th>Niveau</th><th>Fichier:Ligne</th><th>Constat</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><span class="tag tag-conf">CONFIRMÉ</span></td><td><code>api/users.js:42</code></td><td>Requête SQL concaténée avec une entrée utilisateur — injectable.</td></tr>
+      <tr><td>2</td><td><span class="tag tag-motif">MOTIF</span></td><td><code>ui/render.js:118</code></td><td><code>innerHTML</code> sur données serveur — à vérifier : échappement en amont ?</td></tr>
+      <tr><td>3</td><td><span class="tag tag-motif">MOTIF</span></td><td><code>README.md:7</code></td><td>Chaîne d'exemple qui ressemble à une clé — documentation, pas un secret.</td></tr>
+    </tbody>
+  </table>
+  <p class="honest">La 3<sup>e</sup> ligne n'est pas un risque : c'est un exemple. Compter cette ligne comme
+  une « vulnérabilité » serait malhonnête. C'est précisément ce que mon rapport ne fait pas.</p>
+
+  <h2>Ce qui est livré</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Périmètre :</strong> fichiers, langages, dépendances, points d'entrée.</li>
+      <li><strong>Constats :</strong> chaque ligne avec <code>fichier:ligne</code> et recommandation.</li>
+      <li><strong>Classification :</strong> motif détecté vs problème confirmé en contexte.</li>
+      <li><strong>Limites :</strong> ce qui n'a <em>pas</em> été analysé, et pourquoi.</li>
+      <li><strong>Effort :</strong> estimation de remise en état, par lot priorisé.</li>
+    </ul>
+  </div>
+
+  <h2>Conditions</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Échantillon gratuit</strong> sur 1 à 3 fichiers que vous désignez — vous jugez la qualité
+          sur du code réel, sans engagement.</li>
+      <li><strong>Devis ensuite</strong>, selon le volume. Montant et devise fixés ensemble avant tout travail payant.</li>
+      <li><strong>Paiement :</strong> PayPal ou virement professionnel. Pas de cryptomonnaie.</li>
+    </ul>
+    <p class="honest">Je ne garantis pas l'absence de défaut : un audit réduit l'incertitude, il ne l'annule pas.
+    Aucun prestataire honnête ne peut promettre un code sans faille.</p>
+  </div>
+
+  <h2>Une preuve, pas une promesse</h2>
+  <p>J'applique la méthode à mon propre outillage et je publie le résultat — y compris les défauts
+  trouvés, dont deux faux positifs que mon propre moteur produisait. Un rapport que je n'ose pas
+  appliquer à moi-même n'a aucune valeur pour vous.</p>
+  <p><a href="exemple-vulnerable.mjs">Voir un fichier d'exemple vulnérable analysé</a> ·
+     <a href="rapport-exemple.md">Voir un rapport d'exemple</a></p>
+
+  <h2>Démarrer</h2>
+  <p>Déposez l'URL d'un dépôt public. Si le dépôt est privé, écrivez-moi pour convenir d'un envoi d'archive.</p>
+  <a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Proposer un dépôt à auditer</a>
+
+  <footer>
+    Arthur Grossi EI — audit de code statique.<br>
+    Un audit réduit l'incertitude ; il ne garantit pas l'absence de défaut.
+    Aucun chiffre de ce site n'est une vulnérabilité confirmée sans revue manuelle du contexte.
+  </footer>
+
+</div>
+</body>
+</html>
