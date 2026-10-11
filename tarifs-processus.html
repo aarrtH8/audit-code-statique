@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment ça marche et combien ça coûte — audit de code statique</title>
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--card:#161b22;--bd:#30363d;
+        --haute:#f85149;--moyenne:#d29922;--basse:#58a6ff;--ok:#238636}
+  *{box-sizing:border-box} body{margin:0;font:15px/1.65 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--fg)}
+  header{padding:30px 24px;border-bottom:1px solid var(--bd);background:#010409}
+  h1{margin:0 0 6px;font-size:23px} .sub{color:var(--mut);font-size:14px}
+  main{max-width:900px;margin:0 auto;padding:24px}
+  h2{font-size:18px;margin-top:30px;border-bottom:1px solid var(--bd);padding-bottom:6px}
+  ol,ul{padding-left:22px} li{margin:6px 0}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--bd)}
+  th{color:var(--mut);font-weight:600}
+  .prix{color:var(--fg);font-weight:700}
+  .note{background:#0d1a2b;border:1px solid #1f6feb;border-radius:8px;padding:12px 14px;font-size:13.5px;margin:16px 0}
+  .warn{background:#2b1d0d;border:1px solid var(--moyenne)}
+  .cta{display:inline-block;background:#238636;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:600;margin:6px 8px 6px 0}
+  .cta.alt{background:#21262d;color:var(--fg);border:1px solid var(--bd)}
+  a{color:var(--basse)}
+  footer{max-width:900px;margin:0 auto;padding:18px 24px;color:var(--mut);font-size:13px;border-top:1px solid var(--bd)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Comment ça marche, et combien ça coûte</h1>
+  <div class="sub">Audit de code statique · grille publique · aucune cryptomonnaie</div>
+</header>
+<main>
+
+  <h2>Le processus, en 5 étapes</h2>
+  <ol>
+    <li><strong>Vous décrivez</strong> votre dépôt et votre objectif (formulaire ou Issue). Rien n'est téléchargé à ce stade.</li>
+    <li><strong>Je chiffre</strong> une fourchette sous 24 h, selon la grille ci-dessous. Vous recevez un devis avec périmètre et délai.</li>
+    <li><strong>Vous acceptez le montant exact</strong> par écrit. Le devis devient commande.</li>
+    <li><strong>J'analyse</strong> : lecture statique des fichiers, jamais d'exécution, chaque constat relu dans son contexte.</li>
+    <li><strong>Vous recevez</strong> le rapport (Markdown + HTML), les <code>fichier:ligne</code>, les faux positifs écartés, et le SHA-256 recalculable.</li>
+  </ol>
+
+  <h2>Grille indicative</h2>
+  <p class="sub">Indicative : le montant exact est convenu avant toute commande. Base = taille du code à analyser.</p>
+  <table>
+    <tr><th>Taille du code</th><th>Fourchette indicative</th></tr>
+    <tr><td>≤ 50 Ko (petit projet)</td><td class="prix">250 – 340 €</td></tr>
+    <tr><td>50 – 300 Ko (application moyenne)</td><td class="prix">450 – 610 €</td></tr>
+    <tr><td>300 Ko – 1,5 Mo (projet important)</td><td class="prix">750 – 1 010 €</td></tr>
+    <tr><td>1,5 – 6 Mo</td><td class="prix">1 200 – 1 620 €</td></tr>
+    <tr><td>&gt; 6 Mo</td><td class="prix">sur devis (plafond 2 500 €)</td></tr>
+  </table>
+  <ul>
+    <li><strong>+10 %</strong> par langage supplémentaire au-delà du premier.</li>
+    <li><strong>+25 %</strong> pour un délai garanti en 48 h.</li>
+    <li><strong>Paiement :</strong> 50 % à la commande, 50 % à la livraison, sauf accord contraire.</li>
+  </ul>
+
+  <h2>Ce que ce service NE fait PAS</h2>
+  <div class="note warn">
+    <ul style="margin:0">
+      <li>Aucune garantie de « zéro faille ». Un audit statique de motifs ne couvre pas votre logique métier.</li>
+      <li>Aucun pentest, aucun test d'intrusion, aucune exploitation.</li>
+      <li>Aucun correctif de code, aucun engagement de conformité réglementaire.</li>
+      <li>Un motif signalé n'est <strong>pas</strong> une vulnérabilité confirmée tant qu'il n'a pas été relu dans son contexte.</li>
+    </ul>
+  </div>
+
+  <h2>Paiement</h2>
+  <p>PayPal (<strong>arthhur.grossi@gmail.com</strong>) ou virement professionnel au nom d'Arthur Grossi EI.
+     <strong>Aucune cryptomonnaie.</strong> Le RIB complet est transmis uniquement après accord sur le devis.</p>
+
+  <h2>Essayer avant de payer</h2>
+  <a class="cta" href="scan-depot.html">Scanner un dépôt public gratuitement</a>
+  <a class="cta alt" href="audit-instantane.html">Tester un extrait de code</a>
+  <a class="cta alt" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Demander un devis</a>
+
+</main>
+<footer>
+  Arthur Grossi EI · audit de code statique · code jamais exécuté · aucune donnée client conservée.
+</footer>
+</body>
+</html>
