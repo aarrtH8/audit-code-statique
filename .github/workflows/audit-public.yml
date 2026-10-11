@@ -4,10 +4,6 @@ name: Audit de dépôt public
 #   - une issue AMENANT une URL de dépôt public  -> rapport en commentaire
 #   - un COMMENTAIRE amenant/corrigeant une URL  -> rapport en commentaire
 #   - une RÉOUVERTURE                            -> rapport en commentaire
-#
-# Pourquoi ces trois événements : une issue ouverte avant la publication de ce
-# fichier ne déclenche rien, et un demandeur qui corrige son URL dans un
-# commentaire doit pouvoir être réanalysé. Sans ça, le guichet rate le cas réel.
 on:
   issues:
     types: [opened, reopened]
@@ -21,7 +17,7 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    # On ignore les commentaires postés par un bot (dont le nôtre), sinon boucle.
+    # On ignore les commentaires postés par un bot (dont le nôtre), sinon boucle infinie.
     if: github.event_name != 'issue_comment' || github.event.comment.user.type != 'Bot'
     steps:
       - uses: actions/checkout@v4
@@ -30,55 +26,37 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Extraire l'URL de dépôt et le numéro d'issue
+      - name: Extraire la cible
         id: cible
         env:
-          CORPS_ISSUE: ${{ github.event.issue.body }}
-          CORPS_COMMENTAIRE: ${{ github.event.comment.body }}
-          NUM_ISSUE: ${{ github.event.issue.number }}
+          CORPS: "issue:${{ github.event.issue.body }}\ncomment:${{ github.event.comment.body }}"
         run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const txt = [process.env.CORPS_ISSUE || '', process.env.CORPS_COMMENTAIRE || ''].join('\n');
-          // Regex stricte : uniquement github.com/<owner>/<repo>
-          const m = txt.match(/github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)/);
-          const sortie = process.env.GITHUB_OUTPUT;
-          fs.appendFileSync(sortie, 'num=' + (process.env.NUM_ISSUE || '') + '\n');
-          if (!m) {
-            fs.appendFileSync(sortie, 'valide=false\n');
-            console.log('Aucune URL de dépôt GitHub trouvée.');
-            process.exit(0);
-          }
-          const cible = m[1] + '/' + m[2].replace(/\.git$/, '');
-          fs.appendFileSync(sortie, 'valide=true\n');
-          fs.appendFileSync(sortie, 'ref=' + cible + '\n');
-          console.log('Cible :', cible);
-          NODE
+          node tools/extraire-cible.mjs "$CORPS" >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
 
       - name: Produire le rapport
-        id: rapport
         if: steps.cible.outputs.valide == 'true'
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          REF_CIBLE: ${{ steps.cible.outputs.ref }}
         run: |
-          node tools/audit-depot-dist.mjs "${{ steps.cible.outputs.ref }}" --max-fichiers 200 --out rapport.md
-          echo "--- extrait ---"
-          head -30 rapport.md
-          echo "---------------"
+          node tools/audit-depot-dist.mjs "$REF_CIBLE" --max-fichiers 200 --out rapport.md
+          wc -l rapport.md
+          head -25 rapport.md
 
       - name: Publier le rapport en commentaire
         if: steps.cible.outputs.valide == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          NUM: ${{ steps.cible.outputs.num }}
+          NUM: ${{ github.event.issue.number }}
+          REF_CIBLE: ${{ steps.cible.outputs.ref }}
         run: |
           {
-            echo "## Rapport d'analyse — `${{ steps.cible.outputs.ref }}`"
+            echo "## Rapport d'analyse — $REF_CIBLE"
             echo ""
             cat rapport.md
             echo ""
             echo "---"
-            echo "_Analyse automatique. Ni revue humaine, ni garantie d'absence de faille. Un secret retiré du dernier commit mais resté dans l'historique n'apparaît pas. Une relecture humaine avec correctifs priorisés se chiffre sur devis, après accord écrit sur le périmètre._"
+            echo "_Analyse automatique. Ni revue humaine, ni garantie d'absence de faille._"
           } > commentaire.md
           gh issue comment "$NUM" --body-file commentaire.md
 
@@ -86,7 +64,7 @@ jobs:
         if: steps.cible.outputs.valide != 'true' && github.event_name == 'issues'
         env:
           GH_TOKEN: ${{ github.token }}
-          NUM: ${{ steps.cible.outputs.num }}
+          NUM: ${{ github.event.issue.number }}
         run: |
           cat > reponse.md <<'TXT'
           Aucune URL de dépôt GitHub exploitable n'a été trouvée dans ce message.
