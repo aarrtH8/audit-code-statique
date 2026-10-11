@@ -25,7 +25,20 @@
  .aide{color:#6b7280;font-size:.82rem;margin:4px 0 0}
 </style>
 </head>
-<body><div class="w">
+<body>
+<!--NAV-INTERNE-->
+<style id="nav-interne">
+.nav-interne{max-width:700px;margin:0 auto;padding:18px 20px 0;display:flex;flex-wrap:wrap;gap:6px;font-size:.88rem}
+.nav-interne a{color:#9aa0a6;text-decoration:none;padding:6px 12px;border:1px solid #232833;border-radius:999px}
+.nav-interne a:hover{color:#e8eaed;border-color:#3a4150}
+.nav-interne a[aria-current]{color:#06101f;background:#5b9dff;border-color:#5b9dff;font-weight:600}
+</style>
+<nav class="nav-interne" aria-label="Navigation du site">
+  <a href="index.html">Accueil</a>
+  <a href="service.html">Prestations</a>
+  <a href="agences.html">Agences & freelances</a>
+  <a href="demande.html" aria-current="page">Décrire un besoin</a>
+</nav><div class="w">
 <a class="marque" href="./">← Audit de code statique</a>
 <h1>Décrire un besoin</h1>
 <p class="intro">Vous exposez votre besoin. Je vous réponds si je peux le traiter.
