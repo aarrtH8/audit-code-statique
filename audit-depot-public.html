@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit de code statique — rapport immédiat sur dépôt public</title>
+<meta name="description" content="Collez l'URL d'un dépôt GitHub public : secrets en clair, motifs à examiner, et limites de la méthode. Analyse automatique honnête, sans compte.">
+<style>
+ body{font:16px/1.6 system-ui,Segoe UI,Arial;max-width:780px;margin:40px auto;padding:0 20px;color:#1b1b1b}
+ h1{font-size:1.55rem;line-height:1.25} h2{font-size:1.1rem;margin-top:2rem}
+ pre{background:#f5f5f7;padding:14px;border-radius:8px;overflow:auto;font-size:13px;line-height:1.45}
+ input,button{font:inherit;padding:11px;border:1px solid #bbb;border-radius:7px}
+ input{width:62%;min-width:250px} button{background:#111;color:#fff;border-color:#111;cursor:pointer}
+ .note{color:#555;font-size:14px} .box{border-left:3px solid #999;padding-left:14px;color:#333;background:#fafafa;padding:14px}
+ a{color:#0b5cad}
+</style></head><body>
+<h1>Audit de code statique d'un dépôt public</h1>
+<p>Collez l'URL d'un dépôt GitHub <strong>public</strong>. Vous recevez immédiatement un rapport :
+secrets en clair éventuels, motifs à examiner, empreinte de ce qui a été analysé, et
+ce que la méthode <em>ne</em> prouve pas.</p>
+<form onsubmit="go(event)">
+  <input id="u" placeholder="https://github.com/proprietaire/depot" autocomplete="off">
+  <button>Analyser</button>
+</form>
+<p class="note">Aucun compte. Aucun dépôt privé. Aucun code exécuté. Quelques analyses par heure maximum.</p>
+<div id="out"></div>
+<div class="box">
+<p><strong>Ce que c'est :</strong> une analyse automatique de motifs sur les fichiers texte du dépôt.</p>
+<p><strong>Ce que ce n'est pas :</strong> une revue humaine, ni une garantie d'absence de faille. Un secret
+retiré du dernier commit mais resté dans l'historique n'apparaît pas. Un motif signalé peut être légitime.</p>
+<p><strong>Aller plus loin :</strong> une relecture humaine, avec correctifs priorisés et ordre
+d'application, se chiffre sur devis après accord — jamais avant.</p>
+</div>
+<script>
+async function go(e){
+  e.preventDefault();
+  var u=document.getElementById('u').value.trim(), out=document.getElementById('out');
+  if(!u) return;
+  out.innerHTML='<p>Analyse en cours…</p>';
+  try{
+    var r=await fetch('http://localhost:8787/analyser?depot='+encodeURIComponent(u));
+    var t=await r.text();
+    out.innerHTML='<pre></pre>';
+    out.querySelector('pre').textContent=t;
+  }catch(err){
+    out.innerHTML='<p>Le service d\'analyse est momentanément indisponible. Vous pouvez demander un rapport par une issue publique sur le dépôt <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">audit-code-statique</a>.</p>';
+  }
+}
+</script></body></html>
