@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demander un audit de code — Arthur Grossi EI</title>
+<meta name="description" content="Demande d'audit de code statique. Analyse sans exécution. Rapport scellé SHA-256. Devis sur mesure.">
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--dim:#8b949e;--acc:#2f81f7;--card:#161b22;--ok:#3fb950}
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+  header{padding:40px 20px;border-bottom:1px solid #30363d}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  h1{font-size:26px;margin:0 0 8px}
+  .dim{color:var(--dim)}
+  .card{background:var(--card);border:1px solid #30363d;border-radius:8px;padding:20px;margin:20px 0}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input,textarea,select{width:100%;padding:10px;border:1px solid #30363d;border-radius:6px;
+    background:#0d1117;color:var(--fg);font:inherit}
+  textarea{min-height:110px;resize:vertical}
+  button{margin-top:18px;padding:12px 22px;border:0;border-radius:6px;background:var(--acc);
+    color:#fff;font:600 16px inherit;cursor:pointer}
+  button:disabled{opacity:.55;cursor:wait}
+  .note{font-size:14px;color:var(--dim);margin-top:12px}
+  #res{margin-top:16px;padding:14px;border-radius:6px;display:none}
+  .ok{background:#0f2b16;border:1px solid var(--ok)}
+  .err{background:#2d1214;border:1px solid #f85149}
+  ul{padding-left:20px}
+  a{color:var(--acc)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Demander un audit de code statique</h1>
+  <p class="dim">Arthur Grossi EI — analyse de code <strong>sans exécution</strong>. Rapport scellé SHA-256,
+  constats <code>fichier:ligne</code>, correctifs proposés.</p>
+</div></header>
+
+<main class="wrap">
+  <div class="card">
+    <h2 style="margin-top:0">Ce que vous recevez</h2>
+    <ul>
+      <li>Une liste de <strong>constats précis</strong> (<code>fichier:ligne</code>) : secrets en clair, exécution de commande, TLS désactivé, hachage faible, dépendances connues.</li>
+      <li>La distinction honnête entre <strong>motif à vérifier</strong> et <strong>faille confirmée</strong>. Le code n'est pas exécuté.</li>
+      <li>Un <strong>rapport scellé</strong> : empreinte SHA-256 en fin de document, vérifiable à toute heure.</li>
+      <li>Des correctifs proposés, priorisés.</li>
+    </ul>
+    <p class="note">Devis établi <strong>avant</strong> toute commande. Montant et devise convenus d'un commun accord.
+    Paiement : PayPal ou virement professionnel. Aucune crypto.</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Votre demande</h2>
+    <form id="f">
+      <label for="nom">Nom et moyen de réponse</label>
+      <input id="nom" name="nom" required placeholder="Ex. Jean Dupont — jean@exemple.fr">
+
+      <label for="depot">Dépôt ou code à auditer</label>
+      <input id="depot" name="depot" required placeholder="URL du dépôt, ou description de l'accès">
+
+      <label for="langages">Langage(s) principal(aux)</label>
+      <input id="langages" name="langages" placeholder="Ex. Python/Django, JS/Node, PHP…">
+
+      <label for="echeance">Échéance souhaitée</label>
+      <select id="echeance" name="echeance">
+        <option value="">— au plus tôt —</option>
+        <option>Dans les 48 h (prioritaire)</option>
+        <option>Sous 1 à 2 semaines</option>
+        <option>Pas de contrainte</option>
+      </select>
+
+      <label for="description">Ce que vous voulez vérifier</label>
+      <textarea id="description" name="description" placeholder="Contexte : avant mise en production, après une alerte, revue de sécurité, secrets exposés…"></textarea>
+
+      <button id="b" type="submit">Envoyer la demande</button>
+      <p class="note">Vos informations servent uniquement à traiter cette demande. Aucun envoi à un tiers.</p>
+    </form>
+    <div id="res"></div>
+  </div>
+
+  <p class="dim">Pas de formulaire ? Écrivez directement :
+    <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">ouvrir une demande sur GitHub</a>.</p>
+</main>
+
+<script>
+const f = document.getElementById('f'), b = document.getElementById('b'), res = document.getElementById('res');
+f.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  b.disabled = true; const ancien = b.textContent; b.textContent = 'Envoi…';
+  const corps = Object.fromEntries(new FormData(f).entries());
+  try {
+    const r = await fetch('/api/commande', { method: 'POST',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) });
+    const j = await r.json();
+    res.style.display = 'block';
+    if (j.ok) {
+      res.className = 'ok';
+      res.innerHTML = '<strong>Demande enregistrée.</strong> Je reviens vers vous pour le devis.'
+        + (j.relais && j.relais.url ? ' Suivi public : <a href="' + j.relais.url + '">' + j.relais.url + '</a>' : '');
+      f.reset();
+    } else {
+      res.className = 'err'; res.textContent = 'Échec : ' + (j.erreur || 'inconnu');
+    }
+  } catch (err) {
+    res.style.display = 'block'; res.className = 'err';
+    res.innerHTML = 'Le guichet local n\u2019est pas joignable depuis cette page. '
+      + 'Ouvrez plutôt une <a href="https://github.com/aarrtH8/audit-code-statique/issues/new">demande sur GitHub</a> — elle sera traitée.';
+  }
+  b.disabled = false; b.textContent = ancien;
+});
+</script>
+</body>
+</html>
