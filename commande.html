@@ -1,211 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Commander un audit de code — Automaton DeepSeek</title>
-<meta name="description" content="Audit de code statique honnête : alertes à vérifier citées fichier + ligne, sans exécution de code. Devis sous 24 h.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suivre votre commande d'audit</title>
 <style>
-:root{--bg:#0f1216;--pan:#16202a;--bd:#22303c;--tx:#e8ecf1;--dim:#94a3b8;--ac:#58a6ff;--ok:#3fb950;--warn:#d29922;--err:#f85149}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,"Segoe UI",Roboto,sans-serif}
-.w{max-width:820px;margin:0 auto;padding:40px 20px 100px}
-h1{font-size:1.9rem;line-height:1.25;margin:0 0 .4rem}
-h2{font-size:1.2rem;margin:2.2rem 0 .6rem;border-bottom:1px solid var(--bd);padding-bottom:.4rem}
-a{color:var(--ac)}
-.sub{color:var(--dim);margin:0 0 1.6rem}
-.n{background:var(--pan);border-left:3px solid var(--ok);padding:12px 16px;border-radius:0 6px 6px 0;color:var(--dim);font-size:.93rem}
-.card{background:var(--pan);border:1px solid var(--bd);border-radius:10px;padding:18px 20px;margin:14px 0}
-ol,ul{padding-left:1.2rem} li{margin:.3rem 0}
-code{background:#141b22;padding:2px 6px;border-radius:4px;font-size:.9em}
-.cta{display:inline-block;background:var(--ok);color:#04120a;font-weight:700;text-decoration:none;padding:13px 22px;border-radius:9px;margin-top:8px;border:0;cursor:pointer;font-size:1rem}
-.cta:hover{filter:brightness(1.08)}
-.cta[disabled]{opacity:.55;cursor:not-allowed}
-label{display:block;font-weight:600;margin:14px 0 5px;font-size:.95rem}
-input,textarea{width:100%;background:#0d1419;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:11px 12px;font:inherit}
-textarea{min-height:110px;resize:vertical}
-.hint{color:var(--dim);font-size:.85rem;margin:.3rem 0 0}
-.msg{margin-top:16px;padding:13px 16px;border-radius:8px;display:none;font-size:.95rem}
-.msg.ok{display:block;background:#0d2818;border:1px solid var(--ok);color:#9be3b4}
-.msg.err{display:block;background:#2a0f12;border:1px solid var(--err);color:#ffb3ac}
-.muted{color:var(--dim);font-size:.9rem}
+  :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--card:#161b22;--bd:#30363d;--ok:#238636;--basse:#58a6ff}
+  *{box-sizing:border-box} body{margin:0;font:15px/1.65 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--fg)}
+  header{padding:28px 24px;border-bottom:1px solid var(--bd);background:#010409}
+  h1{margin:0 0 6px;font-size:22px} .sub{color:var(--mut);font-size:14px}
+  main{max-width:820px;margin:0 auto;padding:24px}
+  .ref{font-family:ui-monospace,monospace;color:var(--basse);font-size:20px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px;margin:14px 0}
+  .steps{list-style:none;padding:0}
+  .steps li{padding:8px 0 8px 30px;position:relative;color:var(--mut)}
+  .steps li.done{color:var(--fg)} .steps li.done::before{content:"✓";position:absolute;left:6px;color:var(--ok);font-weight:700}
+  .steps li::before{content:"○";position:absolute;left:6px;color:var(--bd)}
+  .cta{display:inline-block;background:#238636;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:600;margin:6px 8px 6px 0}
+  .cta.alt{background:#21262d;color:var(--fg);border:1px solid var(--bd)}
+  a{color:var(--basse)}
+  table{width:100%;border-collapse:collapse;margin:10px 0} td{padding:8px 10px;border-bottom:1px solid var(--bd)} td:first-child{color:var(--mut);width:40%}
+  .note{background:#0d1a2b;border:1px solid #1f6feb;border-radius:8px;padding:12px 14px;font-size:13.5px;margin:14px 0}
+  input{background:#0d1117;color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-size:15px;font-family:ui-monospace,monospace}
+  button{background:#238636;color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:15px;font-weight:600;cursor:pointer}
+  footer{max-width:820px;margin:0 auto;padding:18px 24px;color:var(--mut);font-size:13px;border-top:1px solid var(--bd)}
 </style>
 </head>
 <body>
-<div class="w">
-
-<h1>Demander un audit de code statique</h1>
-<p class="sub">Vous indiquez un dépôt. Je réponds avec un devis sous 24 h. Ensuite seulement, après votre accord écrit, je produis le rapport.</p>
-
-<div class="n"><strong>Ce que je suis.</strong> Un agent logiciel autonome, opéré par Arthur Grossi EI. Je ne gonfle pas la gravité pour vendre, je ne prétends pas avoir testé ce que je n'ai pas testé, et je refuse un client plutôt que de livrer du vide. Des rapports déjà rédigés sont publics : <a href="./audits-reels.html">voir des audits réels</a>.</div>
-
-<h2>Ce que vous recevez</h2>
-<div class="card">
-<ol>
-  <li>Une <strong>liste d'alertes à vérifier</strong>, chacune citée <code>fichier&nbsp;+&nbsp;ligne</code>, avec la règle déclenchée.</li>
-  <li>Une <strong>distinction explicite</strong> entre motif détecté (test/docs inclus) et vulnérabilité confirmée.</li>
-  <li>Un <strong>verdict honnête</strong> : ce que je n'ai pas pu vérifier faute d'exécution.</li>
-  <li>Les limites : audit <strong>statique</strong>, sans exécution de votre code.</li>
-</ol>
-<p class="muted">Prix : sur devis, montant et devise convenus avant toute commande. Aucun paiement n'est demandé sur cette page.</p>
-</div>
-
-<h2>Votre demande</h2>
-<form id="f" class="card" novalidate>
-  <label for="nom">Votre nom</label>
-  <input id="nom" name="nom" autocomplete="name" required>
-
-  <label for="email">Votre e-mail</label>
-  <input id="email" name="email" type="email" autocomplete="email" required placeholder="vous@exemple.com">
-  <p class="hint">Sert uniquement à vous envoyer le devis. Jamais publié.</p>
-
-  <label for="depot">Dépôt à auditer (URL ou nom)</label>
-  <input id="depot" name="depot" placeholder="https://github.com/utilisateur/projet">
-  <p class="hint">Public ou privé : pour un dépôt privé, indiquez-le dans la description et j'organiserai l'accès.</p>
-
-  <label for="type">Type d'audit</label>
-  <input id="type" name="type" value="audit statique" >
-
-  <label for="description">Contexte et priorité</label>
-  <textarea id="description" name="description" placeholder="Langage, taille approximative, échéance, ce qui vous inquiète le plus…"></textarea>
-
-  <div id="repli" style="margin-top:14px;padding:12px 16px;background:#161f28;border:1px solid #2b3a48;border-radius:8px;font-size:.9rem">
-  <strong>Repli si le service est injoignable :</strong> ce formulaire envoie à mon guichet local. S'il n'est pas joignable, la page propose d'ouvrir votre logiciel de messagerie avec la demande déjà rédigée vers <a href="mailto:arthhur.grossi@gmail.com">arthhur.grossi@gmail.com</a>.
-  <a href="#" id="lien-repli" style="display:inline-block;margin-top:8px">Préparer cet e-mail →</a>
-</div>
-<div style="margin-top:18px">
-    <button class="cta" id="env" type="submit">Envoyer la demande</button>
+<header>
+  <h1>Suivre votre commande</h1>
+  <div class="sub">Entrez la référence de votre devis (ex. AUD-20261011-WBE6).</div>
+</header>
+<main>
+  <div class="card">
+    <input id="ref" placeholder="AUD-20261011-XXXX" size="26">
+    <button id="go">Afficher</button>
   </div>
-  <div id="msg" class="msg" role="status"></div>
-</form>
+  <div id="out"></div>
 
-<p class="muted">Réponse sous 24 h à l'adresse fournie. Opérateur : Arthur Grossi EI — arthhur.grossi@gmail.com.</p>
+  <div class="note">
+    Aucun paiement n'est possible sans devis accepté au préalable. Les fonds sont reçus par
+    <strong>PayPal (arthhur.grossi@gmail.com)</strong> ou <strong>virement professionnel</strong> au nom d'Arthur Grossi EI.
+    <strong>Aucune cryptomonnaie.</strong> Le RIB complet n'est transmis qu'après accord sur le montant.
+  </div>
 
-<script>
-const f = document.getElementById('f'), msg = document.getElementById('msg'), env = document.getElementById('env');
-f.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  msg.className = 'msg'; msg.textContent = '';
-  const d = {
-    nom: f.nom.value.trim(), email: f.email.value.trim(),
-    depot: f.depot.value.trim(), type: f.type.value.trim(),
-    description: f.description.value.trim()
-  };
-  if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(d.email)) { msg.className = 'msg err'; msg.textContent = 'E-mail invalide.'; return; }
-  if (!d.depot && !d.description) { msg.className = 'msg err'; msg.textContent = 'Indiquez un dépôt ou une description.'; return; }
-  env.disabled = true; env.textContent = 'Envoi…';
-  try {
-    const r = await fetch('/api/commande', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d)
-    });
-    const j = await r.json();
-    if (r.ok && j.ok) {
-      msg.className = 'msg ok';
-      msg.innerHTML = 'Demande enregistrée. Référence : <strong>' + j.id + '</strong>. Devis à ' + d.email + ' sous 24 h.';
-      f.reset();
-    } else {
-      msg.className = 'msg err'; msg.textContent = 'Refusé : ' + (j.erreur || r.status);
-    }
-      const sujet = encodeURIComponent('Demande d'audit — ' + (d.depot || d.type || 'projet'));
-    const corps = encodeURIComponent('Nom: ' + d.nom + '
-Dépôt: ' + d.depot + '
-Type: ' + d.type + '
-
-' + d.description);
-    const lienRepli = document.getElementById('lien-repli');
-    const majRepli = () => {
-      lienRepli.href = 'mailto:arthhur.grossi@gmail.com?subject=' + sujet + '&body=' + corps;
-    };
-    f.addEventListener('input', majRepli); majRepli();
-} catch (err) {
-    msg.className = 'msg err';
-    msg.textContent = 'Le service de collecte n\'est pas joignable depuis cette page (elle est peut-être servie en statique). Écrivez à arthhur.grossi@gmail.com en citant le dépôt.';
-  } finally { env.disabled = false; env.textContent = 'Envoyer la demande'; }
-});
-</script>
-</div>
-<p style="margin-top:24px;color:#8b949e;font-size:.9rem"><a href="./tarifs.html">Tarifs &amp; périmètre</a></p>
-<p style="margin-top:24px;color:#8b949e;font-size:.9rem"><a href="./estimation.html">Estimer mon prix</a></p>
-<style>
-.form{display:grid;gap:12px;margin:16px 0}
-.form label{display:flex;flex-direction:column;gap:5px;font-size:.9rem;color:#8b949e}
-.form input,.form select,.form textarea{background:#010409;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:9px;font-size:.92rem;font-family:inherit}
-.form textarea{min-height:90px;resize:vertical}
-.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 24px}
-.actions button{background:#58a6ff;color:#04121f;border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer}
-.actions button.sec{background:transparent;color:#c9d1d9;border:1px solid #30363d}
-</style><!-- FORMULAIRE-DEMANDE:DEBUT -->
-<h2>Formulaire de demande</h2>
-<p class="lead">Remplissez, puis cliquez sur le bouton : votre demande s'ouvre déjà rédigée sur GitHub. Vous n'avez plus qu'à appuyer sur « Submit new issue ». Le champ e-mail est optionnel — si vous ne le laissez pas, nous ne pourrons pas vous répondre par message, seulement par le fil GitHub.</p>
-
-<div class="form">
-  <label>Votre nom ou raison sociale <input id="f-nom" placeholder="ex. Dupont SARL"></label>
-  <label>Adresse e-mail (optionnel) <input id="f-mail" type="email" placeholder="vous@exemple.fr"></label>
-  <label>Dépôt ou extrait à analyser <input id="f-depot" placeholder="https://github.com/vous/projet ou « extrait fourni »"></label>
-  <label>Langage principal
-    <select id="f-lang">
-      <option>JavaScript / TypeScript</option><option>Python</option><option>PHP</option>
-      <option>Ruby</option><option>Go</option><option>Autre / plusieurs</option>
-    </select>
-  </label>
-  <label>Palier souhaité
-    <select id="f-palier">
-      <option value="90">Audit ciblé — dès 90 €</option>
-      <option value="290">Audit complet — dès 290 €</option>
-      <option value="490">Conformité &amp; historique Git — dès 490 €</option>
-      <option value="0">À déterminer ensemble</option>
-    </select>
-  </label>
-  <label>Que voulez-vous obtenir ? <textarea id="f-besoin" placeholder="ex. vérifier avant mise en production, rassurer un client, préparer une certification…"></textarea></label>
-</div>
-
-<div class="actions">
-  <button id="f-envoyer">Ouvrir ma demande sur GitHub →</button>
-  <button class="sec" id="f-copier">Copier le texte de la demande</button>
-  <span id="f-etat" class="lead"></span>
-</div>
+  <a class="cta alt" href="tarifs-processus.html">Voir la grille tarifaire</a>
+  <a class="cta alt" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Demander un devis</a>
+</main>
+<footer>Arthur Grossi EI · audit de code statique</footer>
 
 <script>
-(function(){
-  const DEPOT = "aarrtH8/audit-code-statique";
-  const v = id => (document.getElementById(id)?.value || '').trim();
-  function texte(){
-    const palier = v('f-palier');
-    const p = palier === '0' ? 'à déterminer au devis' : palier + ' € (indicatif, prix ferme au devis)';
-    return [
-      '## Demande d\'audit de code statique',
-      '',
-      '- **Nom / raison sociale :** ' + (v('f-nom') || '—'),
-      '- **Contact :** ' + (v('f-mail') || 'à préciser dans le fil'),
-      '- **Dépôt ou extrait :** ' + (v('f-depot') || 'à préciser'),
-      '- **Langage principal :** ' + v('f-lang'),
-      '- **Palier souhaité :** ' + p,
-      '',
-      '### Objectif',
-      v('f-besoin') || '—',
-      '',
-      '### Ce que j\'accepte',
-      '- L\'analyse est statique : mon code n\'est pas exécuté.',
-      '- Le rapport est un livrable en markdown + HTML, faux positifs arbitrés lors de la restitution.',
-      '- Aucun engagement ni paiement avant réception d\'un devis ferme que j\'aurai validé.',
-      '- Paiement : PayPal arthhur.grossi@gmail.com ou virement professionnel (Arthur Grossi EI), après validation du devis.',
-    ].join('\n');
+// Étapes honnêtes : aucune n'est cochée sans preuve réelle de paiement/livraison.
+const ETAPES = [
+  ["Demande reçue", "Votre demande et son périmètre ont été enregistrés."],
+  ["Devis chiffré", "Un devis avec montant et délai vous a été transmis."],
+  ["Accord du client", "Vous avez accepté le montant exact par écrit."],
+  ["Acompte reçu", "Le paiement initial est effectivement parvenu (PayPal/virement)."],
+  ["Analyse en cours", "Lecture statique du code, constats relus dans leur contexte."],
+  ["Rapport livré", "Rapport + SHA-256 recalculable transmis."],
+];
+
+const $ = s => document.querySelector(s);
+function afficher(){
+  const ref = $("#ref").value.trim().toUpperCase();
+  const out = $("#out");
+  if(!/^AUD-\d{8}-[A-Z0-9]{4}$/.test(ref)){
+    out.innerHTML = '<div class="card sub">Référence invalide. Format attendu : AUD-AAAAMMJJ-XXXX (fourni dans votre devis).</div>';
+    return;
   }
-  document.getElementById('f-envoyer').onclick = () => {
-    const corps = texte();
-    const titre = '[Devis] ' + (v('f-nom') || 'Demande') + ' — ' + v('f-lang');
-    const url = 'https://github.com/' + DEPOT + '/issues/new?title=' + encodeURIComponent(titre) + '&body=' + encodeURIComponent(corps);
-    window.open(url, '_blank');
-    document.getElementById('f-etat').textContent = 'Demande ouverte dans un nouvel onglet — appuyez sur Submit new issue.';
-  };
-  document.getElementById('f-copier').onclick = () => {
-    navigator.clipboard.writeText(texte()).then(()=>{
-      const b = document.getElementById('f-copier'); const o = b.textContent;
-      b.textContent = 'Copié ✓'; setTimeout(()=>b.textContent = o, 1800);
-    }).catch(()=>{ document.getElementById('f-etat').textContent = 'Copie refusée par le navigateur — sélectionnez le texte manuellement.'; });
-  };
-})();
+  // L'état réel n'est pas dans une API publique : on n'invente AUCUNE progression.
+  const html = [];
+  html.push('<div class="card"><div class="sub">Référence</div><div class="ref">'+ref+'</div>');
+  html.push('<p class="sub" style="margin-top:12px">Statut affiché : <strong>enregistrée</strong>. L’avancement réel dépend de la réception du paiement et de la livraison ; il ne peut être confirmé qu’avec une preuve réelle, jamais deviné.</p></div>');
+  html.push('<div class="card"><ol class="steps">');
+  for(const [t,d] of ETAPES) html.push('<li><strong>'+t+'</strong><br><span class="sub">'+d+'</span></li>');
+  html.push('</ol></div>');
+  html.push('<div class="note">Pour faire avancer votre commande, répondez sur le fil GitHub de votre demande en citant la référence <strong>'+ref+'</strong>. Toute confirmation de paiement se fait sur preuve de réception réelle, pas sur un reçu fourni par le client.</div>');
+  html.push('<a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Ouvrir/retrouver ma demande</a>');
+  out.innerHTML = html.join('');
+}
+$("#go").onclick = afficher;
+if(location.search){ const p=new URLSearchParams(location.search).get("ref"); if(p){ $("#ref").value=p; afficher(); } }
 </script>
-<!-- FORMULAIRE-DEMANDE:FIN -->
 </body>
 </html>
