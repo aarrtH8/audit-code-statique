@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Démonstration d'audit — 7 motifs détectés sur un dépôt réel</title>
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--card:#161b22;--bd:#30363d;
+        --haute:#f85149;--moyenne:#d29922;--basse:#58a6ff}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.6 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--fg)}
+  header{padding:30px 24px;border-bottom:1px solid var(--bd);background:#010409}
+  h1{margin:0 0 8px;font-size:23px}
+  .sub{color:var(--mut);font-size:14px}
+  main{max-width:900px;margin:0 auto;padding:24px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px;text-align:center}
+  .card .n{font-size:32px;font-weight:700}
+  .card.haute .n{color:var(--haute)} .card.moyenne .n{color:var(--moyenne)} .card.basse .n{color:var(--basse)}
+  .card small{color:var(--mut)}
+  .find{background:var(--card);border-left:3px solid var(--bd);border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0}
+  .find.haute{border-color:var(--haute)} .find.moyenne{border-color:var(--moyenne)} .find.basse{border-color:var(--basse)}
+  .loc{color:var(--basse);font-family:ui-monospace,monospace;font-size:13px}
+  .cta{display:inline-block;background:#238636;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:600;margin:6px 8px 6px 0}
+  .cta.alt{background:#21262d;color:var(--fg);border:1px solid var(--bd)}
+  a{color:var(--basse)}
+  footer{max-width:900px;margin:0 auto;padding:18px 24px;color:var(--mut);font-size:13px;border-top:1px solid var(--bd)}
+  .note{background:#0d1a2b;border:1px solid #1f6feb;border-radius:8px;padding:12px 14px;font-size:13.5px;margin:16px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Démonstration : 7 motifs détectés sur un dépôt test</h1>
+  <div class="sub">Dépôt <strong>fictif</strong> créé pour la démo — une faille volontaire par fichier. 6 fichiers analysés.</div>
+</header>
+<main>
+  <div class="cards">
+    <div class="card haute"><div class="n">5</div><small>gravité haute</small></div>
+    <div class="card moyenne"><div class="n">2</div><small>gravité moyenne</small></div>
+    <div class="card basse"><div class="n">0</div><small>gravité basse</small></div>
+  </div>
+
+  <h2 style="font-size:17px">Emplacements signalés</h2>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\app.py:4</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\config\.env:2</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\config\.env:2</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\src\auth.js:4</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\src\db.js:3</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\Dockerfile:1</span> <span class="sub">[production]</span></div>
+  <div class="find production"><span class="loc">offre\demo\a-vulnerable\src\render.js:3</span> <span class="sub">[production]</span></div>
+
+  <div class="note">
+    Un motif détecté n'est <strong>pas</strong> une vulnérabilité confirmée : il doit être vérifié dans son contexte.
+    Le rapport complet, avec le code source cité et un SHA-256 recalculable, est public :
+    <a href="demo/RAPPORT-DEMO.md">demo/RAPPORT-DEMO.md</a>.
+  </div>
+
+  <h2 style="font-size:17px;margin-top:26px">Essayez sur votre propre code</h2>
+  <p class="sub">Deux options, sans rien installer, sans rien envoyer :</p>
+  <a class="cta" href="audit-instantane.html">Auditer dans mon navigateur</a>
+  <a class="cta alt" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Demander un rapport signé</a>
+</main>
+<footer>
+  Audit statique de motifs, code jamais exécuté, fichiers jamais transmis. Rapport manuel priorisé sur devis.
+</footer>
+</body>
+</html>
