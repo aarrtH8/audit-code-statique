@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exemple de rapport — ce que vous recevez réellement</title>
+<meta name="description" content="Exemple d'un rapport d'analyse statique : chaque constat porte un fichier, une ligne, un extrait de code et une correction. Code non exécuté, dépôt non modifié.">
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font:16px/1.7 system-ui,-apple-system,sans-serif;background:#0f1115;color:#e8eaed}
+ .w{max-width:760px;margin:0 auto;padding:56px 20px 80px}
+ h1{font-size:1.9rem;margin:0 0 10px;line-height:1.2}
+ .sous{color:#9aa0a6;font-size:1.06rem;margin:0 0 30px}
+ h2{font-size:1.16rem;margin:40px 0 12px;padding-top:20px;border-top:1px solid #20252d}
+ .cta{display:inline-block;background:#5b9dff;color:#06101f;font-weight:700;padding:13px 26px;
+   border-radius:8px;text-decoration:none;margin:6px 0}
+ .cta:hover{background:#7bb0ff}
+ code{background:#1a1f27;padding:2px 7px;border-radius:4px;font-size:.88em;color:#c7d2fe}
+ pre{background:#141821;border:1px solid #232833;border-radius:8px;padding:14px 16px;overflow-x:auto;
+   font-size:.83rem;line-height:1.55;color:#c9d1d9}
+ .constat{border-left:3px solid #ff6b6b;background:#171a20;padding:12px 16px;margin:10px 0;border-radius:0 8px 8px 0}
+ .constat.moyen{border-left-color:#f0ad4e}
+ .grav{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#ff6b6b}
+ .constat.moyen .grav{color:#f0ad4e}
+ .loc{font-family:ui-monospace,Consolas,monospace;font-size:.82rem;color:#8b98a8}
+ .note{color:#6b7280;font-size:.87rem;margin-top:34px;padding-top:20px;border-top:1px solid #20252d}
+ a{color:#5b9dff}
+ .cadre{background:#151920;border:1px solid #232833;border-radius:10px;padding:18px 22px;margin:22px 0}
+</style>
+</head>
+<body><div class="w">
+
+<h1>Ce que vous recevez, sur du code réel</h1>
+<p class="sous">Voici un rapport produit par le moteur, sur un fichier d'exemple écrit
+pour la démonstration. Aucune valeur n'est retouchée à la main.
+<strong>Le format que vous voyez est celui que vous recevez.</strong></p>
+
+<div class="cadre">
+  <p style="margin-top:0"><strong>Le fichier analysé</strong> — une petite API Node.js qui
+  gère des utilisateurs. Le genre de fichier qu'on écrit vite et qu'on ne relit pas.
+  Les extraits ci-dessous sont copiés du fichier tel quel. Les secrets qu'il contient
+  sont <strong>factices</strong>, par précaution : la leçon est identique, le risque nul.</p>
+<pre>const API_KEY = "CLE_FACTICE_DE_DEMONSTRATION_PAS_UNE_VRAIE_CLE";
+
+const db = mysql.createConnection({ host: 'prod-db.internal',
+  user: 'root', password: 'motdepasse-de-demo-factice', database: 'customers' });
+
+db.query("SELECT * FROM users WHERE id = " + id, (err, rows) => { ... });
+
+if (rows.length &amp;&amp; rows[0].password === password) {
+  res.json({ ok: true, token: Buffer.from(email).toString('base64') }); }</pre>
+</div>
+
+<h2>Le rapport — 7 constats, dont 6 graves</h2>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>secret ou identifiant en dur</strong>
+  <div class="loc">app.js:6</div>
+  <pre>const API_KEY = "CLE_FACTICE_DE_DEMONSTRATION_PAS_UNE_VRAIE_CLE";</pre>
+  <p style="margin:8px 0 0">Une clé committée doit être considérée comme compromise dès
+  qu'elle a été poussée, même si vous la supprimez au commit suivant : elle reste dans
+  l'historique. Correctif : variable d'environnement, puis rotation de la clé.</p>
+</div>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>secret ou identifiant en dur</strong>
+  <div class="loc">app.js:11</div>
+  <pre>user: 'root', password: 'motdepasse-de-demo-factice', database: 'customers'</pre>
+  <p style="margin:8px 0 0">Deux problèmes sur une seule ligne : un compte <code>root</code>
+  là où un compte applicatif restreint suffirait, et un mot de passe dans le code source.
+  Une fuite du dépôt donne un accès complet à la base.</p>
+</div>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>requête SQL construite par concaténation</strong>
+  <div class="loc">app.js:17</div>
+  <pre>db.query("SELECT * FROM users WHERE id = " + id, (err, rows) =&gt; {</pre>
+  <p style="margin:8px 0 0"><code>id</code> provient de <code>req.query.id</code>. Une
+  valeur comme <code>1 OR 1=1</code> retourne toute la table. Correctif : requête préparée
+  avec un paramètre lié.</p>
+</div>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>requête SQL construite par concaténation</strong>
+  <div class="loc">app.js:25</div>
+  <pre>const q = "SELECT * FROM users WHERE email = '" + email + "'";</pre>
+  <p style="margin:8px 0 0">Même défaut sur une route d'authentification : c'est le pire
+  endroit pour laisser une injection. Une apostrophe dans l'entrée suffit à casser la
+  requête, et bien plus avec une entrée choisie.</p>
+</div>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>mot de passe comparé ou stocké en clair</strong>
+  <div class="loc">app.js:27</div>
+  <pre>if (rows.length &amp;&amp; rows[0].password === password) {</pre>
+  <p style="margin:8px 0 0">La comparaison directe suppose que la base stocke les mots de
+  passe lisibles. Une fuite de base = tous les comptes compromis, sans effort de
+  l'attaquant. Correctif : hachage lent (bcrypt, argon2) et vérification dédiée.</p>
+</div>
+
+<div class="constat">
+  <span class="grav">Élevée</span> — <strong>jeton d'authentification dérivé d'une donnée publique</strong>
+  <div class="loc">app.js:28</div>
+  <pre>res.json({ ok: true, token: Buffer.from(email).toString('base64') });</pre>
+  <p style="margin:8px 0 0">Le « jeton de session » est l'email encodé en base64 :
+  n'importe qui peut en fabriquer un pour n'importe quel compte, sans connaître le mot de
+  passe. Correctif : jeton aléatoire cryptographiquement sûr, stocké côté serveur.</p>
+</div>
+
+<div class="constat moyen">
+  <span class="grav">Moyenne</span> — <strong>erreur interne renvoyée au client</strong>
+  <div class="loc">app.js:18</div>
+  <pre>if (err) { res.send(err); return; }</pre>
+  <p style="margin:8px 0 0">Renvoie l'objet d'erreur complet à l'appelant, ce qui peut
+  exposer le schéma de la base et les chemins internes. Correctif : journaliser côté
+  serveur, renvoyer un message générique et un identifiant de corrélation.</p>
+</div>
+
+<h2>Ce que ce rapport ne prétend pas</h2>
+<div class="cadre">
+  <p style="margin-top:0">Il ne dit pas « votre application est vulnérable ». Il dit :
+  <strong>voici des motifs à vérifier, à ces lignes précises.</strong> La nuance compte.
+  Un outil statique ne prouve pas qu'une faille est exploitable ; il prouve qu'un humain
+  doit regarder. C'est exactement ce pour quoi vous payez.</p>
+  <p style="margin-bottom:0">Aucun code de la cible n'a été exécuté. Aucun fichier de la
+  cible n'a été modifié. Le rapport est reproductible : relancer la commande sur le même
+  fichier redonne le même résultat.</p>
+</div>
+
+<h2>Le même rapport, sur votre code</h2>
+<p>Désignez-moi 1 à 3 fichiers d'un dépôt public — ou envoyez un extrait. Je vous rends
+un extrait de rapport de ce format, sur <em>votre</em> code, avant tout engagement.</p>
+
+<a class="cta" href="demande.html">Demander l'extrait →</a>
+
+<div class="note">
+  <p><a href="./">← Audit de code statique</a> ·
+     <a href="service.html">Prestations</a> ·
+     <a href="agences.html">Agences &amp; freelances</a> ·
+     <a href="revue-avant-livraison.html">Guide</a></p>
+  <p>Fichier analysé : <code>demo/sample/app.js</code>, écrit pour la démonstration, avec
+  des identifiants factices. Rapport brut : <a href="exemple-rapport.md">exemple-rapport.md</a>.</p>
+</div>
+
+</div></body></html>
