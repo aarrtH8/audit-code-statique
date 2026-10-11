@@ -1,48 +1,43 @@
-<!doctype html>
-<html lang="fr"><head><meta charset="utf-8">
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Demander un devis — audit de code statique</title>
+<title>Audit de code statique — chaque constat cité fichier:ligne</title>
+<meta name="description" content="Service d'audit de code statique en lecture seule. Chaque constat est référencé fichier:ligne et vérifiable. Démonstration publique sur du code open-source. Devis sur demande.">
+<link rel="canonical" href="https://aarrth8.github.io/audit-code-statique/">
 <style>
- body{font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;max-width:720px;margin:48px auto;padding:0 20px}
- h1{font-size:26px;margin:0 0 8px} h2{font-size:17px;margin:28px 0 8px}
- .lead{color:#555;margin-bottom:24px}
- a.btn{display:inline-block;background:#0b5;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;margin:8px 0}
- a.btn:hover{background:#094}
- .box{background:#f7f9fb;border:1px solid #e2e8ee;border-radius:6px;padding:14px 16px;margin:16px 0;font-size:15px}
- .warn{background:#fff8f0;border-color:#f0d8b8}
- ul{padding-left:20px} li{margin:4px 0}
- code{font-family:ui-monospace,Consolas,monospace;font-size:14px;background:#f2f2f2;padding:1px 4px;border-radius:3px}
+body{font:16px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;max-width:760px;margin:48px auto;padding:0 20px}
+h1{font-size:27px;line-height:1.3}h2{font-size:19px;margin-top:34px}
+ul{padding-left:20px}li{margin:9px 0}a{color:#06c}
+.card{background:#f7f9fb;border:1px solid #e2e8ee;border-radius:8px;padding:16px 18px;margin:24px 0}
+.cta a{font-weight:600;color:#0a6}
+small{color:#777}
+code{font-family:ui-monospace,Consolas,monospace;background:#f2f2f2;padding:1px 4px;border-radius:3px;font-size:13.5px}
 </style></head><body>
-<h1>Demander un devis</h1>
-<p class="lead">Audit de code statique, en lecture seule. Je ne modifie rien, je ne publie rien de votre code,
-je vous rends un rapport avec les motifs à vérifier, chacun référencé <code>fichier:ligne</code>.</p>
+<h1>Audit de code statique, chaque constat cité <code>fichier:ligne</code></h1>
+<p>Je parcours votre code en <strong>lecture seule</strong>. Vous recevez une liste de
+<strong>pistes à vérifier</strong>, chacune référencée <code>fichier:ligne</code>, avec une empreinte
+SHA-256 que vous recalculez. Jamais de conclusion déguisée : le rapport dit aussi ce qu'il n'a pas pu vérifier.</p>
 
-<h2>Ce que vous obtenez</h2>
-<div class="box">
-Rapport honnête : un constat est un <strong>motif à vérifier</strong>, pas une vulnérabilité confirmée.
-Empreinte SHA-256 recalculable. Format visible ici :
-<a href="rapport-exemple.html">rapport-exemple.html</a>.
+<div class="card cta">
+<h2 style="margin-top:0">Le voir fonctionner, sans rien installer</h2>
+<p><a href="audit-autonome.html">Auditeur instantané, 100 % dans votre navigateur</a> — rien n'est envoyé, rien n'est conservé.</p>
+<p><a href="pistes-bibliotheques.html">Démonstration réelle</a> — pistes sur <code>slugify</code>, <code>validator.js</code> et <code>dayjs</code>, chacune avec <code>fichier:ligne</code>.</p>
 </div>
 
-<h2>Demander</h2>
-<p>Le bouton ouvre une nouvelle <em>Issue GitHub</em> déjà étiquetée <code>demande-devis</code> : c'est la voie
-réellement disponible depuis ce site statique. Rien n'est envoyé tant que vous n'avez pas validé le
-formulaire dans votre navigateur.</p>
-<a class="btn" href="https://github.com/aarrtH8/audit-code-statique/issues/new?labels=demande-devis&title=%5BDevis%5D%20&body=%23%23%23%20D%C3%A9p%C3%B4t%20ou%20projet%20%C3%A0%20auditer%0A%3C!--%20proprietaire%2Fnom%2C%20ou%20lien%2C%20ou%20%22code%20priv%C3%A9%22%20--%3E%0A%0A%23%23%23%20Ce%20que%20vous%20voulez%20obtenir%0A%3C!--%20ex.%20audit%20statique%20lecture%20seule%2C%20p%C3%A9rim%C3%A8tre%2C%20%C3%A9ch%C3%A9ance%20--%3E%0A%0A%23%23%23%20Contact%20pour%20le%20devis%0A%3C!--%20e-mail%20ou%20autre%20voie%20%3B%20je%20ne%20publie%20rien%20de%20priv%C3%A9%20--%3E">Ouvrir ma demande de devis</a>
-
-<div class="box warn">
-<strong>Limites.</strong> Tarif : fourchette indicative au devis, montant et devise convenus avant commande.
-Paiement : PayPal ou virement professionnel uniquement — <strong>aucune cryptomonnaie</strong>.
-Preuve de réception réelle exigée avant livraison finale.
-</div>
-
-<h2>Ce que je ne fais pas</h2>
+<h2>Ce que je cherche dans du code réel</h2>
 <ul>
- <li>Je n'exécute pas votre code.</li>
- <li>Je n'accède pas à vos serveurs.</li>
- <li>Je ne publie pas votre code ni vos identifiants.</li>
- <li>Je ne vous démarché pas ailleurs : je réponds à votre demande, pas l'inverse.</li>
+  <li><a href="cas/secrets-en-dur.html">secrets en dur</a></li>
+  <li><a href="cas/injection-sql-concatenation.html">injection sql concatenation</a></li>
+  <li><a href="cas/md5-sha1-mots-de-passe.html">md5 sha1 mots de passe</a></li>
+  <li><a href="cas/cors-etoile-et-csrf.html">cors etoile et csrf</a></li>
+  <li><a href="cas/erreurs-avalees.html">erreurs avalees</a></li>
+  <li><a href="cas/dates-fuseaux.html">dates fuseaux</a></li>
 </ul>
+<p><a href="cas/">Voir les six cas expliqués &rarr;</a></p>
 
-<p style="font-size:13px;color:#888">&larr; <a href="index.html">Page d'accueil</a> · <a href="rapport-exemple.html">Rapport d'exemple</a></p>
+<h2>Demander un devis</h2>
+<p>Ouvrez une <a href="https://github.com/aarrtH8/audit-code-statique/issues/new?labels=demande-devis">demande de devis</a>
+sur le dépôt public — c'est le seul point d'entrée, sans formulaire caché ni traceur.</p>
+<p><small><strong>Tarif au devis</strong>, montant et devise convenus avant commande.
+Paiement <strong>PayPal ou virement professionnel</strong> uniquement, aucune cryptomonnaie.
+Une preuve de réception réelle est exigée avant la livraison finale.</small></p>
 </body></html>
