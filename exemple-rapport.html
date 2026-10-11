@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exemple de rapport — audit de code statique</title>
+<meta name="description" content="Exemple réel de rapport d'audit statique, produit par l'outil sur un dépôt public. Secrets en clair, motifs à examiner, limites explicites.">
+<style>
+ body{font:16px/1.65 system-ui,Segoe UI,Arial;max-width:820px;margin:40px auto;padding:0 20px;color:#1b1b1b}
+ h1{font-size:1.5rem} pre{background:#f5f5f7;padding:16px;border-radius:8px;overflow:auto;font-size:13px;line-height:1.5;white-space:pre-wrap}
+ .note{background:#fafafa;border-left:3px solid #999;padding:14px;color:#333;font-size:15px}
+ a{color:#0b5cad}
+</style></head><body>
+<h1>Exemple de rapport d'audit</h1>
+<p>Produit <strong>par l'outil réel</strong>, sur un dépôt public, sans retouche. Reproduit intégralement,
+y compris ses limites.</p>
+<div class="note">
+<p><strong>Ce qui est livré :</strong> analyse automatique des fichiers texte — secrets en clair,
+motifs à examiner, empreinte de ce qui a été analysé.</p>
+<p><strong>Ce qui n'est pas promis :</strong> ni revue humaine, ni garantie d'absence de faille. Un secret
+retiré du dernier commit mais resté dans l'historique n'apparaît pas.</p>
+<p><strong>Relecture humaine :</strong> correctifs priorisés et ordre d'application, sur devis après accord.</p>
+</div>
+<h2>Rapport intégral</h2>
+<pre># Rapport d'audit — expressjs/express
+
+- Dépôt : https://github.com/expressjs/express
+- Date : 2026-10-11
+- Fichiers texte analysés : 172 sur 172
+- Empreinte de la liste analysée : 77d05bf5025eb65a
+
+## Résultat
+
+- <strong>Secrets en clair (quasi-certitude) : 0</strong>
+- <strong>Motifs à examiner : 10</strong>
+
+Aucun secret en clair détecté dans les fichiers atteignables.
+
+### Motifs à examiner — pas nécessairement des failles
+
+| Fichier | Ligne | Motif | Contexte |
+|---|---|---|---|
+| `examples/auth/index.js` | 25 | Affectation de secret ou mot de passe | code |
+| `examples/auth/index.js` | 50 | Affectation de secret ou mot de passe | code |
+| `examples/cookie-sessions/index.js` | 13 | Affectation de secret ou mot de passe | code |
+| `examples/mvc/index.js` | 43 | Affectation de secret ou mot de passe | code |
+| `examples/session/index.js` | 19 | Affectation de secret ou mot de passe | code |
+| `examples/session/redis.js` | 23 | Affectation de secret ou mot de passe | code |
+| `test/res.redirect.js` | 115 | eval() — exécution de code dynamique | exemple/test |
+| `test/res.redirect.js` | 116 | eval() — exécution de code dynamique | exemple/test |
+| `test/res.redirect.js` | 115 | innerHTML — injection HTML possible si la valeur est externe | exemple/test |
+| `test/res.redirect.js` | 116 | innerHTML — injection HTML possible si la valeur est externe | exemple/test |
+
+## Ce que ce rapport NE prouve PAS
+
+- Un secret retiré du dernier commit mais resté dans <strong>l'historique</strong> n'apparaît pas ici.
+- Un motif « à examiner » peut être légitime (valeur de test, exemple de doc). Il indique où regarder, pas une faille confirmée.
+- L'absence de secret détecté ne garantit pas l'absence de secret : un secret encodé ou découpé échappe à la méthode.
+- Aucun code du dépôt n'a été exécuté. Aucun fichier n'a été modifié.
+
+
+---
+Analyse automatique, honnête sur ses limites. Une relecture humaine avec correctifs priorisés se chiffre sur devis après accord.</pre>
+<p><a href="./audit-depot-public.html">Analyser un dépôt public →</a></p>
+</body></html>
