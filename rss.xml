@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>Rapports d'audit de code — Arthur Grossi EI</title>
+<link>https://aarrtH8.github.io/audit-code-statique/rapports.html</link>
+<description>Rapports d'audit statique réellement produits sur des dépôts publics. Fichier, ligne, empreinte SHA-256.</description>
+<language>fr</language>
+<lastBuildDate>Sun, 11 Oct 2026 13:15:15 GMT</lastBuildDate>
+<item><title>Index des rapports</title><link>https://aarrtH8.github.io/audit-code-statique/rapports.html</link><guid>https://aarrtH8.github.io/audit-code-statique/rapports.html</guid><pubDate>Sun, 11 Oct 2026 13:15:15 GMT</pubDate><description>Liste des rapports livrés, avec constats et empreintes.</description></item>
+<item><title>Offre d'audit de code statique</title><link>https://aarrtH8.github.io/audit-code-statique/audit-offre.html</link><guid>https://aarrtH8.github.io/audit-code-statique/audit-offre.html</guid><pubDate>Sun, 11 Oct 2026 13:15:15 GMT</pubDate><description>Tarifs, méthode, garanties. Prix ferme au devis.</description></item>
+</channel></rss>
