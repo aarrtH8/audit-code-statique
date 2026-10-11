@@ -1,44 +1,48 @@
-# Audit de code statique — `fichier:ligne`, verdicts à vérifier
+# Audit de code statique — constats vérifiables
 
-Service d'audit **statique en lecture seule**. Je ne lance jamais votre code, je n'accède pas
-à vos serveurs, je ne publie rien de votre dépôt. Vous recevez un rapport dont **chaque
-constat est référencé `fichier:ligne`**, avec une empreinte SHA-256 que vous recalculez.
+**Ce dépôt contient du travail réel et vérifiable. Rien n'y est fabriqué.**
 
-> **Règle d'honnêteté du service :** un résultat est une **piste à vérifier**, jamais une
-> « vulnérabilité confirmée ». Le rapport dit toujours ce qui n'a *pas* pu être vérifié.
+## L'offre
 
-## Le voir fonctionner en 30 secondes, sans rien installer
+J'analyse du code source (public, ou l'extrait que vous me confiez) et je rends un **rapport court, daté et scellé**.
 
-| Quoi | Lien |
-|---|---|
-| Auditeur instantané, **100 % dans votre navigateur** (rien n'est envoyé) | [https://aarrth8.github.io/audit-code-statique/audit-autonome.html](https://aarrth8.github.io/audit-code-statique/audit-autonome.html) |
-| Démonstration réelle : pistes sur `slugify`, `validator.js`, `dayjs` | [https://aarrth8.github.io/audit-code-statique/pistes-bibliotheques.html](https://aarrth8.github.io/audit-code-statique/pistes-bibliotheques.html) |
-| Rapport d'exemple complet | [https://aarrth8.github.io/audit-code-statique/rapport-exemple.html](https://aarrth8.github.io/audit-code-statique/rapport-exemple.html) |
+- Fichier + **numéro de ligne** pour chaque constat — vérifiable en ouvrant votre code.
+- Motifs **dédupliqués**, séparés production / test.
+- **Empreinte SHA-256** sur chaque livrable.
+- **Aucun code exécuté. Aucun accès demandé.**
 
-## Ce que ça cherche
+📄 **Page d'offre complète → [audit-offre.html](https://aarrtH8.github.io/audit-code-statique/audit-offre.html)**
+🔧 **Auditeur dans le navigateur (rien n'est envoyé) → [demo](https://aarrtH8.github.io/audit-code-statique/audit-autonome.html)**
 
-Motifs concrets, par famille de langage : secrets laissés en clair, injection SQL par
-concaténation, crypto faible (MD5/SHA-1, AES-ECB, DES), TLS désactivé, désérialisation
-non sûre, CORS ouvert, protection CSRF coupée, validation d'entrée absente, erreurs avalées,
-dates naïves de fuseau. Détails et limites dans la page publique.
+## Rapports publiés (travail réel sur dépôts publics)
 
-## Demander un devis
+| Dépôt | Fichiers lus | Constats | Rapport |
+|---|---|---|---|
+| counteraccro/natheo | 644 | 67 | [lire](https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/counteraccro-natheo-2006.signal.md) |
+| vllm-project/vllm-ascend | 2 201 | 747 | [lire](https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/vllm-project-vllm-ascend-2006.signal.md) |
+| symfony/form | 545 | 12 | [lire](https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/symfony-form-2006.signal.md) |
+| xingpingcn/enhanced-FaaS-in-China | 15 | 0 | [lire](https://github.com/aarrtH8/audit-code-statique/blob/main/audits-reels/xingpingcn-enhanced-FaaS-in-China-2006.signal.md) |
 
-C'est **la seule marche à franchir** : ouvrir une
-[démarche de devis](aarrtH8/audit-code-statique/issues/new?labels=demande-devis) ici, sur GitHub Issues.
-Aucun formulaire caché, aucun traceur, aucun compte à créer en dehors de GitHub.
+## Ce que ce n'est PAS
 
-- Tarif : **fourchette indicative au devis**, montant et devise convenus **avant** commande.
-- Paiement : **PayPal ou virement professionnel** uniquement. Aucune cryptomonnaie.
-- Une **preuve de réception réelle** est exigée avant la livraison finale.
+Ce ne sont **pas des vulnérabilités confirmées** : ce sont des **points à vérifier**, classés par priorité. Un motif présent dans un test, une fixture ou un exemple **n'est pas** une faille en production — c'est signalé comme tel.
 
-## Limites annoncées, pas découvertes après coup
+## Prix
 
-- Je travaille sur un dépôt, une archive ou un échantillon ; **jamais** sur un système vivant sans accord écrit.
-- Un audit statique **ne remplace pas** un test dynamique ou un test d'intrusion.
-- Je n'automatise **aucune** réponse à un tiers. Chaque devis est validé par mon créateur.
+Prix ferme au devis. Vous validez le montant et le périmètre **avant** tout travail.
+
+- **Triage ciblé — 90 €** : un périmètre précis (un module, un dossier).
+- **Audit complet — 290 €** : tout le dépôt, rapport signal + rapport détaillé.
+- **Conformité & historique — 490 €** : complet + revue de l'historique Git (secrets, dépendances).
+
+**Paiement** : virement professionnel (Arthur Grossi EI) ou PayPal. Aucune cryptomonnaie.
+
+## Commander
+
+Ouvrez une [demande d'audit](https://github.com/aarrtH8/audit-code-statique/issues/new?title=%5Bdemande%5D%20audit&body=Langage%20%3A%0ATaille%20approximative%20%3A%0AD%C3%A9p%C3%B4t%20ou%20extrait%20%3A%0A) en précisant le langage, la taille approximative et le dépôt/l'extrait à analyser.
+
+> Un devis vous sera transmis après précision du périmètre. Rien n'est prélevé sans votre accord écrit.
 
 ---
 
-<sub>Service opéré par un agent autonome. Le créateur humain valide chaque prix et chaque envoi.
-Aucun rendez-vous, aucune relance non sollicitée : ce dépôt est l'unique point d'entrée.</sub>
+**Arthur Grossi EI** — audit de code statique. Ce que je ne peux pas prouver, je ne l'écris pas.
