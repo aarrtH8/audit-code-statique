@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan d'un dépôt public — audit de motifs dans votre navigateur</title>
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--card:#161b22;--bd:#30363d;
+        --haute:#f85149;--moyenne:#d29922;--basse:#58a6ff;--ok:#238636}
+  *{box-sizing:border-box} body{margin:0;font:15px/1.6 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--fg)}
+  header{padding:28px 24px;border-bottom:1px solid var(--bd);background:#010409}
+  h1{margin:0 0 6px;font-size:22px} .sub{color:var(--mut);font-size:14px}
+  main{max-width:960px;margin:0 auto;padding:24px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  input{flex:1;min-width:260px;background:#0d1117;color:var(--fg);border:1px solid var(--bd);
+        border-radius:8px;padding:12px 14px;font-size:15px}
+  button{background:var(--ok);color:#fff;border:0;border-radius:8px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+  #log{font-family:ui-monospace,monospace;font-size:13px;color:var(--mut);white-space:pre-wrap;margin:12px 0}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;text-align:center}
+  .card .n{font-size:28px;font-weight:700} .card.haute .n{color:var(--haute)} .card.moyenne .n{color:var(--moyenne)} .card.basse .n{color:var(--basse)}
+  .find{background:var(--card);border-left:3px solid var(--bd);border-radius:0 8px 8px 0;padding:8px 12px;margin:6px 0;font-family:ui-monospace,monospace;font-size:13px}
+  .find.haute{border-color:var(--haute)} .find.moyenne{border-color:var(--moyenne)} .find.basse{border-color:var(--basse)}
+  .grp{color:var(--basse)} a{color:var(--basse)}
+  .note{background:#0d1a2b;border:1px solid #1f6feb;border-radius:8px;padding:12px;font-size:13.5px;margin:14px 0}
+  .cta{display:inline-block;background:#238636;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:600;margin-top:8px}
+  footer{max-width:960px;margin:0 auto;padding:18px 24px;color:var(--mut);font-size:13px;border-top:1px solid var(--bd)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Scanner un dépôt GitHub public</h1>
+  <div class="sub">Le code est téléchargé et analysé <strong>dans votre navigateur</strong>. Rien n'est envoyé à un serveur : vous pouvez vérifier dans l'onglet Réseau.</div>
+</header>
+<main>
+  <div class="row">
+    <input id="url" placeholder="https://github.com/proprietaire/depot  (dépôt public)" value="">
+    <button id="go">Analyser</button>
+  </div>
+  <div id="log"></div>
+  <div id="res"></div>
+
+  <div class="note">
+    Analyse de <strong>motifs</strong> par expressions régulières : un motif signalé n'est pas une vulnérabilité confirmée.
+    Le rapport complet (contexte, priorisation, faux positifs écartés, SHA-256) est produit sur devis.
+  </div>
+  <a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Demander le rapport manuel complet</a>
+</main>
+<footer>Audit statique · code téléchargé, jamais réexécuté · aucune donnée conservée.</footer>
+
+<script>
+// 22 règles alignées sur l'auditeur terminal (audit-client.mjs). Port navigateur, lecture seule.
+const R = [
+ {n:"Crypto faible (MD5/SHA1/DES/ECB)", g:"haute", r:/createHash\(\s*['"](md5|sha1)['"]|md5\(|MessageDigest\.getInstance\(\s*["'](MD5|SHA-?1)["']|Cipher\.getInstance\(\s*["'](DES|AES\/ECB)/i},
+ {n:"Injection SQL par concaténation", g:"haute", r:/(SELECT|INSERT|UPDATE|DELETE)[^;'"`]{0,80}(\+|\$\{|%s["'`]\s*\+|\.format\()/i},
+ {n:"Secret en dur", g:"haute", r:/(AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/},
+ {n:"Clé assignée en clair", g:"haute", r:/(password|passwd|secret|api[_-]?key|token)\s*[:=]\s*["'][^"'{}$]{6,}["']/i},
+ {n:"Désérialisation non sûre", g:"haute", r:/yaml\.load\(|pickle\.loads?\(|unserialize\(|ObjectInputStream|eval\s*\(/},
+ {n:"Injection HTML (innerHTML)", g:"haute", r:/\.innerHTML\s*=|dangerouslySetInnerHTML|document\.write\s*\(/},
+ {n:"Commande shell depuis une variable", g:"haute", r:/(exec|execSync|spawn|system|popen)\s*\([^)]*(\+|\$\{|`)/},
+ {n:"Vérification TLS désactivée", g:"haute", r:/rejectUnauthorized\s*:\s*false|verify\s*=\s*False|InsecureSkipVerify\s*:\s*true|NODE_TLS_REJECT_UNAUTHORIZED\s*=\s*['"]?0/i},
+ {n:"JWT décodé sans vérifier", g:"haute", r:/jwt\.decode\(|decode_token\([^,)]*\)\s*$/m},
+ {n:"Autorisation retirée (permitAll)", g:"haute", r:/permitAll\(\)|csrf\(\)\.disable\(\)|CORS.*origin\s*:\s*['"]\*['"]|Access-Control-Allow-Origin["']?\s*[:=]\s*["']\*/i},
+ {n:"Debug / stacktrace en production", g:"moyenne", r:/app\.run\([^)]*debug\s*=\s*True|DEBUG\s*=\s*True|printStackTrace\(\)|traceback\.print_exc\(\)/},
+ {n:"Aléa non cryptographique pour un secret", g:"moyenne", r:/Math\.random\(\).*?(token|secret|password|key)|random\.(randint|choice).*?(token|secret|password)/i},
+ {n:"Comparaison de secret non constante", g:"moyenne", r:/(password|token|secret)\s*==\s*|==\s*(password|token|secret)/i},
+ {n:"Requête sans délai d'expiration", g:"moyenne", r:/(fetch|axios|requests\.(get|post)|http\.get)\s*\([^)]*\)(?![^\n]*timeout)/},
+ {n:"Fichier .env versionné", g:"moyenne", r:/^[A-Z0-9_]+=.+$/m, fichiers:/(^|\/)\.env($|\.)/},
+ {n:"Image de base en :latest", g:"moyenne", r:/^\s*FROM\s+\S+:latest\s*$/mi, fichiers:/(Dockerfile|\.dockerfile)$/i},
+ {n:"Type de conteneur privilégié", g:"moyenne", r:/privileged\s*:\s*true|--privileged/},
+ {n:"Permissions trop larges (chmod 777)", g:"moyenne", r:/chmod\s+(777|666)\b|mode\s*0?777/},
+ {n:"Mot de passe vide autorisé", g:"moyenne", r:/(password|passwd)\s*[:=]\s*["']["']/},
+ {n:"Traçage de données sensibles", g:"basse", r:/console\.log\([^)]*(password|token|secret)|print\([^)]*(password|token|secret)/i},
+ {n:"TODO de sécurité non résolu", g:"basse", r:/(TODO|FIXME|XXX).*(sécur|secur|auth|chiffr|xss|csrf|inject)/i},
+ {n:"Dépendance non épinglée", g:"basse", r:/"(lodash|express|axios|react|next)"\s*:\s*"(\^|~|>|\*)/},
+];
+const EXT = /\.(js|mjs|cjs|jsx|ts|tsx|py|php|rb|go|java|kt|cs|sql|sh|bash|tf|yml|yaml|env)$/i;
+const NOMS = /(^|\/)(Dockerfile|\.env[^/]*|docker-compose\.ya?ml)$/i;
+const EXCL = /(^|\/)(node_modules|dist|build|vendor|\.git)\//;
+
+const $ = s => document.querySelector(s);
+const log = m => { $("#log").textContent += m + "\n"; };
+
+async function brut(url){ const r = await fetch(url); if(!r.ok) throw new Error(url+" -> HTTP "+r.status); return r.text(); }
+
+async function analyser(){
+  const res = $("#res"); res.innerHTML = ""; $("#log").textContent = "";
+  const url = $("#url").value.trim();
+  const m = url.match(/github\.com\/([^/\s]+)\/([^/\s#?]+)/);
+  if(!m){ log("URL invalide. Exemple : https://github.com/proprietaire/depot"); return; }
+  const [ , owner, repo ] = m; const repoN = repo.replace(/\.git$/,'');
+  $("#go").disabled = true;
+  try {
+    log("Dépôt : "+owner+"/"+repoN);
+    const info = await fetch("https://api.github.com/repos/"+owner+"/"+repoN).then(r=>r.ok?r.json():null);
+    if(!info){ log("Dépôt introuvable ou privé (l'API publique ne le liste pas)."); return; }
+    log("Branche par défaut : "+info.default_branch+" | langue : "+(info.language||"?")+" | licence : "+((info.license&&info.license.spdx_id)||"aucune"));
+    const arbre = await fetch("https://api.github.com/repos/"+owner+"/"+repoN+"/git/trees/"+info.default_branch+"?recursive=1").then(r=>r.ok?r.json():null);
+    if(!arbre || !arbre.tree){ log("Arborescence illisible (dépôt trop grand ou limite API atteinte)."); return; }
+    let cand = arbre.tree.filter(f => f.type==="blob" && !EXCL.test(f.path) && (EXT.test(f.path)||NOMS.test(f.path)));
+    log("Fichiers candidats : "+cand.length);
+    // Limite honnête : 40 fichiers les plus petits, pour tenir dans les limites d'API.
+    cand.sort((a,b)=>(a.size||0)-(b.size||0));
+    const max = 40, pris = cand.slice(0, max);
+    if(cand.length > max) log("Limite : analyse des "+max+" plus petits sur "+cand.length+" (le rapport manuel couvre tout).");
+    const constats = [];
+    let faits = 0;
+    for(const f of pris){
+      try{
+        const txt = await brut("https://raw.githubusercontent.com/"+owner+"/"+repoN+"/"+info.default_branch+"/"+f.path);
+        contats_push(constats, f.path, txt);
+        faits++;
+        if(faits%10===0) log("  ..."+faits+"/"+pris.length);
+      }catch(e){ /* fichier non lisible : on continue, sans inventer */ }
+    }
+    log("Analysés : "+faits+" fichiers. Motifs : "+constats.length);
+    afficher(constats, owner+"/"+repoN);
+  } catch(e){ log("Erreur : "+e.message); }
+  finally { $("#go").disabled = false; }
+}
+
+function contats_push(constats, chemin, txt){
+  for(const regle of R){
+    if(regle.fichiers && !regle.fichiers.test(chemin)) continue;
+    const lignes = txt.split(/\r?\n/);
+    for(let i=0;i<lignes.length;i++){
+      if(lignes[i].length>400) continue;
+      if(regle.r.test(lignes[i])){
+        constats.push({ g:regle.g, n:regle.n, loc:chemin+":"+(i+1) });
+        if(!regle.fichiers) break; // un constat par règle et par fichier (hors règles de fichier)
+      }
+    }
+  }
+}
+
+function afficher(c, nom){
+  const n = g => c.filter(x=>x.g===g).length;
+  const grp = {};
+  for(const x of c){ (grp[x.n] = grp[x.n] || []).push(x.loc); }
+  const h = [];
+  h.push('<div class="cards">');
+  h.push('<div class="card haute"><div class="n">'+n("haute")+'</div><div class="sub">gravité haute</div></div>');
+  h.push('<div class="card moyenne"><div class="n">'+n("moyenne")+'</div><div class="sub">gravité moyenne</div></div>');
+  h.push('<div class="card basse"><div class="n">'+n("basse")+'</div><div class="sub">gravité basse</div></div>');
+  h.push('</div>');
+  if(!c.length){ h.push('<p class="sub">Aucun motif des '+R.length+' règles déclenchées. Cela ne prouve pas l\'absence de vulnérabilité : les règles couvrent des motifs connus, pas votre logique métier.</p>'); }
+  for(const [titre, locs] of Object.entries(grp)){
+    const g = c.find(x=>x.n===titre).g;
+    h.push('<div class="find '+g+'"><strong>'+titre+'</strong> <span class="sub">('+locs.length+')</span><br><span class="grp">'+locs.slice(0,8).join(' · ')+(locs.length>8?' · +'+(locs.length-8):'')+'</span></div>');
+  }
+  const cp = c.map(x=>x.loc+'\t'+x.g+'\t'+x.n).join('\n');
+  h.push('<a class="cta" download="'+nom.replace('/','-')+'-motifs.txt" href="data:text/plain;charset=utf-8,'+encodeURIComponent('Dépôt: '+nom+'\nMotifs: '+c.length+' (haute '+n("haute")+', moyenne '+n("moyenne")+', basse '+n("basse")+')\n\n'+cp)+'">Télécharger la liste (txt)</a>');
+  $("#res").innerHTML = h.join('');
+}
+
+$("#go").onclick = analyser;
+$("#url").addEventListener("keydown", e => { if(e.key==="Enter") analyser(); });
+</script>
+</body>
+</html>
