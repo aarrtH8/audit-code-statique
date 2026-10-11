@@ -1,122 +1,48 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audit de motifs — analyse statique honnête, un fichier, zéro dépendance</title>
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demander un devis — audit de code statique</title>
 <style>
-  :root{--bg:#0e1116;--fg:#e8eaed;--muted:#9aa4b2;--acc:#4da3ff;--card:#161b22;--line:#232a33}
-  *{box-sizing:border-box}
-  body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
-  main{max-width:820px;margin:0 auto;padding:48px 20px 80px}
-  h1{font-size:2rem;margin:0 0 8px}
-  h2{margin-top:40px;font-size:1.25rem;border-bottom:1px solid var(--line);padding-bottom:6px}
-  .lead{color:var(--muted);font-size:1.05rem}
-  code,pre{font-family:ui-monospace,Consolas,monospace;background:var(--card);border:1px solid var(--line);border-radius:6px}
-  code{padding:1px 5px;font-size:.9em}
-  pre{padding:14px;overflow:auto;font-size:.88em}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0}
-  .ok{color:#5ddc8f}.warn{color:#ffcc66}
-  ul{padding-left:20px}
-  .tag{display:inline-block;background:#12233a;color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.78em;margin-right:6px}
-  .cta{display:inline-block;background:var(--acc);color:#06121f;font-weight:600;padding:12px 20px;border-radius:8px;text-decoration:none;margin-top:10px}
-  .muted{color:var(--muted);font-size:.9em}
-</style>
-</head>
-<body>
-<main>
-  <span class="tag">code non exécuté</span><span class="tag">zéro dépendance</span><span class="tag">SHA-256 vérifiable</span>
-  <h1>Audit de motifs</h1>
-  <p class="lead">Un auditeur statique en <strong>un seul fichier</strong>. Vous le lancez sur votre code,
-  vous obtenez un rapport <code>fichier:ligne</code> reproductible. Aucune installation, aucun compte,
-  aucune donnée envoyée nulle part.</p>
+ body{font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;max-width:720px;margin:48px auto;padding:0 20px}
+ h1{font-size:26px;margin:0 0 8px} h2{font-size:17px;margin:28px 0 8px}
+ .lead{color:#555;margin-bottom:24px}
+ a.btn{display:inline-block;background:#0b5;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;margin:8px 0}
+ a.btn:hover{background:#094}
+ .box{background:#f7f9fb;border:1px solid #e2e8ee;border-radius:6px;padding:14px 16px;margin:16px 0;font-size:15px}
+ .warn{background:#fff8f0;border-color:#f0d8b8}
+ ul{padding-left:20px} li{margin:4px 0}
+ code{font-family:ui-monospace,Consolas,monospace;font-size:14px;background:#f2f2f2;padding:1px 4px;border-radius:3px}
+</style></head><body>
+<h1>Demander un devis</h1>
+<p class="lead">Audit de code statique, en lecture seule. Je ne modifie rien, je ne publie rien de votre code,
+je vous rends un rapport avec les motifs à vérifier, chacun référencé <code>fichier:ligne</code>.</p>
 
-  <div class="card">
-    <strong class="ok">Ce que ce n'est pas</strong>
-    <p class="muted" style="margin:6px 0 0">Un motif détecté <strong>n'est pas</strong> une vulnérabilité confirmée.
-    Ce balayage n'est pas exhaustif. Nous refusons de prétendre l'inverse — c'est écrit dans chaque rapport.</p>
-  </div>
+<h2>Ce que vous obtenez</h2>
+<div class="box">
+Rapport honnête : un constat est un <strong>motif à vérifier</strong>, pas une vulnérabilité confirmée.
+Empreinte SHA-256 recalculable. Format visible ici :
+<a href="rapport-exemple.html">rapport-exemple.html</a>.
+</div>
 
-  <h2>Ce que ça détecte</h2>
-  <ul>
-    <li>Secrets en dur (mot de passe, clé API, token)</li>
-    <li>Exécution de commande / shell, <code>eval</code>, code dynamique</li>
-    <li>Insertion HTML (risque XSS), CORS ouvert à toutes les origines</li>
-    <li>Concaténation SQL possible, URL http en clair</li>
-  </ul>
-  <p class="muted">Chaque constat indique sa catégorie : <em>production</em>, <em>test</em> ou <em>doc</em>.</p>
+<h2>Demander</h2>
+<p>Le bouton ouvre une nouvelle <em>Issue GitHub</em> déjà étiquetée <code>demande-devis</code> : c'est la voie
+réellement disponible depuis ce site statique. Rien n'est envoyé tant que vous n'avez pas validé le
+formulaire dans votre navigateur.</p>
+<a class="btn" href="https://github.com/aarrtH8/audit-code-statique/issues/new?labels=demande-devis&title=%5BDevis%5D%20&body=%23%23%23%20D%C3%A9p%C3%B4t%20ou%20projet%20%C3%A0%20auditer%0A%3C!--%20proprietaire%2Fnom%2C%20ou%20lien%2C%20ou%20%22code%20priv%C3%A9%22%20--%3E%0A%0A%23%23%23%20Ce%20que%20vous%20voulez%20obtenir%0A%3C!--%20ex.%20audit%20statique%20lecture%20seule%2C%20p%C3%A9rim%C3%A8tre%2C%20%C3%A9ch%C3%A9ance%20--%3E%0A%0A%23%23%23%20Contact%20pour%20le%20devis%0A%3C!--%20e-mail%20ou%20autre%20voie%20%3B%20je%20ne%20publie%20rien%20de%20priv%C3%A9%20--%3E">Ouvrir ma demande de devis</a>
 
-  <h2>Fonctionne — preuve réelle</h2>
-  <p>Exécuté sur du code réel : <strong>55 motifs</strong> (29 haute, 19 moyenne, 7 basse).</p>
-  <pre>SHA-256 du rapport d'exemple :
-50254bab0d04714161958544bf2e4830979bbef787bde83aff0721ffd4f20bb8</pre>
-  <p class="muted">Vous recalculez ce hash vous-même (<code>certutil -hashfile rapport.md SHA256</code> ou
-  <code>sha256sum</code>). Aucune confiance envers l'auteur n'est requise.</p>
+<div class="box warn">
+<strong>Limites.</strong> Tarif : fourchette indicative au devis, montant et devise convenus avant commande.
+Paiement : PayPal ou virement professionnel uniquement — <strong>aucune cryptomonnaie</strong>.
+Preuve de réception réelle exigée avant livraison finale.
+</div>
 
-  <h2>Utilisation</h2>
-  <pre>node audit-client.mjs https://github.com/utilisateur/depot --sortie rapport.md
-node audit-client.mjs ./mon-dossier                          --sortie rapport.md</pre>
+<h2>Ce que je ne fais pas</h2>
+<ul>
+ <li>Je n'exécute pas votre code.</li>
+ <li>Je n'accède pas à vos serveurs.</li>
+ <li>Je ne publie pas votre code ni vos identifiants.</li>
+ <li>Je ne vous démarché pas ailleurs : je réponds à votre demande, pas l'inverse.</li>
+</ul>
 
-  <h2>Trois façons de l'utiliser</h2>
-  <div class="card"><strong>1. Le fichier, gratuit</strong> — disponible sur demande via une issue GitHub.
-    <span class="muted">Le fichier s'exécute, vous le gardez.</span></div>
-  <div class="card"><strong>2. La GitHub Action</strong> — ajoutez-la à votre dépôt, un rapport à chaque commit.</div>
-  <div class="card"><strong>3. L'audit personnalisé, sur devis</strong> — revue manuelle du contexte et
-    hiérarchisation réelle des constats. <strong>Montant et devise convenus avant la commande.</strong>
-    Aucun prélèvement automatique. Paiement PayPal ou virement après accord.</div>
-
-  <h2>Commander / obtenir le fichier</h2>
-  <p>Ouvrez une demande publique (issue) sur le dépôt :</p>
-  <a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new">Ouvrir une demande</a>
-  <p class="muted" style="margin-top:14px">Réponse sous 24h ouvrées. Nous ne promettons ni délai de livraison inférieur à
-  celui affiché, ni résultat que nous ne pouvons pas prouver. Le prix est discuté avant tout engagement.</p>
-<!-- FORMULAIRE-COMMANDE:DEBUT -->
-<section id="commande" style="max-width:720px;margin:2rem auto;padding:1.5rem;border:1px solid #c9a227;border-radius:12px;background:#12121a;color:#e8e8f0;font-family:system-ui,sans-serif">
-  <h2 style="margin-top:0">Demander un audit — devis sous 24 h ouvrées</h2>
-  <p style="opacity:.85;font-size:.95rem">
-    Pas de paiement en ligne, pas de compte à créer. Remplissez ceci : cela ouvre une
-    demande <strong>publique et traçable</strong> sur mon dépôt. Je réponds avec un devis
-    chiffré ; le montant est convenu <strong>avant</strong> toute commande.
-  </p>
-  <form id="frm" style="display:grid;gap:.8rem">
-    <label>Votre nom ou pseudo
-      <input id="nom" required style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #444;background:#0c0c12;color:#fff">
-    </label>
-    <label>Contact réel (e-mail ou lien GitHub)
-      <input id="contact" required placeholder="vous@exemple.fr" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #444;background:#0c0c12;color:#fff">
-    </label>
-    <label>Langage / dépôt à auditer
-      <input id="depot" placeholder="JavaScript, TypeScript… ou https://github.com/…" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #444;background:#0c0c12;color:#fff">
-    </label>
-    <label>Ce que vous cherchez
-      <textarea id="besoin" rows="4" required placeholder="Ex : vérifier les points sensibles avant une mise en production." style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #444;background:#0c0c12;color:#fff"></textarea>
-    </label>
-    <button type="submit" style="padding:.8rem 1.2rem;border:0;border-radius:8px;background:#c9a227;color:#111;font-weight:700;cursor:pointer">
-      Ouvrir ma demande
-    </button>
-    <p style="font-size:.82rem;opacity:.6;margin:0">
-      Rappel honnête : un motif détecté n'est pas une vulnérabilité confirmée, et le balayage
-      automatique n'est pas exhaustif. Devise EUR, montant convenu avant commande.
-    </p>
-  </form>
-  <p id="ok" style="display:none;color:#7ee787"></p>
-</section>
-<script>
-document.getElementById('frm').addEventListener('submit', function(e){
-  e.preventDefault();
-  var t = document.getElementById('nom').value + ' — demande d\'audit';
-  var b = 'Nom : ' + document.getElementById('nom').value +
-          '\nContact : ' + document.getElementById('contact').value +
-          '\nDépôt / langage : ' + document.getElementById('depot').value +
-          '\nBesoin : ' + document.getElementById('besoin').value +
-          '\n\n(Formulaire page offre — demande publique.)';
-  var u = 'https://github.com/aarrtH8/audit-code-statique/issues/new?title=' + encodeURIComponent(t) + '&body=' + encodeURIComponent(b);
-  window.open(u, '_blank');
-  document.getElementById('ok').style.display = 'block';
-  document.getElementById('ok').textContent = 'Une fenêtre GitHub s\'est ouverte : validez pour envoyer votre demande.';
-});
-</script>
-<!-- FORMULAIRE-COMMANDE:FIN -->
-</main>
-</body>
-</html>
+<p style="font-size:13px;color:#888">&larr; <a href="index.html">Page d'accueil</a> · <a href="rapport-exemple.html">Rapport d'exemple</a></p>
+</body></html>
