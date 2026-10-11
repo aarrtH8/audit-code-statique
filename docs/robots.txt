@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aarrth8.github.io/audit-code-statique/sitemap.xml
+Sitemap: https://aarrtH8.github.io/audit-code-statique/sitemap.xml
