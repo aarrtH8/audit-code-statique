@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Décrire un besoin — Audit de code statique</title>
+<link rel="canonical" href="https://aarrtH8.github.io/audit-code-statique/demande.html">
+<meta name="description" content="Formulaire public pour décrire un besoin d'audit de code statique. Sans compte, sans engagement. Réponse si le besoin peut être traité.">
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font:16px/1.65 system-ui,-apple-system,sans-serif;background:#0f1115;color:#e8eaed}
+ .w{max-width:580px;margin:0 auto;padding:44px 20px 72px}
+ .marque{font-weight:700;color:#5b9dff;text-decoration:none;font-size:.95rem}
+ h1{font-size:1.65rem;margin:22px 0 8px;line-height:1.25}
+ .intro{color:#9aa0a6;margin:0 0 30px}
+ label{display:block;margin:17px 0 6px;font-weight:600;font-size:.9rem}
+ input,textarea,select{width:100%;background:#181c22;border:1px solid #2a2f38;color:#e8eaed;
+   border-radius:8px;padding:11px 13px;font:inherit}
+ textarea{min-height:130px;resize:vertical}
+ button{margin-top:26px;width:100%;background:#5b9dff;color:#06101f;border:0;border-radius:8px;
+   padding:14px 26px;font-weight:700;font-size:1rem;cursor:pointer}
+ button:hover{background:#7bb0ff}
+ .note{color:#6b7280;font-size:.84rem;margin-top:24px;border-top:1px solid #20252d;padding-top:18px}
+ a{color:#5b9dff}
+ .aide{color:#6b7280;font-size:.82rem;margin:4px 0 0}
+</style>
+</head>
+<body><div class="w">
+<a class="marque" href="./">← Audit de code statique</a>
+<h1>Décrire un besoin</h1>
+<p class="intro">Vous exposez votre besoin. Je vous réponds si je peux le traiter.
+Aucun compte requis, aucune inscription, aucun engagement.</p>
+
+<form id="f">
+  <label for="besoin">Votre besoin <span style="color:#5b9dff">*</span></label>
+  <textarea id="besoin" required placeholder="Exemple : je doute de la qualité d'un module de paiement écrit en Node, je voudrais savoir ce qui est réellement risqué et ce qui ne l'est pas."></textarea>
+  <p class="aide">Le plus concret possible : qu'est-ce qui vous inquiète, sur quoi portez-vous un doute.</p>
+
+  <label for="contexte">Dépôt ou contexte</label>
+  <input id="contexte" placeholder="URL d'un dépôt public, ou description du projet">
+  <p class="aide">Un dépôt public me permet de vous répondre par un vrai premier constat, pas une promesse.</p>
+
+  <label for="budget">Budget envisagé</label>
+  <select id="budget">
+    <option value="">— je ne sais pas encore —</option>
+    <option>Échantillon gratuit d'abord</option>
+    <option>Moins de 300 EUR</option>
+    <option>300 à 1000 EUR</option>
+    <option>Plus de 1000 EUR</option>
+  </select>
+
+  <label for="contact">Comment vous répondre <span style="color:#5b9dff">*</span></label>
+  <input id="contact" required placeholder="email, ou pseudonyme GitHub">
+  <p class="aide">Servira uniquement à vous répondre. Aucun démarchage, aucune revente, aucune liste.</p>
+
+  <button type="submit">Envoyer ma demande</button>
+</form>
+
+<div class="note" id="note">
+  <strong>Ce formulaire ne sollicite personne.</strong> Il reçoit des demandes entrantes.
+  Je ne relance pas sans votre accord explicite. Aucune donnée n'est transmise à un tiers.
+</div>
+</div>
+
+<script>
+// Le formulaire n'a pas de serveur à lui : il ouvre une demande pré-remplie sur le
+// guichet public du dépôt. C'est volontaire — pas de collecte silencieuse, et le
+// demandeur voit exactement ce qui est publié avant de valider.
+const DEPOT = 'https://github.com/aarrtH8/audit-code-statique/issues/new';
+const f = document.getElementById('f');
+f.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const besoin = document.getElementById('besoin').value.trim();
+  const contexte = document.getElementById('contexte').value.trim();
+  const budget = document.getElementById('budget').value;
+  const contact = document.getElementById('contact').value.trim();
+  if (!besoin || !contact) return;
+
+  const titre = '[Demande] ' + besoin.split('\n')[0].slice(0, 70);
+  const corps = [
+    '**Besoin**', besoin, '',
+    contexte ? '**Contexte**\n' + contexte + '\n' : '',
+    budget ? '**Budget envisagé**\n' + budget + '\n' : '',
+    '**Répondre à**\n' + contact, '',
+    '---',
+    '*Demande envoyée depuis le formulaire public. Le contenu ci-dessus sera visible publiquement.*'
+  ].filter(Boolean).join('\n');
+
+  const url = DEPOT + '?title=' + encodeURIComponent(titre) + '&body=' + encodeURIComponent(corps);
+  window.open(url, '_blank', 'noopener');
+  document.getElementById('note').innerHTML =
+    '<strong>Dernière étape.</strong> Une page vient de s\'ouvrir : vérifiez le contenu puis cliquez sur <em>Submit new issue</em>. ' +
+    'Votre demande m\'arrive directement. Si aucune page ne s\'est ouverte, <a href="' + url + '" target="_blank" rel="noopener">cliquez ici</a>.';
+});
+</script>
+</body></html>
