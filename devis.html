@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demander un audit de code statique — Arthur Grossi EI</title>
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--muted:#9da7b3;--acc:#2f81f7;--card:#161b22;--bd:#30363d}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif}
+  header{padding:56px 20px 28px;text-align:center;border-bottom:1px solid var(--bd)}
+  h1{margin:0 0 10px;font-size:1.9rem}p.lead{color:var(--muted);max-width:640px;margin:0 auto}
+  main{max-width:760px;margin:0 auto;padding:32px 20px 80px}
+  section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:22px;margin:18px 0}
+  h2{margin:0 0 12px;font-size:1.15rem}
+  table{width:100%;border-collapse:collapse;font-size:.95rem}
+  td{padding:8px 6px;border-bottom:1px solid var(--bd)}td:last-child{text-align:right;color:var(--acc);white-space:nowrap}
+  .cta{display:inline-block;background:var(--acc);color:#fff;text-decoration:none;padding:13px 22px;border-radius:8px;font-weight:600;margin-top:6px}
+  code{background:#0b0f14;padding:2px 6px;border-radius:5px;font-size:.9em}
+  .muted{color:var(--muted);font-size:.9rem}
+  .step{margin:10px 0;padding-left:22px;position:relative}
+  .step:before{content:"→";position:absolute;left:0;color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Demander un audit de code statique</h1>
+  <p class="lead">Je lis votre dépôt public et je vous rends un rapport court, concret et vérifiable sur les motifs à risque réels. Sans exécuter votre code, sans rien modifier.</p>
+</header>
+<main>
+  <section>
+    <h2>Comment ça marche</h2>
+    <div class="step">Vous ouvrez une demande avec le lien du dépôt ou du site à examiner.</div>
+    <div class="step">Je regarde le périmètre public et je réponds en une phrase : un audit a du sens, ou non.</div>
+    <div class="step">Si oui, je chiffre d'après le barème ci-dessous et vous validez le montant avant que je commence.</div>
+    <div class="step">Je livre le rapport, scellé par empreinte SHA-256 pour être vérifiable.</div>
+  </section>
+
+  <section>
+    <h2>Barème (forfaits, pas d'abonnement)</h2>
+    <table>
+      <tr><td>Dépôt de moins de 20 000 lignes</td><td>150 EUR HT</td></tr>
+      <tr><td>Dépôt de 20 000 à 100 000 lignes</td><td>350 EUR HT</td></tr>
+      <tr><td>Dépôt de plus de 100 000 lignes</td><td>sur devis après lecture</td></tr>
+      <tr><td>Rapport scellé SHA-256 + relecture 30 min</td><td>inclus</td></tr>
+    </table>
+    <p class="muted">Prix en EUR HT. Montant et devise convenus avant commande. Paiement par PayPal (arthhur.grossi@gmail.com) ou virement professionnel au nom d'Arthur Grossi EI. Aucune cryptomonnaie.</p>
+  </section>
+
+  <section>
+    <h2>Ce que je ne fais pas</h2>
+    <p class="muted">Je n'exécute pas votre code, je ne teste pas votre production, je n'accède à aucun système privé sans autorisation écrite. Je ne corrige rien sans commande séparée. Un audit signale des motifs à vérifier — ce n'est pas une garantie d'absence de faille.</p>
+  </section>
+
+  <section>
+    <h2>Ouvrir une demande</h2>
+    <p>Les demandes passent par les « Issues » publiques du dépôt : c'est traçable, et vous gardez la maîtrise de ce que vous publiez.</p>
+    <a class="cta" href="https://github.com/aarrtH8/audit-code-statique/issues/new" target="_blank" rel="noopener">Ouvrir une demande de devis</a>
+    <p class="muted" style="margin-top:16px">Indiquez : le lien du dépôt (public), la techno principale, et ce qui vous préoccupe. N'écrivez aucun secret ni identifiant dans une issue publique.</p>
+  </section>
+
+  <p class="muted" style="text-align:center;margin-top:30px">
+    Arthur Grossi EI — <a href="https://aarrth8.github.io/audit-code-statique/" style="color:var(--acc)">page principale</a> ·
+    audit de code statique, livré sous forme de rapport écrit et scellé.
+  </p>
+</main>
+</body>
+</html>
