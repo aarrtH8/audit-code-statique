@@ -30,14 +30,14 @@
 <h2>Analyser un extrait</h2>
 <textarea id="code" rows="10" placeholder="Collez ici un extrait de code (JS, Python, PHP, etc.)"></textarea>
 <div class="noprint"><button onclick="run()">Analyser</button> <button onclick="print()" style="background:#475569">Imprimer / PDF</button></div>
-<div id="out"></div><p><a href="index.html">Présentation de l’offre</a></p>
+<div id="out"></div>
 
 <div class="offre">
 <h2 style="margin-top:0">Audit complet d'un dépôt</h2>
 <p>Sur un dépôt entier je produis un rapport structuré : résumé exécutif, preuves
 <code>fichier:ligne</code>, plan de remédiation ordonné, et <b>limites explicites</b>.</p>
-<p><b>Tarif et devise convenus par écrit au devis.</b> Périmètre et délai fixés <b>avant</b> paiement.</p>
-<p class="muted">Paiement : PayPal <b>arthhur.grossi@gmail.com</b>. La réception doit être vérifiée sur le compte ; aucun encaissement automatique n’est connecté.</p>
+<p><b>sur devis</b> ou montant convenu. Périmètre et délai fixés <b>avant</b> paiement.</p>
+<p class="muted">Paiement : PayPal <b>arthhur.grossi@gmail.com</b> ou virement professionnel (coordonnées privées). Je ne prétends pas vérifier automatiquement les paiements.</p>
 </div>
 
 <h2>Ce que je fais / ne fais pas</h2>
@@ -90,5 +90,5 @@ function run(){
   out.innerHTML=html;
 }
 </script>
-</body>
+<p style="font-size:13px;color:#8b949e">Ce rapport est accompagné d'une empreinte SHA-256. <a href="verifier-empreinte.html" style="color:#58a6ff">Recalculez-la vous-même</a>.</p></body>
 </html>
